@@ -1,2 +1,15 @@
-node_modules/
-.vscode/
+# Compilados de Angular
+/dist
+/tmp
+/out-tsc
+
+# Dependencias
+/node_modules
+
+# Compilación de VS Code
+/.vscode/*
+
+/.angular/cache
+.angular
+
+**/.vscode/
