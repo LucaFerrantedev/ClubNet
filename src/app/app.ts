@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { Component, importProvidersFrom } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -10,3 +11,9 @@ import { RouterOutlet } from '@angular/router';
 export class App {
   protected title = 'ClubNet.App';
 }
+
+export const appConfig = {
+  providers: [
+    importProvidersFrom(HttpClientModule)
+  ]
+};

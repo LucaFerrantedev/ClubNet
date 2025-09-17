@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+header.container {
+  background: transparent !important;
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #2563eb 0%, #1e293b 100%) !important;
+}

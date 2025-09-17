@@ -1,0 +1,118 @@
+.login-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(30,60,114,0.2);
+  padding: 2.5rem 2rem 2rem 2rem;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.club-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.club-logo img {
+  width: 60px;
+  margin-bottom: 0.5rem;
+}
+
+.club-logo h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: #1e3c72;
+  margin: 0;
+}
+
+.tabs {
+  display: flex;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.tabs button {
+  flex: 1;
+  padding: 0.7rem 0;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e3c72;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.tabs button.active {
+  border-bottom: 2.5px solid #2a5298;
+  color: #2a5298;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  background: #f3f6fa;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0.8rem;
+}
+
+.input-group .icon {
+  color: #2a5298;
+  margin-right: 0.7rem;
+  font-size: 1.1rem;
+}
+
+.input-group input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: calc(100% - 30px); /* Ajusta si el icono es muy ancho */
+  font-size: 1rem;
+  color: #1e3c72;
+}
+
+.btn-main {
+  width: 100%;
+  background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+  margin-bottom: 0.7rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-main:hover {
+  background: linear-gradient(90deg, #2a5298 0%, #1e3c72 100%);
+}
+
+.forgot-link {
+  display: block;
+  text-align: right;
+  color: #2a5298;
+  font-size: 0.95rem;
+  text-decoration: none;
+  margin-top: -0.5rem;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
