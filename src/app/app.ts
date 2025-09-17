@@ -1,4 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { Component, importProvidersFrom } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
@@ -14,6 +15,6 @@ export class App {
 
 export const appConfig = {
   providers: [
-    importProvidersFrom(HttpClientModule)
+    importProvidersFrom(HttpClientModule, FormsModule)
   ]
 };

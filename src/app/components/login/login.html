@@ -3,24 +3,25 @@
         <div class="club-logo">
             <img src="https://img.icons8.com/color/96/football2.png" alt="Club Logo" />
             <h2>Club Deportivo</h2>
+            <p>TRABAJO EN PROGRESO, TODO SUJETO A CAMBIOS</p>
         </div>
         <div class="tabs">
             <button [class.active]="activeTab === 'login'" (click)="activeTab = 'login'">Iniciar sesión</button>
             <button [class.active]="activeTab === 'register'" (click)="activeTab = 'register'">Registrarse</button>
         </div>
-        <form *ngIf="activeTab === 'login'" (submit)="onLogin($event)">
+        <form *ngIf="activeTab === 'login'" (submit)="onLogin()">
             <div class="input-group">
                 <span class="icon"><i class="fa fa-user"></i></span>
                 <input type="text" placeholder="Usuario o Email" required />
             </div>
             <div class="input-group">
                 <span class="icon"><i class="fa fa-lock"></i></span>
-                <input type="password" placeholder="Contraseña" required />
+                <input type="password" placeholder="Contraseña" required [(ngModel)]="password" name="password"/>
             </div>
             <button class="btn-main" type="submit">Entrar</button>
             <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
         </form>
-        <form *ngIf="activeTab === 'register'" (submit)="onRegister($event)">
+        <form *ngIf="activeTab === 'register'" (submit)="onRegister()">
             <div class="input-group">
                 <span class="icon"><i class="fa fa-user-plus"></i></span>
                 <input type="text" placeholder="Nombre completo" required />
@@ -31,11 +32,11 @@
             </div>
             <div class="input-group">
                 <span class="icon"><i class="fa fa-lock"></i></span>
-                <input type="password" placeholder="Contraseña" required />
+                <input type="password" placeholder="Contraseña" required [(ngModel)]="password" name="password"/>
             </div>
             <div class="input-group">
                 <span class="icon"><i class="fa fa-lock"></i></span>
-                <input type="password" placeholder="Repetir contraseña" required />
+                <input type="password" placeholder="Repetir contraseña" required [(ngModel)]="confirmarPassword" name="confirmPassword"/>
             </div>
             <button class="btn-main" type="submit">Registrarse</button>
         </form>
