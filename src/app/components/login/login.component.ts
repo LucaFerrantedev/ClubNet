@@ -46,6 +46,7 @@ export class LoginComponent {
       next: (x) => {
         this.datasourceLogin = x;
         if ((x as any).success === true) {
+          this.loginService.setLoggedIn(true);
           this.mensaje = '¡Login exitoso!';
           this.mensajeTipo = 'success';
         } else if ((x as any).success === false) {
@@ -56,6 +57,7 @@ export class LoginComponent {
           this.mensajeTipo = '';
         }
         this.resetForm();
+        this.router.navigate(['/dashboard']);
         setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
       },
       error: () => {
@@ -122,4 +124,5 @@ export class LoginComponent {
     this.clave = '';
     this.confirmarClave = '';
   }
+
 }
