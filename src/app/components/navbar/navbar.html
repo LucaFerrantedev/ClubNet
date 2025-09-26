@@ -10,7 +10,11 @@
     <a class="navbar-link" href="#">Contacto</a>
   </div>
   <div class="navbar-user">
-    <span>Usuario</span>
-    <!-- Aquí puedes agregar iconos o menú de usuario -->
+    <div class="navbar-user-dropdown">
+      <span class="navbar-user-label">Usuario</span>
+      <div class="navbar-dropdown-content">
+        <a href="#" (click)="logout()">Cerrar sesión</a>
+      </div>
+    </div>
   </div>
 </nav>

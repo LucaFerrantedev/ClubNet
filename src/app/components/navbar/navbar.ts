@@ -7,5 +7,11 @@ import { Component } from '@angular/core';
   styleUrl: './navbar.css'
 })
 export class NavbarComponent {
+  logout() {
+    localStorage.removeItem('recordarDatos');
+    localStorage.removeItem('email');
+    localStorage.removeItem('clave');
+    window.location.href = '/login';
+  }
 
 }

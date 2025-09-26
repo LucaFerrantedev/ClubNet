@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true
 })
 export class LoginComponent {
+  recordarDatos = false;
 
   mensajeTipo = '';
 
@@ -31,7 +32,13 @@ export class LoginComponent {
   mensaje: any;
 
   ngOnInit(): void {
-
+    // Si hay datos guardados y recordarDatos, redirigir automáticamente
+    const record = localStorage.getItem('recordarDatos');
+    const email = localStorage.getItem('email');
+    const clave = localStorage.getItem('clave');
+    if (record === 'true' && email && clave) {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   activeTab: 'login' | 'register' = 'login';
@@ -49,6 +56,16 @@ export class LoginComponent {
           this.loginService.setLoggedIn(true);
           this.mensaje = '¡Login exitoso!';
           this.mensajeTipo = 'success';
+          if (this.recordarDatos) {
+            localStorage.setItem('recordarDatos', 'true');
+            localStorage.setItem('email', this.email);
+            localStorage.setItem('clave', this.clave);
+          } else {
+            localStorage.removeItem('recordarDatos');
+            localStorage.removeItem('email');
+            localStorage.removeItem('clave');
+          }
+          this.router.navigate(['/dashboard']);
         } else if ((x as any).success === false) {
           this.mensaje = 'Login fallido. Verifica tus datos.';
           this.mensajeTipo = 'error';
@@ -57,7 +74,6 @@ export class LoginComponent {
           this.mensajeTipo = '';
         }
         this.resetForm();
-        this.router.navigate(['/dashboard']);
         setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
       },
       error: () => {
@@ -116,6 +132,7 @@ export class LoginComponent {
 
   }
 
+  // Resetea los campos del formulario
   resetForm() {
     this.dni = '';
     this.nombre = '';

@@ -1,3 +1,50 @@
+.navbar-user-dropdown {
+	position: relative;
+	display: inline-block;
+}
+.navbar-user-label {
+	color: #fff;
+	font-size: 1rem;
+	font-weight: 600;
+	cursor: pointer;
+	padding: 0.3rem 1rem;
+	border-radius: 1rem;
+	transition: background 0.18s;
+}
+.navbar-user-dropdown:hover .navbar-user-label {
+	background: #0a6cf1;
+}
+.navbar-dropdown-content {
+	display: none;
+	position: absolute;
+	right: 0;
+	background: #fff;
+	min-width: 140px;
+	box-shadow: 0 4px 16px 0 #0a6cf155;
+	border-radius: 1rem;
+	z-index: 10;
+	margin-top: 0.5rem;
+	animation: fadeInDropdown 0.3s ease;
+}
+.navbar-user-dropdown:hover .navbar-dropdown-content {
+	display: block;
+}
+.navbar-dropdown-content a {
+	color: #0a2540;
+	padding: 0.8rem 1.2rem;
+	text-decoration: none;
+	display: block;
+	font-weight: 500;
+	border-radius: 1rem;
+	transition: background 0.18s;
+}
+.navbar-dropdown-content a:hover {
+	background: #e6ecfa;
+}
+@keyframes fadeInDropdown {
+	from { opacity: 0; transform: translateY(-10px); }
+	to { opacity: 1; transform: translateY(0); }
+}
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap');
 
 .navbar {

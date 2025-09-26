@@ -18,6 +18,10 @@
                 <i class="fa fa-lock"></i>
                 <input type="password" placeholder="Contraseña" required [(ngModel)]="clave" name="claveLogin" />
             </div>
+            <div class="modern-input-group" style="background: none; box-shadow: none; justify-content: flex-start;">
+                <input type="checkbox" id="recordar" [(ngModel)]="recordarDatos" name="recordarDatos" style="width: 18px; height: 18px; margin-right: 0.5rem;" />
+                <label for="recordar" style="font-size: 1rem; color: #22314a; cursor: pointer;">Recordar estos datos</label>
+            </div>
             <button class="modern-btn-main" type="submit">Entrar</button>
             <a href="#" class="modern-forgot-link">¿Olvidaste tu contraseña?</a>
         </form>
