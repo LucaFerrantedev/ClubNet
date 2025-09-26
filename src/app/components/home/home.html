@@ -1,46 +1,40 @@
-<div class="container-fluid min-vh-100 d-flex flex-column bg-gradient-primary">
-  <header class="container text-center my-5">
-    <h1 class="display-3 fw-bold text-white mb-3 animate__animated animate__fadeInDown">Bienvenido al Club Deportivo</h1>
-    <p class="lead text-light mb-4 animate__animated animate__fadeInUp">Un lugar para crecer, competir y disfrutar en comunidad.</p>
-    <button class="btn btn-light btn-lg mt-3 fw-bold shadow-lg rounded-pill px-5 py-3 animate__animated animate__pulse animate__infinite"
-      (click)="Continuar()">
-      Inicia Sesión o Regístrate
-    </button>
+<div class="landing-bg">
+  <header class="landing-header">
+    <img src="https://img.icons8.com/color/96/football2.png" alt="Club Logo" class="landing-logo animate-pop" />
+    <h1 class="landing-title animate-fadein">¡Bienvenido a <span class="highlight">ClubNet</span>!</h1>
+    <p class="landing-subtitle animate-slidein">El club donde el deporte y la comunidad se encuentran.</p>
+    <button class="landing-btn animate-bounce" (click)="Continuar()">Inicia Sesión o Regístrate</button>
   </header>
-
-  <section class="container my-5">
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="card h-100 shadow-lg border-0 rounded-4">
-          <img src="https://cegresados.udlap.mx/wp-content/uploads/2022/10/soccer-player-action-on-the-stadium-scaled.jpg" class="card-img-top rounded-top-4" alt="Fútbol">
-          <div class="card-body">
-            <h5 class="card-title fw-bold text-primary">Fútbol</h5>
-            <p class="card-text text-secondary">Aprende, entrena y compite en nuestras ligas y escuelas de fútbol para todas las edades.</p>
-          </div>
-        </div>
+  <section class="landing-section">
+    <h2 class="landing-section-title animate-fadein">Nuestras disciplinas</h2>
+    <div class="landing-cards">
+      <div class="landing-card animate-card">
+        <img src="https://cegresados.udlap.mx/wp-content/uploads/2022/10/soccer-player-action-on-the-stadium-scaled.jpg" alt="Fútbol" />
+        <h3>Fútbol</h3>
+        <p>Entrena, compite y vive la pasión del fútbol en nuestras canchas de primer nivel.</p>
       </div>
-      <div class="col-md-4">
-        <div class="card h-100 shadow-lg border-0 rounded-4">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3twMY_uwigMOThaA4dZG6cvMMctA15Tt7lg&s" class="card-img-top rounded-top-4" alt="Natación">
-          <div class="card-body">
-            <h5 class="card-title fw-bold text-primary">Natación</h5>
-            <p class="card-text text-secondary">Piscinas climatizadas y entrenadores certificados para tu desarrollo deportivo.</p>
-          </div>
-        </div>
+      <div class="landing-card animate-card" style="animation-delay: 0.15s;">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3twMY_uwigMOThaA4dZG6cvMMctA15Tt7lg&s" alt="Natación" />
+        <h3>Natación</h3>
+        <p>Piscinas climatizadas y entrenadores certificados para tu desarrollo deportivo.</p>
       </div>
-      <div class="col-md-4">
-        <div class="card h-100 shadow-lg border-0 rounded-4">
-          <img src="https://www.sportmonde.com/wp-content/uploads/2020/04/tennis.jpg" class="card-img-top rounded-top-4" alt="Tenis">
-          <div class="card-body">
-            <h5 class="card-title fw-bold text-primary">Tenis</h5>
-            <p class="card-text text-secondary">Clases, torneos y canchas de primer nivel para todos los socios.</p>
-          </div>
-        </div>
+      <div class="landing-card animate-card" style="animation-delay: 0.3s;">
+        <img src="https://www.sportmonde.com/wp-content/uploads/2020/04/tennis.jpg" alt="Tenis" />
+        <h3>Tenis</h3>
+        <p>Clases, torneos y canchas de primer nivel para todos los socios.</p>
       </div>
     </div>
   </section>
-
-  <footer class="mt-auto bg-dark text-center py-3 rounded-top-4 shadow-lg">
-    <small class="text-light">&copy; 2025 ClubNet. Todos los derechos reservados.</small>
+  <section class="landing-benefits">
+    <h2 class="landing-section-title animate-fadein">¿Por qué elegir ClubNet?</h2>
+    <ul class="benefits-list">
+      <li class="animate-slidein">Ambiente familiar y seguro</li>
+      <li class="animate-slidein" style="animation-delay: 0.1s;">Profesores y entrenadores certificados</li>
+      <li class="animate-slidein" style="animation-delay: 0.2s;">Infraestructura moderna y espacios verdes</li>
+      <li class="animate-slidein" style="animation-delay: 0.3s;">Eventos, torneos y actividades sociales</li>
+    </ul>
+  </section>
+  <footer class="landing-footer">
+    <small>&copy; 2025 ClubNet. Todos los derechos reservados.</small>
   </footer>
 </div>

@@ -1,45 +1,54 @@
-<div class="login-bg">
-    <div class="login-card">
-        <div class="club-logo">
+<div class="modern-login-bg">
+    <div class="modern-login-card">
+        <div class="modern-logo">
             <img src="https://img.icons8.com/color/96/football2.png" alt="Club Logo" />
-            <h2>Club Deportivo</h2>
-            <p>TRABAJO EN PROGRESO, TODO SUJETO A CAMBIOS</p>
+            <h1>ClubNet</h1>
+            <p class="subtitle">Tu portal deportivo</p>
         </div>
-        <div class="tabs">
+        <div class="modern-tabs">
             <button [class.active]="activeTab === 'login'" (click)="activeTab = 'login'">Iniciar sesión</button>
             <button [class.active]="activeTab === 'register'" (click)="activeTab = 'register'">Registrarse</button>
         </div>
-        <form *ngIf="activeTab === 'login'" (submit)="onLogin()">
-            <div class="input-group">
-                <span class="icon"><i class="fa fa-user"></i></span>
-                <input type="text" placeholder="Usuario o Email" required />
+        <form *ngIf="activeTab === 'login'" (submit)="onLogin()" class="modern-form">
+            <div class="modern-input-group">
+                <i class="fa fa-envelope"></i>
+                <input type="email" placeholder="Email" required [(ngModel)]="email" name="emailLogin" />
             </div>
-            <div class="input-group">
-                <span class="icon"><i class="fa fa-lock"></i></span>
-                <input type="password" placeholder="Contraseña" required [(ngModel)]="password" name="password"/>
+            <div class="modern-input-group">
+                <i class="fa fa-lock"></i>
+                <input type="password" placeholder="Contraseña" required [(ngModel)]="clave" name="claveLogin" />
             </div>
-            <button class="btn-main" type="submit">Entrar</button>
-            <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+            <button class="modern-btn-main" type="submit">Entrar</button>
+            <a href="#" class="modern-forgot-link">¿Olvidaste tu contraseña?</a>
         </form>
-        <form *ngIf="activeTab === 'register'" (submit)="onRegister()">
-            <div class="input-group">
-                <span class="icon"><i class="fa fa-user-plus"></i></span>
-                <input type="text" placeholder="Nombre completo" required />
+        <form *ngIf="activeTab === 'register'" (submit)="onRegister()" class="modern-form">
+            <div class="modern-input-group">
+                <i class="fa fa-id-card"></i>
+                <input type="text" placeholder="DNI" required [(ngModel)]="dni" name="dni" />
             </div>
-            <div class="input-group">
-                <span class="icon"><i class="fa fa-envelope"></i></span>
-                <input type="email" placeholder="Email" required />
+            <div class="modern-input-group">
+                <i class="fa fa-user"></i>
+                <input type="text" placeholder="Nombre" required [(ngModel)]="nombre" name="nombre" />
             </div>
-            <div class="input-group">
-                <span class="icon"><i class="fa fa-lock"></i></span>
-                <input type="password" placeholder="Contraseña" required [(ngModel)]="password" name="password"/>
+            <div class="modern-input-group">
+                <i class="fa fa-user"></i>
+                <input type="text" placeholder="Apellido" required [(ngModel)]="apellido" name="apellido" />
             </div>
-            <div class="input-group">
-                <span class="icon"><i class="fa fa-lock"></i></span>
-                <input type="password" placeholder="Repetir contraseña" required [(ngModel)]="confirmarPassword" name="confirmPassword"/>
+            <div class="modern-input-group">
+                <i class="fa fa-envelope"></i>
+                <input type="email" placeholder="Email" required [(ngModel)]="email" name="email" />
             </div>
-            <button class="btn-main" type="submit">Registrarse</button>
+            <div class="modern-input-group">
+                <i class="fa fa-lock"></i>
+                <input type="password" placeholder="Contraseña" required [(ngModel)]="clave" name="clave" />
+            </div>
+            <div class="modern-input-group">
+                <i class="fa fa-lock"></i>
+                <input type="password" placeholder="Confirmar contraseña" required [(ngModel)]="confirmarClave" name="confirmarClave" />
+            </div>
+            <button class="modern-btn-main" type="submit">Registrarse</button>
         </form>
+    <div *ngIf="mensaje" class="modern-message" [ngClass]="mensajeTipo">{{ mensaje }}</div>
     </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">

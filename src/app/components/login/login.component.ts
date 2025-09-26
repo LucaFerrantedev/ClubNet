@@ -13,79 +13,113 @@ import { FormsModule } from '@angular/forms';
 })
 export class LoginComponent {
 
-  constructor(private loginService:LoginService, private router: Router){}
+  mensajeTipo = '';
 
-  
-  password:any;
-  confirmarPassword:any;
-  datasourceRegister:any;
-  datasourceLogin:any;
-  mensaje:any;
+  constructor(private loginService: LoginService, private router: Router) { }
+
+  // Todos los registrados son usuarios normales por defecto
+  dni: string = '';
+  nombre: string = '';
+  apellido: string = '';
+  rol: number = 3;
+  email: string = '';
+  clave: any;
+
+  confirmarClave: any;
+  datasourceRegister: any;
+  datasourceLogin: any;
+  mensaje: any;
 
   ngOnInit(): void {
-    
+
   }
 
   activeTab: 'login' | 'register' = 'login';
 
+
   onLogin() {
-
-    // Ejemplo de lo que iría aca:
-    // let obj = {
-    //   "nombre": this.nombre,
-    //   "password": btoa(this.password)
-    // }
-
     let obj = {
-
+      "email": this.email,
+      "clave": btoa(this.clave)
     }
-
     this.loginService.Login(obj).subscribe({
       next: (x) => {
         this.datasourceLogin = x;
-
-        if (this.datasourceLogin.result == true) {
-
-          // Guardar datos del usuario
-          const UserData = {
-            password: this.datasourceLogin.password
-          };
-
+        if ((x as any).success === true) {
+          this.mensaje = '¡Login exitoso!';
+          this.mensajeTipo = 'success';
+        } else if ((x as any).success === false) {
+          this.mensaje = 'Login fallido. Verifica tus datos.';
+          this.mensajeTipo = 'error';
+        } else {
+          this.mensaje = '';
+          this.mensajeTipo = '';
         }
+        this.resetForm();
+        setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
+      },
+      error: () => {
+        this.mensaje = 'Error de conexión.';
+        this.mensajeTipo = 'error';
+        this.resetForm();
+        setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
       }
-    })
-
-    alert('¡Login simulado!');
-
-
-
+    });
   }
 
   onRegister() {
-
-    // Ejemplo de lo que iría aca:
-    // let obj = {
-    //   "nombre": this.nombre,
-    //   "password": btoa(this.password)
-    // }
-    let obj = {
-
+    if (!this.dni || !this.nombre || !this.apellido || !this.email || !this.clave || !this.confirmarClave) {
+      this.mensaje = 'Todos los campos son obligatorios.';
+      this.mensajeTipo = 'error';
+      return;
     }
-
+    if (this.clave !== this.confirmarClave) {
+      this.mensaje = 'Las contraseñas no coinciden.';
+      this.mensajeTipo = 'error';
+      this.clave = '';
+      this.confirmarClave = '';
+      return;
+    }
+    let obj = {
+      "dni": Number(this.dni),
+      "nombre": this.nombre,
+      "apellido": this.apellido,
+      "rol": this.rol,
+      "email": this.email,
+      "clave": btoa(this.clave)
+    }
     this.loginService.Register(obj).subscribe({
       next: (response) => {
-        if (typeof response === 'boolean') {
-          this.datasourceRegister = { result: response, mensaje: '' };
+        let success = (typeof response === 'boolean') ? response : (response as any).success;
+        if (success === true) {
+          this.mensaje = '¡Registro exitoso!';
+          this.mensajeTipo = 'success';
+        } else if (success === false) {
+          this.mensaje = 'Registro fallido. Intenta de nuevo.';
+          this.mensajeTipo = 'error';
         } else {
-          this.datasourceRegister = response;
+          this.mensaje = '';
+          this.mensajeTipo = '';
         }
+        this.resetForm();
+        setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
+      },
+      error: () => {
+        this.mensaje = 'Error de conexión.';
+        this.mensajeTipo = 'error';
+        this.resetForm();
+        setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
       }
     });
 
-    alert('¡Registro simulado!');
-
   }
 
-
-
+  resetForm() {
+    this.dni = '';
+    this.nombre = '';
+    this.apellido = '';
+    this.email = '';
+    this.clave = '';
+    this.confirmarClave = '';
+  }
 }
