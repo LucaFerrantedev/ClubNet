@@ -31,7 +31,13 @@ export class LoginComponent {
   mensaje: any;
 
   ngOnInit(): void {
-
+    // Si hay datos guardados y recordarDatos, redirigir automáticamente
+    const record = localStorage.getItem('recordarDatos');
+    const email = localStorage.getItem('email');
+    const clave = localStorage.getItem('clave');
+    if (record === 'true' && email && clave) {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   activeTab: 'login' | 'register' = 'login';
@@ -40,14 +46,19 @@ export class LoginComponent {
   onLogin() {
     let obj = {
       "email": this.email,
-      "clave": btoa(this.clave)
+      "clave": this.clave
     }
     this.loginService.Login(obj).subscribe({
       next: (x) => {
         this.datasourceLogin = x;
         if ((x as any).success === true) {
+          this.loginService.setLoggedIn(true);
           this.mensaje = '¡Login exitoso!';
           this.mensajeTipo = 'success';
+          localStorage.setItem('recordarDatos', 'true');
+          localStorage.setItem('email', this.email);
+          localStorage.setItem('clave', this.clave);
+          this.router.navigate(['/dashboard']);
         } else if ((x as any).success === false) {
           this.mensaje = 'Login fallido. Verifica tus datos.';
           this.mensajeTipo = 'error';
@@ -86,7 +97,7 @@ export class LoginComponent {
       "apellido": this.apellido,
       "rol": this.rol,
       "email": this.email,
-      "clave": btoa(this.clave)
+      "clave": (this.clave)
     }
     this.loginService.Register(obj).subscribe({
       next: (response) => {
@@ -114,6 +125,7 @@ export class LoginComponent {
 
   }
 
+  // Resetea los campos del formulario
   resetForm() {
     this.dni = '';
     this.nombre = '';
@@ -122,4 +134,5 @@ export class LoginComponent {
     this.clave = '';
     this.confirmarClave = '';
   }
+
 }

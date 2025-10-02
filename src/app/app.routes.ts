@@ -3,6 +3,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { ContainerComponent } from './components/container/container';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -18,6 +19,14 @@ export const routes: Routes = [
     component: ContainerComponent,
     children: [
       { path: "", component: LoginComponent }
+    ]
+  },
+  {
+    path: "dashboard",
+    component: ContainerComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: "", component: DashboardComponent }
     ]
   }
 ];

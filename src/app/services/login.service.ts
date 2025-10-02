@@ -17,4 +17,11 @@ export class LoginService {
   Register(obj:any){
     return this.httpClient.post(this.url + "/Register",obj);
   }
+
+  setLoggedIn(value: boolean) {
+    localStorage.setItem('loggedIn', value ? 'true' : 'false');
+  }
+  isLoggedIn(): boolean {
+    return localStorage.getItem('loggedIn') === 'true';
+  }
 }
