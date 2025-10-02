@@ -3,10 +3,11 @@
 	<div class="dashboard-card animate-fadein">
 		<h2 class="dashboard-title">Hola 👋</h2>
 		<div class="dashboard-user-info">
-			<div><strong>Email:</strong> {{ email }}</div>
-			<div><strong>Nombre:</strong> {{ nombre }}</div>
-			<div><strong>Apellido:</strong> {{ apellido }}</div>
-			<div><strong>DNI:</strong> {{ dni }}</div>
+			<div><strong>Email:</strong> {{ DataSourceUsuario?.email }}</div>
+			<div><strong>Nombre:</strong> {{ DataSourceUsuario?.nombre }}</div>
+			<div><strong>Apellido:</strong> {{ DataSourceUsuario?.apellido }}</div>
+			<div><strong>DNI:</strong> {{ DataSourceUsuario?.dni }}</div>
+			<div><strong>Rol:</strong> {{ getRolTexto(DataSourceUsuario?.rol_id) }}</div>
 		</div>
 	</div>
 </div>

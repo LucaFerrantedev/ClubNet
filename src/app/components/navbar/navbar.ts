@@ -11,6 +11,7 @@ export class NavbarComponent {
     localStorage.removeItem('recordarDatos');
     localStorage.removeItem('email');
     localStorage.removeItem('clave');
+    localStorage.removeItem('rol');
     window.location.href = '/login';
   }
 

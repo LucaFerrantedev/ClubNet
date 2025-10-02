@@ -12,7 +12,6 @@ import { FormsModule } from '@angular/forms';
   standalone: true
 })
 export class LoginComponent {
-  recordarDatos = false;
 
   mensajeTipo = '';
 
@@ -47,7 +46,7 @@ export class LoginComponent {
   onLogin() {
     let obj = {
       "email": this.email,
-      "clave": btoa(this.clave)
+      "clave": this.clave
     }
     this.loginService.Login(obj).subscribe({
       next: (x) => {
@@ -56,15 +55,9 @@ export class LoginComponent {
           this.loginService.setLoggedIn(true);
           this.mensaje = '¡Login exitoso!';
           this.mensajeTipo = 'success';
-          if (this.recordarDatos) {
-            localStorage.setItem('recordarDatos', 'true');
-            localStorage.setItem('email', this.email);
-            localStorage.setItem('clave', this.clave);
-          } else {
-            localStorage.removeItem('recordarDatos');
-            localStorage.removeItem('email');
-            localStorage.removeItem('clave');
-          }
+          localStorage.setItem('recordarDatos', 'true');
+          localStorage.setItem('email', this.email);
+          localStorage.setItem('clave', this.clave);
           this.router.navigate(['/dashboard']);
         } else if ((x as any).success === false) {
           this.mensaje = 'Login fallido. Verifica tus datos.';
@@ -104,7 +97,7 @@ export class LoginComponent {
       "apellido": this.apellido,
       "rol": this.rol,
       "email": this.email,
-      "clave": btoa(this.clave)
+      "clave": (this.clave)
     }
     this.loginService.Register(obj).subscribe({
       next: (response) => {
