@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.actividades-main {
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 64px); /* Resta la altura de la navbar */
+  padding: 2rem;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.actividades-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.actividades-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.actividades-subtitle {
+  font-size: 1.1rem;
+  color: #4b5563;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.table-container {
+  background-color: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.07);
+  padding: 1.5rem;
+  overflow-x: auto; /* Para responsividad en pantallas pequeñas */
+}
+
+.actividades-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.actividades-table thead {
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.actividades-table th {
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4b5563;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.actividades-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s ease;
+}
+
+.actividades-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.actividades-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.actividades-table td {
+  padding: 1rem;
+  font-size: 0.95rem;
+  color: #111827;
+  vertical-align: middle;
+}
+
+/* Estilos para los Badges de Estado */
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 99px; /* Píldora */
+  text-align: center;
+}
+
+.badge-activa {
+  color: #155724;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+}
+
+.badge-completa {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+}
+
+.badge-proximamente {
+  color: #0c5460;
+  background-color: #d1ecf1;
+  border: 1px solid #bee5eb;
+}
+
+/* Animaciones (opcional, pero recomendado) */
+.animate-fadein {
+	animation: fadein 0.8s ease-out both;
+}
+
+.animate-slidein {
+	animation: slidein 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slidein {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

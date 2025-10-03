@@ -1,0 +1,46 @@
+<app-navbar></app-navbar>
+<div class="actividades-main">
+  <div class="actividades-header animate-fadein">
+    <h1 class="actividades-title">Actividades del Club</h1>
+    <p class="actividades-subtitle">Consulta los detalles, cupos y horarios de todas nuestras actividades.</p>
+  </div>
+
+  <div class="table-container animate-slidein">
+    <table class="actividades-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Profesor</th>
+          <th>Inscriptos / Cupo</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Ejemplo de datos, esto se llenaría con un *ngFor -->
+        <tr>
+          <td>1</td>
+          <td>Clase de Yoga</td>
+          <td>Ana Pérez</td>
+          <td>15 / 20</td>
+          <td><span class="badge badge-activa">Activa</span></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Entrenamiento Funcional</td>
+          <td>Juan García</td>
+          <td>15 / 15</td>
+          <td><span class="badge badge-completa">Completa</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Clase de Spinning</td>
+          <td>Laura Martínez</td>
+          <td>0 / 25</td>
+          <td><span class="badge badge-proximamente">Próximamente</span></td>
+        </tr>
+        <!-- Fin del ejemplo -->
+      </tbody>
+    </table>
+  </div>
+</div>
