@@ -30,53 +30,39 @@ export class LoginComponent {
   datasourceLogin: any;
   mensaje: any;
 
-  ngOnInit(): void {
-    // Si hay datos guardados y recordarDatos, redirigir automáticamente
-    const record = localStorage.getItem('recordarDatos');
-    const email = localStorage.getItem('email');
-    const clave = localStorage.getItem('clave');
-    if (record === 'true' && email && clave) {
-      this.router.navigate(['/dashboard']);
-    }
-  }
-
   activeTab: 'login' | 'register' = 'login';
 
 
-  onLogin() {
-    let obj = {
-      "email": this.email,
-      "clave": this.clave
-    }
-    this.loginService.Login(obj).subscribe({
-      next: (x) => {
-        this.datasourceLogin = x;
-        if ((x as any).success === true) {
-          this.loginService.setLoggedIn(true);
-          this.mensaje = '¡Login exitoso!';
-          this.mensajeTipo = 'success';
-          localStorage.setItem('recordarDatos', 'true');
-          localStorage.setItem('email', this.email);
-          localStorage.setItem('clave', this.clave);
-          this.router.navigate(['/dashboard']);
-        } else if ((x as any).success === false) {
-          this.mensaje = 'Login fallido. Verifica tus datos.';
-          this.mensajeTipo = 'error';
-        } else {
-          this.mensaje = '';
-          this.mensajeTipo = '';
-        }
-        this.resetForm();
-        setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
-      },
-      error: () => {
-        this.mensaje = 'Error de conexión.';
-        this.mensajeTipo = 'error';
-        this.resetForm();
-        setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
-      }
-    });
+onLogin() {
+  let obj = {
+    "email": this.email,
+    "clave": this.clave
   }
+
+  this.loginService.Login(obj).subscribe({
+    next: (x: any) => {
+      if (x.success === true && x.data?.token) {
+        this.loginService.setToken(x.data.token);
+        this.mensaje = '¡Login exitoso!';
+        this.mensajeTipo = 'success';
+        this.router.navigate(['/dashboard']);
+      } else {
+        this.mensaje = 'Login fallido. Verifica tus datos.';
+        this.mensajeTipo = 'error';
+      }
+
+      this.resetForm();
+      setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
+    },
+    error: () => {
+      this.mensaje = 'Error de conexión.';
+      this.mensajeTipo = 'error';
+      this.resetForm();
+      setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
+    }
+  });
+}
+
 
   onRegister() {
     if (!this.dni || !this.nombre || !this.apellido || !this.email || !this.clave || !this.confirmarClave) {

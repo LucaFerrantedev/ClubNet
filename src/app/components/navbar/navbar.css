@@ -56,6 +56,11 @@
 	background-color: #374151;
 }
 
+.navbar-link.active-link {
+	color: #fff;
+	background-color: #374151;
+}
+
 /* =================================
    Navbar Dropdown (Usuario)
    ================================= */

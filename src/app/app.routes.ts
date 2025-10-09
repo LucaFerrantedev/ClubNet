@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from './guards/auth.guard';
 import { ContainerComponent } from './components/container/container';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ActividadesComponent } from './components/actividades/actividades.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -25,7 +25,7 @@ export const routes: Routes = [
   {
     path: "dashboard",
     component: ContainerComponent,
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
     children: [
       { path: "", component: DashboardComponent }
     ]
@@ -33,7 +33,7 @@ export const routes: Routes = [
   {
     path: "actividades",
     component: ContainerComponent,
-    //canActivate: [AuthGuard],
+    canActivate: [authGuard],
     children: [
       { path: "", component: ActividadesComponent }
     ]

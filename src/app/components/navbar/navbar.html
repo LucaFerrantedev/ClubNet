@@ -4,10 +4,9 @@
     <span class="navbar-title">ClubNet</span>
   </div>
   <div class="navbar-links">
-    <a class="navbar-link" href="#">Inicio</a>
-    <a class="navbar-link" href="#">Socios</a>
-    <a class="navbar-link" href="/dashboard/actividades">Actividades</a>
-    <a class="navbar-link" href="#">Contacto</a>
+    <a class="navbar-link" routerLink="/home" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
+    <a class="navbar-link" routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
+    <a class="navbar-link" routerLink="/actividades" routerLinkActive="active-link">Actividades</a>
   </div>
   <div class="navbar-user">
     <div class="navbar-user-dropdown">

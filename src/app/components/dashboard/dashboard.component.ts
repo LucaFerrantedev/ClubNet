@@ -24,15 +24,15 @@ export class DashboardComponent implements OnInit {
   dni = '';
 
   ngOnInit(): void {
-    this.email = localStorage.getItem('email') || '';
-    this.nombre = localStorage.getItem('nombre') || '';
-    this.apellido = localStorage.getItem('apeallido') || '';
-    this.dni = localStorage.getItem('dni') || '';
-    if (this.email) {
-      this.CargarUsuario(this.email);
-    } else {
-      console.error("No se encontró un email en localStorage. No se puede cargar el usuario.");
-    }
+    // this.email = localStorage.getItem('email') || '';
+    // this.nombre = localStorage.getItem('nombre') || '';
+    // this.apellido = localStorage.getItem('apeallido') || '';
+    // this.dni = localStorage.getItem('dni') || '';
+    // if (this.email) {
+    //   this.CargarUsuario(this.email);
+    // } else {
+    //   console.error("No se encontró un email en localStorage. No se puede cargar el usuario.");
+    // }
   }
 
   CargarUsuario(email: string) {
