@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
@@ -11,13 +11,20 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './login.css',
   standalone: true
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   mensajeTipo = '';
 
   constructor(private loginService: LoginService, private router: Router) { }
 
-  // Todos los registrados son usuarios normales por defecto
+  // Si el usuario ya está autenticado, redirigir al dashboard
+  ngOnInit(): void {
+    if (this.loginService.isUserAuthenticated()) {
+      this.router.navigate(['/dashboard']);
+    }
+  }
+
+  // Todos los registrados son usuarios normales (rol 3) por defecto
   dni: string = '';
   nombre: string = '';
   apellido: string = '';
@@ -30,9 +37,10 @@ export class LoginComponent {
   datasourceLogin: any;
   mensaje: any;
 
+  // Controla la pestaña activa (login o register)
   activeTab: 'login' | 'register' = 'login';
 
-
+// Esto pasa cuando se apreta el boton de iniciar sesion
 onLogin() {
   let obj = {
     "email": this.email,
@@ -43,6 +51,7 @@ onLogin() {
     next: (x: any) => {
       if (x.success === true && x.data?.token) {
         this.loginService.setToken(x.data.token);
+        localStorage.setItem('email', this.email);
         this.mensaje = '¡Login exitoso!';
         this.mensajeTipo = 'success';
         this.router.navigate(['/dashboard']);
@@ -51,9 +60,11 @@ onLogin() {
         this.mensajeTipo = 'error';
       }
 
+      // Resetea los campos del formulario
       this.resetForm();
       setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
     },
+    // Error de cuando no se puede conectar al backend
     error: () => {
       this.mensaje = 'Error de conexión.';
       this.mensajeTipo = 'error';
@@ -63,7 +74,7 @@ onLogin() {
   });
 }
 
-
+  // Esto pasa cuando se apreta el boton de registrarse
   onRegister() {
     if (!this.dni || !this.nombre || !this.apellido || !this.email || !this.clave || !this.confirmarClave) {
       this.mensaje = 'Todos los campos son obligatorios.';

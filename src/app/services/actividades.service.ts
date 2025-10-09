@@ -11,7 +11,13 @@ export class ActividadesService {
 
   constructor(private http: HttpClient, private loginService: LoginService) {}
 
-  getActividades() {
-    return this.http.get(this.url + "/GetActividades");
+  GetActividades() {
+    const headers = this.loginService.getAuthHeaders();
+    return this.http.get(this.url + "/GetActividades", { headers: headers });
+  }
+
+  CreateActividad(obj: any) {
+    const headers = this.loginService.getAuthHeaders();
+    return this.http.post(this.url + "/CreateActividad", obj, { headers: headers });
   }
 }

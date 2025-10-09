@@ -10,37 +10,65 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>Nombre</th>
+          <th class="nombre-col">Nombre</th>
           <th>Profesor</th>
           <th>Inscriptos / Cupo</th>
           <th>Estado</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <!-- Ejemplo de datos, esto se llenaría con un *ngFor -->
+        @if (isLoading) {
         <tr>
-          <td>1</td>
-          <td>Clase de Yoga</td>
-          <td>Ana Pérez</td>
-          <td>15 / 20</td>
-          <td><span class="badge badge-activa">Activa</span></td>
+          <td colspan="6" class="loading-cell">Cargando actividades...</td>
         </tr>
+        }
+        @for (actividad of actividades; track actividad.id) {
         <tr>
-          <td>2</td>
-          <td>Entrenamiento Funcional</td>
-          <td>Juan García</td>
-          <td>15 / 15</td>
-          <td><span class="badge badge-completa">Completa</span></td>
+          <td>{{ actividad.id }}</td>
+          <td>{{ actividad.nombre }}</td>
+          <td>{{ actividad.profesor || 'No asignado' }}</td>
+          <td>{{ actividad.inscriptos || 0 }} / {{ actividad.cupo }}</td>
+          <td><span class="badge" [ngClass]="'badge-' + (actividad.estado?.toLowerCase() || 'default')">{{
+              actividad.estado || 'No definido' }}</span></td>
+          <td>
+            <button class="btn-ver-mas" (click)="openModal(actividad)" title="Ver detalles">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </td>
         </tr>
+        } @empty {
+        @if (!isLoading) {
         <tr>
-          <td>4</td>
-          <td>Clase de Spinning</td>
-          <td>Laura Martínez</td>
-          <td>0 / 25</td>
-          <td><span class="badge badge-proximamente">Próximamente</span></td>
+          <td colspan="6" class="no-actividades">No hay actividades disponibles.</td>
         </tr>
-        <!-- Fin del ejemplo -->
+        }
+        }
       </tbody>
     </table>
   </div>
 </div>
+
+<!-- Modal -->
+@if (selectedActividad) {
+<div class="modal-backdrop" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="closeModal()">&times;</button>
+    <h2 class="modal-title">{{ selectedActividad.nombre }}</h2>
+    @if (selectedActividad.imagenUrl) {
+    <div class="modal-image-container">
+      <img [src]="selectedActividad.imagenUrl" [alt]="'Imagen de ' + selectedActividad.nombre" class="modal-image">
+    </div>
+    } @else {
+    <div class="modal-image-placeholder"><span>Imagen no disponible</span></div>
+    }
+    <div class="modal-body">
+      <p>{{ selectedActividad.descripcion }}</p>
+    </div>
+  </div>
+</div>
+}

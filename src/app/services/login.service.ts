@@ -33,6 +33,7 @@ export class LoginService {
 
   logout(): void {
     this.removeToken();
+    localStorage.removeItem('email');
   }
 
   getAuthHeaders(): HttpHeaders {
