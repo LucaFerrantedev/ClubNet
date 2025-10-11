@@ -44,11 +44,12 @@
             </div>
             <div class="modern-input-group">
                 <i class="fa fa-lock"></i>
-                <input type="password" placeholder="Confirmar contraseña" required [(ngModel)]="confirmarClave" name="confirmarClave" />
+                <input type="password" placeholder="Confirmar contraseña" required [(ngModel)]="confirmarClave"
+                    name="confirmarClave" />
             </div>
             <button class="modern-btn-main" type="submit">Registrarse</button>
         </form>
-    <div *ngIf="mensaje" class="modern-message" [ngClass]="mensajeTipo">{{ mensaje }}</div>
+        <div *ngIf="mensaje" class="modern-message" [ngClass]="mensajeTipo">{{ mensaje }}</div>
     </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">

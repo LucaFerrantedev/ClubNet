@@ -5,16 +5,46 @@
     <p class="actividades-subtitle">Consulta los detalles, cupos y horarios de todas nuestras actividades.</p>
   </div>
 
+  @if (esAdmin) {
+  <div class="table-container animate-fadein">
+    <h2 class="form-title">Crear Nueva Actividad</h2>
+    <form (ngSubmit)="CrearActividad()" #actividadForm="ngForm">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" name="nombre" [(ngModel)]="nombre" required>
+        </div>
+        <div class="form-group">
+          <label for="cupo">Cupo</label>
+          <input type="number" id="cupo" name="cupo" [(ngModel)]="cupo" required>
+        </div>
+        <div class="form-group">
+          <label for="cuota_valor">Valor Cuota</label>
+          <input type="number" id="cuota_valor" name="cuota_valor" [(ngModel)]="cuota_valor" required>
+        </div>
+        <div class="form-group">
+          <label for="descripcion">Descripción</label>
+          <textarea id="descripcion" name="descripcion" [(ngModel)]="descripcion"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="imagenUrl">Imagen URL</label>
+          <textarea id="imagenUrl" name="imagenUrl" [(ngModel)]="url_imagen"></textarea>
+        </div>
+      </div>
+      <button type="submit" class="btn-crear" [disabled]="!actividadForm.form.valid">Crear Actividad</button>
+    </form>
+  </div>
+  }
+
   <div class="table-container animate-slidein">
     <table class="actividades-table">
       <thead>
         <tr>
-          <th>ID</th>
           <th class="nombre-col">Nombre</th>
           <th>Profesor</th>
           <th>Inscriptos / Cupo</th>
           <th>Estado</th>
-          <th>Acciones</th>
+          <th>Ver mas</th>
         </tr>
       </thead>
       <tbody>
@@ -23,14 +53,13 @@
           <td colspan="6" class="loading-cell">Cargando actividades...</td>
         </tr>
         }
-        @for (actividad of actividades; track actividad.id) {
+        @for (actividad of actividades; track actividad.actividad_id) {
         <tr>
-          <td>{{ actividad.id }}</td>
           <td>{{ actividad.nombre }}</td>
           <td>{{ actividad.profesor || 'No asignado' }}</td>
           <td>{{ actividad.inscriptos || 0 }} / {{ actividad.cupo }}</td>
-          <td><span class="badge" [ngClass]="'badge-' + (actividad.estado?.toLowerCase() || 'default')">{{
-              actividad.estado || 'No definido' }}</span></td>
+          <td><span class="badge" [ngClass]="actividad.estado ? 'badge-activo' : 'badge-inactivo'">{{
+              actividad.estado ? 'Activo' : 'Inactivo' }}</span></td>
           <td>
             <button class="btn-ver-mas" (click)="openModal(actividad)" title="Ver detalles">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -59,9 +88,9 @@
   <div class="modal-content" (click)="$event.stopPropagation()">
     <button class="modal-close" (click)="closeModal()">&times;</button>
     <h2 class="modal-title">{{ selectedActividad.nombre }}</h2>
-    @if (selectedActividad.imagenUrl) {
+    @if (selectedActividad.url_imagen) {
     <div class="modal-image-container">
-      <img [src]="selectedActividad.imagenUrl" [alt]="'Imagen de ' + selectedActividad.nombre" class="modal-image">
+      <img [src]="selectedActividad.url_imagen" [alt]="'Imagen de ' + selectedActividad.nombre" class="modal-image">
     </div>
     } @else {
     <div class="modal-image-placeholder"><span>Imagen no disponible</span></div>

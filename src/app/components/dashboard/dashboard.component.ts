@@ -14,10 +14,10 @@ import { DashboardService } from '../../services/dashboard.service';
 export class DashboardComponent implements OnInit {
 
   constructor(
-    private service:DashboardService,
-    private router: Router) {}
+    private service: DashboardService,
+    private router: Router) { }
   DataSourceUsuario: any;
-  
+
   email = '';
   nombre = '';
   apellido = '';
@@ -25,9 +25,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.email = localStorage.getItem('email') || '';
-    // this.nombre = localStorage.getItem('nombre') || '';
-    // this.apellido = localStorage.getItem('apeallido') || '';
-    // this.dni = localStorage.getItem('dni') || '';
     if (this.email) {
       this.CargarUsuario(this.email);
     } else {
