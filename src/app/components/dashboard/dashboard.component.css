@@ -138,6 +138,26 @@
 	border: 1px solid #e9ecef;
 	color: #2c3e50;
 	font-weight: 500;
+	max-height: 150px;
+	overflow-y: auto;
+	text-align: left;  
+	line-height: 1.6;  
+	white-space: pre-wrap; 
+}
+
+/* Estilos para la barra de desplazamiento (opcional, para un look más moderno) */
+.sugerencia-resultado::-webkit-scrollbar {
+	width: 8px;
+}
+
+.sugerencia-resultado::-webkit-scrollbar-track {
+	background: #f1f1f1;
+	border-radius: 10px;
+}
+
+.sugerencia-resultado::-webkit-scrollbar-thumb {
+	background: #ccc;
+	border-radius: 10px;
 }
 
 .animate-fadein {

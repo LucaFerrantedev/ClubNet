@@ -96,7 +96,7 @@ export class DashboardComponent implements OnInit {
         this.cargando = false;
       },
       error: () => {
-        this.sugerencia = 'Hubo un error al generar la sugerencia.';
+        this.sugerencia = '¡😐 Algo salio mal! Intenta de nuevo.';
         this.cargando = false;
       }
     });
