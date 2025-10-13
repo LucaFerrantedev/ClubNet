@@ -15,9 +15,12 @@ export class ActividadesComponent implements OnInit {
   actividades: any[] = [];
   selectedActividad: any | null = null;
   isLoading = true;
+  isEditMode = false;
+  actividadParaEditar: any = {};
 
   nombre: any;
   descripcion: any;
+
   cupo: number = 0;
   cuota_valor: number = 0;
   estado: boolean = true;
@@ -54,9 +57,6 @@ export class ActividadesComponent implements OnInit {
     });
   }
 
-  openModal(actividad: any) { this.selectedActividad = actividad; }
-  closeModal() { this.selectedActividad = null; }
-
   CrearActividad() {
     if (!this.esAdmin) {
       console.error('Acción no permitida. El usuario no es administrador.');
@@ -77,10 +77,64 @@ export class ActividadesComponent implements OnInit {
       next: () => {
         console.log('Actividad creada con éxito');
         this.CargarActividades(); // Recargar la lista de actividades
-        this.resetForm(); // Limpiar el formulario
+        this.resetFormulario(); // Limpiar el formulario
       },
       error: (err) => console.error('Error al crear la actividad:', err)
     });
+  }
+
+  ModificarActividad() {
+    if (!this.esAdmin) {
+      console.error('Acción no permitida. El usuario no es administrador.');
+      return;
+    }
+
+    // para asegurar que los valores sean numeros
+    this.actividadParaEditar.cupo = Number(this.actividadParaEditar.cupo);
+    this.actividadParaEditar.cuota_valor = Number(this.actividadParaEditar.cuota_valor);
+
+    this.actividadesService.UpdateActividad(this.actividadParaEditar).subscribe({
+      next: () => {
+        console.log('Actividad modificada con éxito');
+        this.CargarActividades(); // recarga la lista de actividades
+        this.resetFormulario(); // limpia el formulario
+        this.cerrarModal(); // y cierra el modal
+      },
+      error: (err) => console.error('Error al modificar la actividad:', err)
+    });
+  }
+
+  EliminarActividad(id: number) {
+    if (!this.esAdmin) {
+      console.error('Acción no permitida. El usuario no es administrador.');
+      return;
+    }
+
+    this.actividadesService.DeleteActividad(id).subscribe({
+      next: () => {
+        console.log('Actividad eliminada con éxito');
+        this.CargarActividades(); // recarga la lista de actividades
+        this.cerrarModal(); // cierra el modal
+      },
+      error: (err) => console.error('Error al eliminar la actividad:', err)
+    });
+  }
+
+
+  abrirModal(actividad: any, editMode: boolean = false) {
+    this.selectedActividad = actividad;
+    this.actividadParaEditar = { ...actividad }; // Clonar para edición
+    this.isEditMode = editMode;
+  }
+
+  cerrarModal() {
+    this.selectedActividad = null;
+    this.isEditMode = false;
+    this.actividadParaEditar = {};
+  }
+
+  toggleEditMode(): void {
+    this.isEditMode = !this.isEditMode;
   }
 
   CargarUsuario(email: string) {
@@ -96,7 +150,7 @@ export class ActividadesComponent implements OnInit {
     });
   }
 
-  resetForm() {
+  resetFormulario() {
     this.nombre = '';
     this.descripcion = '';
     this.cupo = 0;

@@ -1,13 +1,38 @@
 <app-navbar></app-navbar>
 <div class="dashboard-main">
-	<div class="dashboard-card animate-fadein">
-		<h2 class="dashboard-title">Hola 👋</h2>
-		<div class="dashboard-user-info">
-			<div><strong>Email:</strong> {{ DataSourceUsuario?.email }}</div>
-			<div><strong>Nombre:</strong> {{ DataSourceUsuario?.nombre }}</div>
-			<div><strong>Apellido:</strong> {{ DataSourceUsuario?.apellido }}</div>
-			<div><strong>DNI:</strong> {{ DataSourceUsuario?.dni }}</div>
-			<div><strong>Rol:</strong> {{ getRolTexto(DataSourceUsuario?.rol_id) }}</div>
+	<div class="dashboard-container">
+		<div class="dashboard-card animate-fadein">
+			<h2 class="dashboard-title">Hola 👋</h2>
+			<div class="dashboard-user-info">
+				<div><strong>Email:</strong> {{ DataSourceUsuario?.email }}</div>
+				<div><strong>Nombre:</strong> {{ DataSourceUsuario?.nombre }}</div>
+				<div><strong>Apellido:</strong> {{ DataSourceUsuario?.apellido }}</div>
+				<div><strong>DNI:</strong> {{ DataSourceUsuario?.dni }}</div>
+				<div><strong>Rol:</strong> {{ getRolTexto(DataSourceUsuario?.rol_id) }}</div>
+			</div>
+		</div>
+
+		<div class="sugerencia-card animate-fadein">
+			<h3 class="sugerencia-title">Sugerencia de Actividad</h3>
+			<p class="sugerencia-descripcion">¿No sabes qué hacer? ¡Deja que nuestra IA te recomiende una actividad!</p>
+			<div class="sugerencia-form">
+				<div class="form-group">
+					<label for="edad">Tu Edad</label>
+					<input type="number" id="edad" [(ngModel)]="edadUsuario" placeholder="Ej: 25" required>
+				</div>
+				<div class="form-group">
+					<label for="intereses">Tus Intereses (separados por coma)</label>
+					<input type="text" id="intereses" [(ngModel)]="interesesUsuario" placeholder="Ej: fútbol, lectura" required>
+				</div>
+				<div class="form-group">
+					<label for="historial">Actividades Previas (opcional)</label>
+					<input type="text" id="historial" [(ngModel)]="historialUsuario" placeholder="Ej: tenis, gimnasio">
+				</div>
+			</div>
+			<button class="btn-sugerencia" (click)="pedirSugerencia()" [disabled]="cargando">
+				{{ cargando ? 'Generando...' : 'Obtener sugerencia' }}
+			</button>
+			<p class="sugerencia-resultado" *ngIf="sugerencia || cargando">{{ cargando ? 'Generando...' : sugerencia }}</p>
 		</div>
 	</div>
 </div>

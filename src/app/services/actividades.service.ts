@@ -21,7 +21,19 @@ export class ActividadesService {
     return this.http.post(this.url + "/CreateActividad", obj, { headers: headers });
   }
 
+  UpdateActividad(obj: any) {
+    const headers = this.loginService.getAuthHeaders();
+    return this.http.put(this.url + "/UpdateActividad", obj, { headers: headers });
+  }
+
+  DeleteActividad(id: number) {
+    const headers = this.loginService.getAuthHeaders();
+
+    return this.http.delete(this.url + "/DeleteActividad?id=" + id, { headers: headers });
+  }
+
   GetUsuario(email: string) {
-    return this.http.get(this.url_user + "/GetUsuario?email=" + email);
+    const headers = this.loginService.getAuthHeaders();
+    return this.http.get(this.url_user + "/GetUsuario?email=" + email, { headers: headers });
   }
 }

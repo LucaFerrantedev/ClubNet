@@ -1,16 +1,15 @@
 <nav class="navbar">
-  <div class="navbar-logo">
+  <div class="navbar-logo" style="cursor: pointer;" routerLink="/home" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
     <img src="https://img.icons8.com/color/48/football2.png" alt="Logo Club" height="40" />
     <span class="navbar-title">ClubNet</span>
   </div>
   <div class="navbar-links">
-    <a class="navbar-link" routerLink="/home" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
     <a class="navbar-link" routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
     <a class="navbar-link" routerLink="/actividades" routerLinkActive="active-link">Actividades</a>
   </div>
   <div class="navbar-user">
     <div class="navbar-user-dropdown">
-      <span class="navbar-user-label">Usuario</span>
+      <span class="navbar-user-label">Cuenta</span>
       <div class="navbar-dropdown-content">
         <a href="#" (click)="logout()">Cerrar sesión</a>
       </div>

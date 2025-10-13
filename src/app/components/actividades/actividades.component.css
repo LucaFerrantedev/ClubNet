@@ -63,6 +63,7 @@
 }
 
 .form-group input,
+.form-group select,
 .form-group textarea {
     width: 100%;
     padding: 0.8rem 1rem;
@@ -224,6 +225,113 @@
     font-size: 1.1rem;
     line-height: 1.6;
     color: #555;
+}
+
+.modal-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.btn-editar, .btn-guardar, .btn-cancelar {
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-editar {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-editar:hover {
+    background-color: #2980b9;
+}
+
+.btn-guardar {
+    background-color: #27ae60;
+    color: white;
+}
+
+.btn-guardar:hover:not(:disabled) {
+    background-color: #229954;
+}
+
+.btn-guardar:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.btn-cancelar {
+    background-color: #ecf0f1;
+    color: #34495e;
+    border: 1px solid #bdc3c7;
+}
+
+/* Estilos para los botones de acción en la tabla */
+.actions-cell {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.btn-ver-mas {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease-in-out;
+    color: #7f8c8d;
+}
+
+.btn-editar-tabla {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease-in-out;
+    color: #bd9f5f;
+}
+
+.btn-eliminar-tabla {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease-in-out;
+    color: #bd5f5f;
+}
+
+.btn-ver-mas:hover {
+    background-color: #ecf0f1;
+    color: #3498db;
+}
+
+.btn-editar-tabla:hover {
+    background-color: #ecf0f1;
+    color: #dbae34;
+}
+
+.btn-eliminar-tabla:hover {
+    background-color: #ecf0f1;
+    color: #db3434;
 }
 
 @keyframes slideInUp {
