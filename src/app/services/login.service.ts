@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,14 @@ export class LoginService {
   constructor(private httpClient: HttpClient) { }
 
   Login(obj: any): Observable<any> {
-    return this.httpClient.post(`${this.url}/Login`, obj);
+    return this.httpClient.post<any>(`${this.url}/Login`, obj).pipe(
+      tap(response => {
+        // La respuesta del backend viene en la propiedad 'data'
+        if (response && response.data && response.data.token) {
+          this.setToken(response.data.token);
+        }
+      })
+    );
   }
 
   Register(obj: any): Observable<any> {

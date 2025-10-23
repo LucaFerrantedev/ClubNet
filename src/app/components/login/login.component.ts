@@ -40,39 +40,41 @@ export class LoginComponent implements OnInit {
   // Controla la pestaña activa (login o register)
   activeTab: 'login' | 'register' = 'login';
 
-// Esto pasa cuando se apreta el boton de iniciar sesion
-onLogin() {
-  let obj = {
-    "email": this.email,
-    "clave": this.clave
-  }
-
-  this.loginService.Login(obj).subscribe({
-    next: (x: any) => {
-      if (x.success === true && x.data?.token) {
-        this.loginService.setToken(x.data.token);
-        localStorage.setItem('email', this.email);
-        this.mensaje = '¡Login exitoso!';
-        this.mensajeTipo = 'success';
-        this.router.navigate(['/dashboard']);
-      } else {
-        this.mensaje = 'Login fallido. Verifica tus datos.';
-        this.mensajeTipo = 'error';
-      }
-
-      // Resetea los campos del formulario
-      this.resetForm();
-      setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
-    },
-    // Error de cuando no se puede conectar al backend
-    error: () => {
-      this.mensaje = 'Error de conexión.';
-      this.mensajeTipo = 'error';
-      this.resetForm();
-      setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
+  // Esto pasa cuando se apreta el boton de iniciar sesion
+  onLogin() {
+    let obj = {
+      "email": this.email,
+      "clave": this.clave
     }
-  });
-}
+
+    this.loginService.Login(obj).subscribe({
+      next: (x: any) => {
+        // 1. Cambia la condición: Comprueba que x.data exista y no sea nulo.
+        if (x.success === true && x.data) {
+          // 2. Cambia la asignación: Pasa x.data (que es el token) directamente.
+          this.loginService.setToken(x.data);
+          localStorage.setItem('email', this.email);
+          this.mensaje = '¡Login exitoso!';
+          this.mensajeTipo = 'success';
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.mensaje = 'Login fallido. Verifica tus datos.';
+          this.mensajeTipo = 'error';
+        }
+
+        // Resetea los campos del formulario
+        this.resetForm();
+        setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
+      },
+      // Error de cuando no se puede conectar al backend
+      error: () => {
+        this.mensaje = 'Error de conexión.';
+        this.mensajeTipo = 'error';
+        this.resetForm();
+        setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
+      }
+    });
+  }
 
   // Esto pasa cuando se apreta el boton de registrarse
   onRegister() {
