@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
@@ -11,13 +11,20 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './login.css',
   standalone: true
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   mensajeTipo = '';
 
   constructor(private loginService: LoginService, private router: Router) { }
 
-  // Todos los registrados son usuarios normales por defecto
+  // Si el usuario ya está autenticado, redirigir al dashboard
+  ngOnInit(): void {
+    if (this.loginService.isUserAuthenticated()) {
+      this.router.navigate(['/dashboard']);
+    }
+  }
+
+  // Todos los registrados son usuarios normales (rol 3) por defecto
   dni: string = '';
   nombre: string = '';
   apellido: string = '';
@@ -30,45 +37,36 @@ export class LoginComponent {
   datasourceLogin: any;
   mensaje: any;
 
-  ngOnInit(): void {
-    // Si hay datos guardados y recordarDatos, redirigir automáticamente
-    const record = localStorage.getItem('recordarDatos');
-    const email = localStorage.getItem('email');
-    const clave = localStorage.getItem('clave');
-    if (record === 'true' && email && clave) {
-      this.router.navigate(['/dashboard']);
-    }
-  }
-
+  // Controla la pestaña activa (login o register)
   activeTab: 'login' | 'register' = 'login';
 
-
+  // Esto pasa cuando se apreta el boton de iniciar sesion
   onLogin() {
     let obj = {
       "email": this.email,
       "clave": this.clave
     }
+
     this.loginService.Login(obj).subscribe({
-      next: (x) => {
-        this.datasourceLogin = x;
-        if ((x as any).success === true) {
-          this.loginService.setLoggedIn(true);
+      next: (x: any) => {
+        // 1. Cambia la condición: Comprueba que x.data exista y no sea nulo.
+        if (x.success === true && x.data) {
+          // 2. Cambia la asignación: Pasa x.data (que es el token) directamente.
+          this.loginService.setToken(x.data);
+          localStorage.setItem('email', this.email);
           this.mensaje = '¡Login exitoso!';
           this.mensajeTipo = 'success';
-          localStorage.setItem('recordarDatos', 'true');
-          localStorage.setItem('email', this.email);
-          localStorage.setItem('clave', this.clave);
           this.router.navigate(['/dashboard']);
-        } else if ((x as any).success === false) {
+        } else {
           this.mensaje = 'Login fallido. Verifica tus datos.';
           this.mensajeTipo = 'error';
-        } else {
-          this.mensaje = '';
-          this.mensajeTipo = '';
         }
+
+        // Resetea los campos del formulario
         this.resetForm();
         setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
       },
+      // Error de cuando no se puede conectar al backend
       error: () => {
         this.mensaje = 'Error de conexión.';
         this.mensajeTipo = 'error';
@@ -78,6 +76,7 @@ export class LoginComponent {
     });
   }
 
+  // Esto pasa cuando se apreta el boton de registrarse
   onRegister() {
     if (!this.dni || !this.nombre || !this.apellido || !this.email || !this.clave || !this.confirmarClave) {
       this.mensaje = 'Todos los campos son obligatorios.';

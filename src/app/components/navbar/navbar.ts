@@ -1,18 +1,21 @@
 import { Component } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-navbar',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css'
 })
 export class NavbarComponent {
+
+  constructor(
+    private loginService: LoginService, private router: Router) {}
+
   logout() {
-    localStorage.removeItem('recordarDatos');
-    localStorage.removeItem('email');
-    localStorage.removeItem('clave');
-    localStorage.removeItem('rol');
-    window.location.href = '/login';
+    this.loginService.logout();
+    this.router.navigate(['/login']);
   }
 
 }
