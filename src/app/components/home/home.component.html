@@ -8,27 +8,15 @@
   <section class="landing-section">
     <h2 class="landing-section-title animate-fadein">Nuestras disciplinas</h2>
     <div class="landing-cards">
+      @for (actividad of DataSource; track actividad.actividad_id) {
       <div class="landing-card animate-card">
-        <img src="https://cegresados.udlap.mx/wp-content/uploads/2022/10/soccer-player-action-on-the-stadium-scaled.jpg" alt="Fútbol" />
+        <img [src]="actividad.url_imagen" [alt]="actividad.nombre" />
         <div class="landing-card-content">
-          <h3>Fútbol</h3>
-          <p>Entrena, compite y vive la pasión del fútbol en nuestras canchas de primer nivel.</p>
+          <h3>{{actividad.nombre}}</h3>
+          <p>{{actividad.descripcion}}</p>
         </div>
       </div>
-      <div class="landing-card animate-card" style="animation-delay: 0.15s;">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3twMY_uwigMOThaA4dZG6cvMMctA15Tt7lg&s" alt="Natación" />
-        <div class="landing-card-content">
-          <h3>Natación</h3>
-          <p>Piscinas climatizadas y entrenadores certificados para tu desarrollo deportivo.</p>
-        </div>
-      </div>
-      <div class="landing-card animate-card" style="animation-delay: 0.3s;">
-        <img src="https://www.sportmonde.com/wp-content/uploads/2020/04/tennis.jpg" alt="Tenis" />
-        <div class="landing-card-content">
-          <h3>Tenis</h3>
-          <p>Clases, torneos y canchas de primer nivel para todos los socios.</p>
-        </div>
-      </div>
+    }
     </div>
   </section>
   <section class="landing-benefits">
