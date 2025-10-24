@@ -21,6 +21,7 @@ export class DashboardComponent implements OnInit {
     private router: Router,
     private ia: IAService) { }
   DataSourceUsuario: any;
+  isDarkMode = false;
   
   email = '';
   nombre = '';
@@ -42,6 +43,11 @@ export class DashboardComponent implements OnInit {
     } else {
       console.error("No se encontró un email en localStorage. No se puede cargar el usuario.");
     }
+
+    // Cargar preferencia de modo oscuro
+    const darkModePref = localStorage.getItem('darkMode');
+    this.isDarkMode = darkModePref === 'true';
+    this.applyDarkMode();
   }
 
   CargarUsuario(email: string) {
@@ -102,9 +108,18 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
+    localStorage.setItem('darkMode', this.isDarkMode.toString());
+    this.applyDarkMode();
+  }
 
-
-
-
-
+  private applyDarkMode(): void {
+    const body = document.body;
+    if (this.isDarkMode) {
+      body.classList.add('dark-mode');
+    } else {
+      body.classList.remove('dark-mode');
+    }
+  }
 }

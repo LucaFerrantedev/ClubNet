@@ -7,7 +7,7 @@ import { Observable, tap } from 'rxjs';
 })
 export class LoginService {
   private tokenKey = 'authToken';
-  url = "https://localhost:7121/api/Login"; // Asegúrate que esta URL es correcta
+  url = "https://localhost:7121/api/login"; // Asegúrate que esta URL es correcta
 
   constructor(private httpClient: HttpClient) { }
 

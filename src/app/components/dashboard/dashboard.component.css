@@ -1,21 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 .dashboard-main {
+	position: relative; /* Para posicionar el botón de modo oscuro */
 	min-height: 100vh;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	font-family: 'Inter', sans-serif;
 	background: linear-gradient(135deg, #eaf6fb 0%, #f7faff 100%);
 	padding: 2rem;
+	transition: background-color 0.3s ease;
 }
 
 .dashboard-container {
+	width: 100%;
+	max-width: 1400px; /* Ancho máximo para el contenido */
+	margin: 0 auto;
+}
+
+.dashboard-grid {
+	display: flex;
+	flex-wrap: wrap; /* Permite que las tarjetas se ajusten en pantallas pequeñas */
+	justify-content: center;
+	align-items: flex-start;
+	gap: 2rem;
+}
+
+.dashboard-column {
 	display: flex;
 	flex-direction: column;
 	gap: 2rem;
-	align-items: center;
 }
 
 .dashboard-card {
 	background: #fff;
+	width: 100%;
 	min-width: 320px;
 	max-width: 400px;
 	display: flex;
@@ -25,6 +44,7 @@
 	border-radius: 2rem;
 	box-shadow: 0 8px 32px 0 #0a6cf122, 0 2px 8px 0 #0a254033;
 	padding: 2.5rem 2.5rem 2rem 2.5rem;
+	transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 .dashboard-title {
 	font-size: 2.2rem;
@@ -32,6 +52,7 @@
 	color: #22314a;
 	margin-bottom: 0.7rem;
 	letter-spacing: 1px;
+	transition: color 0.3s ease;
 }
 .dashboard-user-info {
 	width: 100%;
@@ -44,9 +65,11 @@
 	border-radius: 1.2rem;
 	padding: 1.2rem 1.5rem;
 	box-shadow: 0 1px 4px 0 #0a6cf122;
+	transition: background-color 0.3s ease, color 0.3s ease;
 }
 .dashboard-user-info strong {
 	color: #0a6cf1;
+	transition: color 0.3s ease;
 }
 
 /* Estilos para la tarjeta de sugerencia */
@@ -61,6 +84,15 @@
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
+	transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sugerencia-header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
 }
 
 .sugerencia-title {
@@ -68,12 +100,44 @@
 	font-weight: 600;
 	color: #34495e;
 	margin: 0;
+	transition: color 0.3s ease;
+}
+
+.pills-container {
+	display: flex;
+	gap: 0.75rem;
+	justify-content: center;
+}
+
+.ai-pill {
+	display: inline-block;
+	padding: 0.2rem 0.7rem;
+	font-size: 0.7rem;
+	font-weight: 700;
+	color: #2980b9;
+	background-color: #eaf6ff;
+	border-radius: 1rem;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.experimental-pill {
+	display: inline-block;
+	padding: 0.2rem 0.7rem;
+	font-size: 0.7rem;
+	font-weight: 700;
+	color: #8e44ad;
+	background-color: #f3e5f5;
+	border-radius: 1rem;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
 }
 
 .sugerencia-descripcion {
 	color: #7f8c8d;
 	font-size: 0.95rem;
 	margin-top: -0.5rem;
+	transition: color 0.3s ease;
 }
 
 .sugerencia-form {
@@ -95,6 +159,7 @@
 	font-weight: 600;
 	color: #555;
 	margin-bottom: 0.4rem;
+	transition: color 0.3s ease;
 }
 
 .form-group input {
@@ -103,7 +168,7 @@
 	border-radius: 6px;
 	font-size: 0.95rem;
 	color: #333;
-	transition: border-color 0.3s, box-shadow 0.3s;
+	transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s, color 0.3s;
 }
 
 .btn-sugerencia {
@@ -143,6 +208,7 @@
 	text-align: left;  
 	line-height: 1.6;  
 	white-space: pre-wrap; 
+	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Estilos para la barra de desplazamiento (opcional, para un look más moderno) */
@@ -167,4 +233,138 @@
 	0% { opacity: 0; transform: translateY(30px) scale(0.95); }
 	80% { opacity: 1; transform: translateY(-2px) scale(1.03); }
 	100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* --- Estilos Modo Oscuro --- */
+.dark-mode-toggle {
+	position: absolute;
+	top: 1.5rem;
+	right: 2.5rem;
+	width: 45px;
+	height: 45px;
+	border-radius: 50%;
+	background-color: #fff;
+	color: #111827;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	font-size: 1.5rem;
+	box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+	transition: all 0.3s ease;
+	z-index: 100;
+}
+
+.dark-mode-toggle:hover {
+	transform: scale(1.1) rotate(15deg);
+}
+
+.dashboard-main.dark-mode {
+	background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+}
+
+.dashboard-main.dark-mode .dark-mode-toggle {
+	background-color: #374151;
+	color: #f9fafb;
+}
+
+.dashboard-main.dark-mode .dashboard-card,
+.dashboard-main.dark-mode .sugerencia-card {
+	background: #1f2937;
+	box-shadow: 0 8px 32px 0 #00000033, 0 2px 8px 0 #00000055;
+}
+
+.dashboard-main.dark-mode .dashboard-title,
+.dashboard-main.dark-mode .sugerencia-title {
+	color: #e5e7eb;
+}
+
+.dashboard-main.dark-mode .experimental-pill {
+	background-color: #3e304f;
+	color: #d1c4e9;
+}
+
+.dashboard-main.dark-mode .ai-pill {
+	background-color: #1c3b55;
+	color: #aed6f1;
+}
+
+.dashboard-main.dark-mode .dashboard-user-info {
+	background: #374151;
+	color: #d1d5db;
+	box-shadow: none;
+}
+
+.dashboard-main.dark-mode .dashboard-user-info strong {
+	color: #60a5fa;
+}
+
+.dashboard-main.dark-mode .sugerencia-descripcion,
+.dashboard-main.dark-mode .form-group label {
+	color: #9ca3af;
+}
+
+.dashboard-main.dark-mode .form-group input {
+	background-color: #374151;
+	border-color: #4b5563;
+	color: #e5e7eb;
+}
+
+.dashboard-main.dark-mode .sugerencia-resultado {
+	background-color: #374151;
+	border-color: #4b5563;
+	color: #d1d5db;
+}
+
+/* --- Estilos Calendario --- */
+.calendar-card {
+	background: #fff;
+	border-radius: 1.5rem;
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+	padding: 2rem;
+	flex-grow: 1; /* Ocupa el espacio restante */
+	min-width: 320px;
+	max-width: 800px;
+	transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.calendar-title {
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: #34495e;
+	margin: 0 0 1rem 0;
+	text-align: center;
+	transition: color 0.3s ease;
+}
+
+.calendar-placeholder {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 300px;
+	border: 2px dashed #e0e0e0;
+	border-radius: 1rem;
+	color: #95a5a6;
+	text-align: center;
+	transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.calendar-icon {
+	font-size: 4rem;
+	margin-top: 1rem;
+}
+
+.dashboard-main.dark-mode .calendar-card {
+	background: #1f2937;
+	box-shadow: 0 8px 32px 0 #00000033, 0 2px 8px 0 #00000055;
+}
+
+.dashboard-main.dark-mode .calendar-title {
+	color: #e5e7eb;
+}
+
+.dashboard-main.dark-mode .calendar-placeholder {
+	border-color: #4b5563;
+	color: #9ca3af;
 }

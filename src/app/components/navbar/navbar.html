@@ -1,18 +1,66 @@
+@if (isLoggedIn$ | async) {
 <nav class="navbar">
-  <div class="navbar-logo" style="cursor: pointer;" routerLink="/home" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
-    <img src="https://img.icons8.com/color/48/football2.png" alt="Logo Club" height="40" />
-    <span class="navbar-title">ClubNet</span>
-  </div>
-  <div class="navbar-links">
-    <a class="navbar-link" routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
-    <a class="navbar-link" routerLink="/actividades" routerLinkActive="active-link">Actividades</a>
-  </div>
-  <div class="navbar-user">
-    <div class="navbar-user-dropdown">
-      <span class="navbar-user-label">Cuenta</span>
-      <div class="navbar-dropdown-content">
-        <a href="#" (click)="logout()">Cerrar sesión</a>
+  <div class="navbar-container"> <!-- Contenedor principal para Flexbox -->
+    <div class="navbar-left">
+      <div class="navbar-logo" style="cursor: pointer;" routerLink="/dashboard" routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{exact: true}">
+        <img src="https://img.icons8.com/color/48/football2.png" alt="Logo Club" height="40" />
+        <span class="navbar-title">ClubNet</span>
+      </div>
+    </div>
+    <div class="navbar-center">
+      <div class="navbar-links">
+        <!-- Rol: Administrador (1) -->
+        @if (userRole === 1) {
+        <a class="navbar-link" routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
+        <a class="navbar-link" routerLink="/actividades" routerLinkActive="active-link">Actividades</a>
+        <a class="navbar-link" routerLink="/usuarios" routerLinkActive="active-link">Usuarios</a>
+        <a class="navbar-link" routerLink="/inscripciones" routerLinkActive="active-link">Inscripciones</a>
+        <a class="navbar-link" routerLink="/clases" routerLinkActive="active-link">Clases</a>
+        <a class="navbar-link" routerLink="/tesoreria" routerLinkActive="active-link">Tesorería</a>
+        <div class="navbar-user-dropdown">
+          <span class="navbar-user-label navbar-link">Pagos</span>
+          <div class="navbar-dropdown-content">
+            <a routerLink="/pagos/promociones">Promociones</a>
+          </div>
+        </div>
+        <a class="navbar-link" routerLink="/recursos" routerLinkActive="active-link">Recursos</a>
+        <a class="navbar-link" routerLink="/comunicacion" routerLinkActive="active-link">Comunicación</a>
+        <div class="navbar-user-dropdown">
+          <span class="navbar-user-label navbar-link">Novedades</span>
+          <div class="navbar-dropdown-content">
+            <a routerLink="/novedades/notificaciones">Notificaciones</a>
+          </div>
+        </div>
+        <a class="navbar-link" routerLink="/reportes" routerLinkActive="active-link">Reportes</a>
+        }
+
+        <!-- Rol: Entrenador (2) -->
+        @if (userRole === 2) {
+        <a class="navbar-link" routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
+        <a class="navbar-link" routerLink="/mis-clases" routerLinkActive="active-link">Mis Clases</a>
+        <a class="navbar-link" routerLink="/actividades" routerLinkActive="active-link">Actividades</a>
+        }
+
+        <!-- Rol: Usuario (3) -->
+        @if (userRole === 3) {
+        <a class="navbar-link" routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
+        <a class="navbar-link" routerLink="/actividades" routerLinkActive="active-link">Actividades</a>
+        <a class="navbar-link" routerLink="/mis-inscripciones" routerLinkActive="active-link">Mis Inscripciones</a>
+        <a class="navbar-link" routerLink="/estado-cuenta" routerLinkActive="active-link">Estado de Cuenta</a>
+        }
+      </div>
+    </div>
+    <div class="navbar-right">
+      <div class="navbar-user">
+        <div class="navbar-user-dropdown">
+          <span class="navbar-user-label">Cuenta</span>
+          <div class="navbar-dropdown-content">
+            <a (click)="logout()" style="cursor: pointer;">Cerrar sesión</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </nav>
+}
