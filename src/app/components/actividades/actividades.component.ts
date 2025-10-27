@@ -30,7 +30,7 @@ export class ActividadesComponent implements OnInit {
   esAdmin = false;
   email = ''
 
-  constructor(private actividadesService: ActividadesService) {}
+  constructor(private actividadesService: ActividadesService) { }
 
   ngOnInit(): void {
     this.email = localStorage.getItem('email') || '';
@@ -40,7 +40,7 @@ export class ActividadesComponent implements OnInit {
       console.error("No se encontró un email en localStorage. No se puede cargar el usuario.");
     }
     this.CargarActividades();
-    
+
   }
 
   CargarActividades() {
