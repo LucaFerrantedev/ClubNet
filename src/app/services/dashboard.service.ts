@@ -11,6 +11,7 @@ export class DashboardService {
 
   constructor(private httpClient: HttpClient, private loginService: LoginService) { }
 
+  // Metodo para obtener datos del usuario para el dashboard
   GetUsuario(email: string) {
     const headers = this.loginService.getAuthHeaders();
     return this.httpClient.get(this.url + "/GetUsuario?email=" + email, { headers });

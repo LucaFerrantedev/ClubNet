@@ -5,36 +5,37 @@ import { LoginService } from './login.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ActividadesService {
-  url = "https://localhost:7121/api/actividad";
+export class ClasesService {
+  url = "https://localhost:7121/api/clase";
   url_user = "https://localhost:7121/api/usuario";
 
   constructor(private http: HttpClient, private loginService: LoginService) { }
 
-  // Metodos para gestionar CRUD de Actividades
+  // Metodos para gestionar CRUD de Clases
 
-  GetActividades() {
+  GetClases() {
     const headers = this.loginService.getAuthHeaders();
-    return this.http.get(this.url + "/GetActividades", { headers: headers });
+    return this.http.get(this.url + "/GetClases", { headers: headers });
   }
 
-  CreateActividad(obj: any) {
+  CreateClase(obj: any) {
     const headers = this.loginService.getAuthHeaders();
-    return this.http.post(this.url + "/CreateActividad", obj, { headers: headers });
+    return this.http.post(this.url + "/CreateClase", obj, { headers: headers });
   }
 
-  UpdateActividad(obj: any) {
+  UpdateClase(obj: any) {
     const headers = this.loginService.getAuthHeaders();
-    return this.http.put(this.url + "/UpdateActividad", obj, { headers: headers });
+    return this.http.put(this.url + "/UpdateClase", obj, { headers: headers });
   }
 
-  DeleteActividad(id: number) {
+  DeleteClase(id: number) {
     const headers = this.loginService.getAuthHeaders();
-    return this.http.delete(this.url + "/DeleteActividad?id=" + id, { headers: headers });
+    return this.http.delete(this.url + "/DeleteClase?id=" + id, { headers: headers });
   }
 
   GetUsuario(email: string) {
     const headers = this.loginService.getAuthHeaders();
     return this.http.get(this.url_user + "/GetUsuario?email=" + email, { headers: headers });
   }
+
 }

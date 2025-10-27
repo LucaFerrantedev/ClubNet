@@ -7,9 +7,11 @@ import { Observable, tap } from 'rxjs';
 })
 export class LoginService {
   private tokenKey = 'authToken';
-  url = "https://localhost:7121/api/login"; // Asegúrate que esta URL es correcta
+  url = "https://localhost:7121/api/login";
 
   constructor(private httpClient: HttpClient) { }
+
+  // Metodos para gestionar login y registro y manejo de token
 
   Login(obj: any): Observable<any> {
     return this.httpClient.post<any>(`${this.url}/Login`, obj).pipe(
@@ -26,22 +28,28 @@ export class LoginService {
     return this.httpClient.post(`${this.url}/Register`, obj);
   }
 
+  // Metodos para manejar el token en el localStorage
   setToken(token: string): void {
     localStorage.setItem(this.tokenKey, token);
   }
 
+  // Obtener el token de localStorage
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
 
+  // Eliminar el token de localStorage
   removeToken(): void {
     localStorage.removeItem(this.tokenKey);
   }
 
+  // Metodo para cerrar sesion
   logout(): void {
     this.removeToken();
     localStorage.removeItem('email');
   }
+
+  // Metodo para verificar si el usuario ya inicio sesion
 
   getAuthHeaders(): HttpHeaders {
     const token = this.getToken();
