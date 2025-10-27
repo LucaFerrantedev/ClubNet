@@ -17,8 +17,8 @@ export class LoginService {
     return this.httpClient.post<any>(`${this.url}/Login`, obj).pipe(
       tap(response => {
         // La respuesta del backend viene en la propiedad 'data'
-        if (response && response.data && response.data.token) {
-          this.setToken(response.data.token);
+        if (response && response.data) {
+          this.setToken(response.data); // Acceder directamente a 'data'
         }
       })
     );
@@ -80,4 +80,5 @@ export class LoginService {
     this.removeToken(); // Limpia el token si es inválido o ha expirado
     return false;
   }
+  
 }

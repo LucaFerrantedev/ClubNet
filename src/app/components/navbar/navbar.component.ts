@@ -9,8 +9,8 @@ import { catchError, map } from 'rxjs/operators';
 @Component({
   selector: 'app-navbar',
   imports: [RouterModule, CommonModule],
-  templateUrl: './navbar.html',
-  styleUrl: './navbar.css',
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.css',
   standalone: true
 })
 export class NavbarComponent implements OnInit {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavbarComponent } from "../navbar/navbar";
+import { NavbarComponent } from "../navbar/navbar.component";
 import { Router } from '@angular/router';
 import { DashboardService } from '../../services/dashboard.service';
 import { IAService } from '../../services/ia.service';
