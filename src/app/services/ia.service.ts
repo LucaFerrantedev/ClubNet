@@ -8,8 +8,9 @@ import { Observable } from 'rxjs';
 export class IAService {
   private apiUrl = 'https://localhost:7121/api/ia/sugerirActividad';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
+  // Metodo para sugerir una actividad basada en datos proporcionados
   sugerirActividad(datos: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, datos);
   }

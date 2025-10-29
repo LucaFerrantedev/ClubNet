@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActividadesService } from '../../services/actividades.service';
-import { NavbarComponent } from "../navbar/navbar";
+import { NavbarComponent } from "../navbar/navbar.component";
 
 @Component({
   selector: 'app-actividades',
@@ -30,7 +30,7 @@ export class ActividadesComponent implements OnInit {
   esAdmin = false;
   email = ''
 
-  constructor(private actividadesService: ActividadesService) {}
+  constructor(private actividadesService: ActividadesService) { }
 
   ngOnInit(): void {
     this.email = localStorage.getItem('email') || '';
@@ -40,7 +40,7 @@ export class ActividadesComponent implements OnInit {
       console.error("No se encontró un email en localStorage. No se puede cargar el usuario.");
     }
     this.CargarActividades();
-    
+
   }
 
   CargarActividades() {
