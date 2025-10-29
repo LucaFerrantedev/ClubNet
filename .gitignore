@@ -20,3 +20,7 @@ packages/
 .angular
 
 **/.vscode/
+
+# Ignorar archivos de entorno específicos
+src/environments/environment.ts
+src/environments/environment.production.ts
