@@ -2,9 +2,16 @@
 /dist
 /tmp
 /out-tsc
+build/
+bin/
+obj/
+
+.env
+*.local
 
 # Dependencias
 /node_modules
+packages/
 
 # Compilación de VS Code
 /.vscode/*
