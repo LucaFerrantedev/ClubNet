@@ -6,6 +6,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ActividadesComponent } from './components/actividades/actividades.component';
 import { authGuard } from './guards/auth.guard';
 import { ClasesComponent } from './components/clases/clases.component';
+import { InscripcionComponent } from './components/inscripcion/inscripcion.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -45,6 +46,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: "", component: ClasesComponent}
+    ]
+  },
+  {
+    path: "inscripcion",
+    component: ContainerComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: "", component: InscripcionComponent}
     ]
   }
 ];
