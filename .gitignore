@@ -2,9 +2,16 @@
 /dist
 /tmp
 /out-tsc
+build/
+bin/
+obj/
+
+.env
+*.local
 
 # Dependencias
 /node_modules
+packages/
 
 # Compilación de VS Code
 /.vscode/*
@@ -13,3 +20,7 @@
 .angular
 
 **/.vscode/
+
+# Ignorar archivos de entorno específicos
+src/environments/environment.ts
+src/environments/environment.production.ts

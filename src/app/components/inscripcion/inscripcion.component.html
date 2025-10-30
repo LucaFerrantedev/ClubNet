@@ -1,0 +1,101 @@
+<app-navbar></app-navbar>
+
+<div class="container-lg my-4 my-lg-5">
+
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+
+      <h1 class="text-center fw-bold">Confirmar Inscripción</h1>
+      <p class="text-center text-muted fs-5 mb-4">
+        Revisa tus datos y el detalle de la actividad antes de confirmar.
+      </p>
+
+      <div class="row g-4 g-lg-5">
+
+        <div class="col-lg-7">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4 p-md-5">
+
+              <h2 class="fs-4 fw-semibold mb-4">Tus Datos Personales</h2>
+
+              <form>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" id="nombre" class="form-control form-control-lg bg-light" required
+                      [(ngModel)]="nombre" name="nombre">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="apellido" class="form-label">Apellido</label>
+                    <input type="text" id="apellido" class="form-control form-control-lg bg-light" required
+                      [(ngModel)]="apellido" name="apellido">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="nombre" class="form-label">Fecha de Nacimiento</label>
+                    <input type="date" id="nombre" class="form-control form-control-lg bg-light" required
+                      [(ngModel)]="fechaNacimiento" name="fechaNacimiento">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="sexo" class="form-label">Sexo</label>
+
+                    <select id="sexo" class="form-select form-select-lg bg-light" [(ngModel)]="sexo" name="sexo">
+                      <option [ngValue]="null" disabled selected>Seleccionar...</option>
+                      <option value="Femenino">Femenino</option>
+                      <option value="Masculino">Masculino</option>
+                      <option value="Otro">Otro</option>
+                    </select>
+                  </div>
+                  <div class="col-12">
+                    <label for="dni" class="form-label">DNI</label>
+                    <input type="text" id="dni" class="form-control form-control-lg bg-light" required [(ngModel)]="dni"
+                      name="dni">
+                  </div>
+                  <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-success btn-lg w-100 fw-bold">
+                      Confirmar Inscripción
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        @if (DataActividad) {
+        <div class="col-lg-5">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4 p-md-5">
+
+              <h2 class="fs-4 fw-semibold mb-4">Detalle de la Actividad</h2>
+
+              <img [src]="DataActividad.url_imagen" alt="Imagen de Natación" class="img-fluid rounded mb-3">
+
+              <h3 class="fs-3 fw-bold">{{DataActividad.nombre}}</h3>
+
+              <p class="text-muted">{{DataActividad.descripcion}}</p>
+
+              <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <span class="fw-semibold">Entrenador:</span>
+                  <span>Juan Pérez</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <span class="fw-semibold">Cupos Totales:</span>
+                  <span>{{DataActividad.cupo}}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <span class="fw-semibold">Estado:</span>
+                  <span class="badge bg-success rounded-pill">Abierto</span>
+                </li>
+              </ul>
+
+              <div class="text-center bg-light rounded p-4">
+                <h4 class="text-muted mb-0">Valor de la Cuota Mensual</h4>
+                <p class="fs-1 fw-bolder text-success mb-1">${{DataActividad.cuota_valor}}</p>
+                <small class="text-muted">Este valor se debitará mensualmente.</small>
+              </div>
+
+            </div>
+          </div>
+        </div> }
+      </div>
+    </div>

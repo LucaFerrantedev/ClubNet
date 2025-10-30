@@ -90,6 +90,13 @@
                 </svg>
               </button>
               }
+              @if (esUsuarioNormal) {
+                <div>
+                  <button class="btn btn-success btn-sm" (click)="Inscribirse(actividad.actividad_id)">
+                    Anotarse
+                  </button>
+                </div>
+              }
             </div>
           </td>
         </tr>

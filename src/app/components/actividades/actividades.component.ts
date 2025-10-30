@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActividadesService } from '../../services/actividades.service';
 import { NavbarComponent } from "../navbar/navbar.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-actividades',
@@ -28,9 +29,10 @@ export class ActividadesComponent implements OnInit {
 
   DataSourceUsuario: any;
   esAdmin = false;
+  esUsuarioNormal = false;
   email = ''
 
-  constructor(private actividadesService: ActividadesService) { }
+  constructor(private actividadesService: ActividadesService, private router: Router) { }
 
   ngOnInit(): void {
     this.email = localStorage.getItem('email') || '';
@@ -39,6 +41,7 @@ export class ActividadesComponent implements OnInit {
     } else {
       console.error("No se encontró un email en localStorage. No se puede cargar el usuario.");
     }
+    console.log("es usuario normal? ",this.esUsuarioNormal)
     this.CargarActividades();
 
   }
@@ -142,12 +145,21 @@ export class ActividadesComponent implements OnInit {
       next: (x) => {
         this.DataSourceUsuario = x;
         this.esAdmin = this.DataSourceUsuario?.rol_id === 1;
+        this.esUsuarioNormal = this.DataSourceUsuario?.rol_id === 3;
         console.log("Datos del usuario recibidos:", this.DataSourceUsuario);
       },
       error: (err) => {
         console.error("Error al cargar los datos del usuario:", err);
       }
     });
+  }
+
+  Inscribirse(actividad_id:number){
+    this.router.navigate(['/inscripcion'], {
+    state: {
+      actividadId: actividad_id 
+    }
+  });
   }
 
   resetFormulario() {
