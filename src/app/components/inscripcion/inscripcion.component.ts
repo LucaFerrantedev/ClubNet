@@ -20,6 +20,8 @@ export class InscripcionComponent implements OnInit{
   fechaNacimiento:string='';
   sexo:any;
   dni:string='';
+  DataRegistro:any;
+  DataMercadoPago:any;
 
   constructor(private inscripcionSvc:InscripcionService){
     this.actividadId = history.state?.actividadId;
@@ -35,6 +37,34 @@ export class InscripcionComponent implements OnInit{
     this.inscripcionSvc.GetActividadById(id).subscribe(x=>{
       this.DataActividad=x;
       console.log(x);
+    })
+  }
+
+  ConfirmarInscripcion(){
+    let obj={
+      dni:Number(this.dni),
+      actividad_id:this.actividadId
+    }
+    this.inscripcionSvc.RegisterToActivity(obj).subscribe(x=>{
+      this.DataRegistro=x;
+      if(this.DataRegistro.success==true){
+        this.GenerarLinkMP();
+      }
+    })
+  }
+
+  GenerarLinkMP(){
+    let obj={
+      inscripcion_id: Number(this.DataRegistro.data),
+      concepto: "Inscripcion - "+this.DataActividad.nombre,
+      monto: Number(this.DataActividad.cuota_valor),
+      moneda: "ARS"
+    }
+    this.inscripcionSvc.GetLinkMP(obj).subscribe(x=>{
+      this.DataMercadoPago=x;
+      if (this.DataMercadoPago.success) {
+      window.location.href = this.DataMercadoPago.data; 
+    }
     })
   }
 }
