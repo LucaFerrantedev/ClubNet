@@ -173,11 +173,11 @@
 
 .modal-content {
     background-color: white;
-    padding: 2rem;
+    padding: 2.5rem;
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     width: 90%;
-    max-width: 600px;
+    max-width: 700px;
     position: relative;
     animation: slideInUp 0.4s ease-out;
 }
@@ -229,7 +229,7 @@
 
 .modal-actions {
     margin-top: 1.5rem;
-    display: flex;
+    display: flex;    
     justify-content: flex-end;
     gap: 0.75rem;
 }
@@ -248,10 +248,16 @@
     background-color: #3498db;
     color: white;
 }
-
 .btn-editar:hover {
     background-color: #2980b9;
+    transform: translateY(-2px);
 }
+
+.btn-eliminar {
+    background-color: #e74c3c;
+    color: white;
+}
+
 
 .btn-guardar {
     background-color: #27ae60;
@@ -260,6 +266,7 @@
 
 .btn-guardar:hover:not(:disabled) {
     background-color: #229954;
+    transform: translateY(-2px);
 }
 
 .btn-guardar:disabled {
@@ -337,4 +344,21 @@
 @keyframes slideInUp {
     from { transform: translateY(30px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
+}
+
+/* Estilos para el modal de confirmación */
+.modal-confirmacion {
+    max-width: 450px;
+    text-align: center;
+}
+
+.modal-confirmacion .text-muted {
+    font-size: 0.9rem;
+}
+
+/* Contenedor para centrar el contenido principal */
+.content-wrapper {
+    max-width: 1600px; /* Ancho máximo del contenido */
+    margin: 0 auto; /* Centra el contenedor horizontalmente */
+    padding: 0 1rem; /* Añade un poco de espacio en pantallas más pequeñas */
 }

@@ -18,6 +18,7 @@ export class ActividadesComponent implements OnInit {
   isLoading = true;
   isEditMode = false;
   actividadParaEditar: any = {};
+  actividadParaEliminar: any | null = null;
 
   nombre: any;
   descripcion: any;
@@ -119,12 +120,20 @@ export class ActividadesComponent implements OnInit {
       next: () => {
         console.log('Actividad eliminada con éxito');
         this.CargarActividades(); // recarga la lista de actividades
-        this.cerrarModal(); // cierra el modal
+        this.actividadParaEliminar = null; // Cierra el modal de confirmación
       },
       error: (err) => console.error('Error al eliminar la actividad:', err)
     });
   }
 
+
+  solicitarConfirmacionEliminar(actividad: any) {
+    this.actividadParaEliminar = actividad;
+  }
+
+  cancelarEliminacion() {
+    this.actividadParaEliminar = null;
+  }
 
   abrirModal(actividad: any, editMode: boolean = false) {
     this.selectedActividad = actividad;
