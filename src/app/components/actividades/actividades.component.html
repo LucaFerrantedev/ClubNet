@@ -46,6 +46,7 @@
         <tr>
           <th class="nombre-col">Nombre</th>
           <th>Entrenador</th>
+          <th>Fecha de Inicio</th>
           <th>Cupo</th>
           <th>Estado</th>
           <th>Ver mas</th>
@@ -61,6 +62,7 @@
         <tr>
           <td>{{ actividad.nombre }}</td>
           <td>{{ actividad.entrenador }}</td>
+          <td>{{ actividad.inicio.toString() | slice:0:4 }}/{{ actividad.inicio.toString() | slice:4:6 }}</td>
           <td>{{ actividad.cupo }}</td>
           <td><span class="badge" [ngClass]="actividad.estado ? 'badge-activo' : 'badge-inactivo'">{{
               actividad.estado ? 'Activo' : 'Inactivo' }}</span></td>
