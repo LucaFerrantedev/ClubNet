@@ -26,6 +26,7 @@ export class ActividadesComponent implements OnInit {
   cuota_valor: number = 0;
   estado: boolean = true;
   url_imagen: any;
+  inicio: string = '';
 
   DataSourceUsuario: any;
   esAdmin = false;
@@ -73,7 +74,8 @@ export class ActividadesComponent implements OnInit {
       "cupo": Number(this.cupo),
       "cuota_valor": Number(this.cuota_valor),
       "estado": this.estado,
-      "url_imagen": this.url_imagen
+      "url_imagen": this.url_imagen,
+      "inicio": this.inicio ? Number(this.inicio.replace('-', '')) : null
     };
 
     this.actividadesService.CreateActividad(obj).subscribe({
@@ -168,6 +170,7 @@ export class ActividadesComponent implements OnInit {
     this.cupo = 0;
     this.cuota_valor = 0;
     //this.estado = true;
+    this.inicio = '';
     this.url_imagen = '';
   }
 }

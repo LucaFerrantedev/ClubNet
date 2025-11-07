@@ -13,6 +13,8 @@ export class InscripcionService {
   constructor(private http:HttpClient, private loginService: LoginService){
   }
 
+  // Metodos para gestionar inscripciones a actividades
+
   GetActividadById(id:number){
     const headers = this.loginService.getAuthHeaders();
     return this.http.get(this.url_actividad + "/GetActividadById/"+id);
