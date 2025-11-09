@@ -18,7 +18,7 @@
 
               <h2 class="fs-4 fw-semibold mb-4">Tus Datos Personales</h2>
 
-              <form>
+              <form (ngSubmit)="ConfirmarInscripcion()" #inscripcionForm="ngForm">
                 <div class="row g-3">
                   <div class="col-md-6">
                     <label for="nombre" class="form-label">Nombre</label>
@@ -42,7 +42,6 @@
                       <option [ngValue]="null" disabled selected>Seleccionar...</option>
                       <option value="Femenino">Femenino</option>
                       <option value="Masculino">Masculino</option>
-                      <option value="Otro">Otro</option>
                     </select>
                   </div>
                   <div class="col-12">
@@ -51,7 +50,7 @@
                       name="dni">
                   </div>
                   <div class="col-12 mt-4">
-                    <button type="submit" class="btn btn-success btn-lg w-100 fw-bold">
+                    <button type="submit" class="btn btn-success btn-lg w-100 fw-bold" [disabled]="!inscripcionForm.valid">
                       Confirmar Inscripción
                     </button>
                   </div>
