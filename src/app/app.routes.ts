@@ -7,6 +7,7 @@ import { ActividadesComponent } from './components/actividades/actividades.compo
 import { authGuard } from './guards/auth.guard';
 import { ClasesComponent } from './components/clases/clases.component';
 import { InscripcionComponent } from './components/inscripcion/inscripcion.component';
+import { UsuariosComponent } from './components/usuarios/usuarios.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -45,7 +46,7 @@ export const routes: Routes = [
     component: ContainerComponent,
     canActivate: [authGuard],
     children: [
-      { path: "", component: ClasesComponent}
+      { path: "", component: ClasesComponent }
     ]
   },
   {
@@ -53,7 +54,15 @@ export const routes: Routes = [
     component: ContainerComponent,
     canActivate: [authGuard],
     children: [
-      { path: "", component: InscripcionComponent}
+      { path: "", component: InscripcionComponent }
+    ]
+  },
+  {
+    path: "usuarios",
+    component: ContainerComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: "", component: UsuariosComponent }
     ]
   }
 ];
