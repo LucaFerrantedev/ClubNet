@@ -55,7 +55,7 @@ export class UsuariosComponent implements OnInit {
     confirmarClave: ''
   };
 
-  // NUEVO: Propiedad para el modal de confirmación de eliminación
+  // Propiedad para el modal de confirmación de eliminación
   userToDelete: UsuarioDTO | null = null; 
 
   // Para paginación
@@ -69,7 +69,7 @@ export class UsuariosComponent implements OnInit {
     this.checkAdminAndLoadData();
   }
 
-  // Verifica el rol del usuario logueado (Rol ID 1 es Administrador)
+  // Verifica si el usuario es admin y carga datos
   checkAdminAndLoadData() {
     const email = localStorage.getItem('email');
     if (email) {
@@ -161,7 +161,7 @@ export class UsuariosComponent implements OnInit {
     });
   }
   
-  // Método: Crear Usuario
+  // Método Crear Usuario
   createUser() {
     if (!this.newUser.dni || !this.newUser.nombre || !this.newUser.apellido || !this.newUser.email || !this.newUser.clave || !this.newUser.confirmarClave) {
       this.showMessage('Todos los campos son obligatorios.', 'error');
@@ -194,18 +194,18 @@ export class UsuariosComponent implements OnInit {
     });
   }
   
-  // NUEVO: Pide confirmación para eliminar
+  // Pide confirmación para eliminar
   solicitarConfirmacionEliminar(user: UsuarioDTO) {
     this.userToDelete = user;
     this.mensaje = ''; 
   }
 
-  // NUEVO: Cancela la eliminación
+  // Cancela la eliminación
   cancelarEliminacion() {
     this.userToDelete = null;
   }
 
-  // NUEVO: Ejecuta la eliminación (baja lógica)
+  // Ejecuta la eliminación (baja lógica)
   EliminarUsuario(persona_id: number) {
     this.userToDelete = null; 
     this.usuariosService.DeleteUser(persona_id).subscribe({
