@@ -11,8 +11,7 @@ import { UsuariosComponent } from './components/usuarios/usuarios.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },
-
-  { path: "**", redirectTo: "/home", pathMatch: "full" },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
 
   {
     path: "home",
