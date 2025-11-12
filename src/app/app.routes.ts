@@ -10,8 +10,16 @@ import { InscripcionComponent } from './components/inscripcion/inscripcion.compo
 import { UsuariosComponent } from './components/usuarios/usuarios.component';
 
 export const routes: Routes = [
-  { path: "", redirectTo: "/home", pathMatch: "full" },
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  // Redirección de la ruta raíz ("") a "/home"
+  //{ path: "", redirectTo: "/home", pathMatch: "full" },
+
+  {
+    path: "",
+    component: ContainerComponent,
+    children: [
+      { path: "", component: HomeComponent }
+    ]
+  },
 
   {
     path: "home",
@@ -66,5 +74,7 @@ export const routes: Routes = [
     children: [
       { path: "", component: UsuariosComponent }
     ]
-  }
+  },
+  // Captura cualquier URL no definida y redirige a /home
+  { path: '**', redirectTo: '/home' }
 ];
