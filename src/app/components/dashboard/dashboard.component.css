@@ -237,22 +237,20 @@
 
 /* --- Estilos Modo Oscuro --- */
 .dark-mode-toggle {
-	position: absolute;
-	top: 1.5rem;
-	right: 2.5rem;
-	width: 45px;
-	height: 45px;
-	border-radius: 50%;
-	background-color: #fff;
-	color: #111827;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	font-size: 1.5rem;
-	box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-	transition: all 0.3s ease;
-	z-index: 100;
+  position: fixed;
+  top: 80px; /* Ajusta esto según la altura de tu navbar */
+  right: 20px;
+  z-index: 1000; /* Asegura que esté por encima de otros elementos */
+  background-color: var(--background-color, #fff); /* Fondo para que no se vea el texto de atrás */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease;
+  cursor: pointer;
 }
 
 .dark-mode-toggle:hover {

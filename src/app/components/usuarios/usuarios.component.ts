@@ -34,6 +34,7 @@ export class UsuariosComponent implements OnInit {
   roles: Rol[] = [];
   isLoading = true;
   isAdmin = false;
+  isDarkMode = false;
 
   // Para el modal de edición
   selectedUser: UsuarioDTO | null = null;
@@ -67,6 +68,9 @@ export class UsuariosComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkAdminAndLoadData();
+    // Cargar preferencia de modo oscuro
+    const darkModePref = localStorage.getItem('darkMode');
+    this.isDarkMode = darkModePref === 'true';
   }
 
   // Verifica si el usuario es admin y carga datos

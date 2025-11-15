@@ -20,10 +20,15 @@ interface Clase {
 export class ClasesComponent implements OnInit {
   clases: Clase[] = [];
   isLoading = true;
+  isDarkMode = false;
 
   constructor(private clasesService: ClasesService) { }
 
   ngOnInit(): void {
+    // Cargar preferencia de modo oscuro
+    const darkModePref = localStorage.getItem('darkMode');
+    this.isDarkMode = darkModePref === 'true';
+
     this.clasesService.GetClases().subscribe({
       next: (data: any) => {
         this.clases = data;

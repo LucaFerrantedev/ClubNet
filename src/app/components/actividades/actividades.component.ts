@@ -20,6 +20,7 @@ export class ActividadesComponent implements OnInit {
   actividadParaEditar: any = {};
   actividadParaEliminar: any | null = null;
 
+  isDarkMode = false;
   nombre: any;
   descripcion: any;
 
@@ -43,6 +44,10 @@ export class ActividadesComponent implements OnInit {
     } else {
       console.error("No se encontró un email en localStorage. No se puede cargar el usuario.");
     }
+    // Cargar preferencia de modo oscuro
+    const darkModePref = localStorage.getItem('darkMode');
+    this.isDarkMode = darkModePref === 'true';
+
     console.log("es usuario normal? ",this.esUsuarioNormal)
     this.CargarActividades();
 

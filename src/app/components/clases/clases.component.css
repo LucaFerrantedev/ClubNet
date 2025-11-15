@@ -92,3 +92,44 @@
     from { transform: translateY(20px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
 }
+
+/* =================================
+   Estilos Modo Oscuro
+   ================================= */
+
+.clases-main.dark-mode {
+    background-color: #111827;
+    color: #d1d5db;
+}
+
+.clases-main.dark-mode .clases-title {
+    color: #f9fafb;
+}
+
+.clases-main.dark-mode .clases-subtitle {
+    color: #9ca3af;
+}
+
+.clases-main.dark-mode .table-container {
+    background-color: #1f2937;
+    border: 1px solid #374151;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
+}
+
+.clases-main.dark-mode .clases-table th {
+    background-color: #374151;
+    color: #e5e7eb;
+}
+
+.clases-main.dark-mode .clases-table td {
+    border-bottom-color: #374151;
+}
+
+.clases-main.dark-mode .clases-table tbody tr:hover {
+    background-color: #374151;
+}
+
+.clases-main.dark-mode .loading-cell,
+.clases-main.dark-mode .no-clases {
+    color: #9ca3af;
+}
