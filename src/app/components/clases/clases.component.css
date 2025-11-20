@@ -1,0 +1,135 @@
+/* Contenedor principal */
+.clases-main {
+	padding: 2rem;
+	background-color: #f9fafb;
+	min-height: calc(100vh - 64px); /* 100% de la altura menos la navbar */
+}
+
+/* Encabezado de la sección */
+.clases-header {
+	text-align: center;
+	margin-bottom: 2.5rem;
+}
+
+.clases-title {
+	font-size: 2.5rem;
+	font-weight: 800;
+	color: #111827;
+	margin-bottom: 0.5rem;
+}
+
+.clases-subtitle {
+	font-size: 1.1rem;
+	color: #4b5563;
+	max-width: 600px;
+	margin: 0 auto;
+}
+
+/* Contenedor del contenido (tablas, formularios, etc.) */
+.content-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+/* Contenedor de la tabla y formularios */
+.table-container {
+	background-color: #fff;
+	padding: 2rem;
+	border-radius: 0.75rem;
+	box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* Tabla de clases */
+.clases-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9rem;
+}
+
+.clases-table th,
+.clases-table td {
+	padding: 0.75rem 1rem;
+	text-align: left;
+	border-bottom: 1px solid #e5e7eb;
+}
+
+.clases-table th {
+	background-color: #f9fafb;
+	font-weight: 600;
+	color: #374151;
+}
+
+.clases-table tbody tr:hover {
+	background-color: #f3f4f6;
+}
+
+.loading-cell,
+.no-clases {
+	text-align: center;
+	padding: 2rem;
+	color: #6b7280;
+	font-style: italic;
+}
+
+/* Animaciones */
+.animate-fadein {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slidein {
+    animation: slideInUp 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* =================================
+   Estilos Modo Oscuro
+   ================================= */
+
+.clases-main.dark-mode {
+    background-color: #111827;
+    color: #d1d5db;
+}
+
+.clases-main.dark-mode .clases-title {
+    color: #f9fafb;
+}
+
+.clases-main.dark-mode .clases-subtitle {
+    color: #9ca3af;
+}
+
+.clases-main.dark-mode .table-container {
+    background-color: #1f2937;
+    border: 1px solid #374151;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
+}
+
+.clases-main.dark-mode .clases-table th {
+    background-color: #374151;
+    color: #e5e7eb;
+}
+
+.clases-main.dark-mode .clases-table td {
+    border-bottom-color: #374151;
+}
+
+.clases-main.dark-mode .clases-table tbody tr:hover {
+    background-color: #374151;
+}
+
+.clases-main.dark-mode .loading-cell,
+.clases-main.dark-mode .no-clases {
+    color: #9ca3af;
+}

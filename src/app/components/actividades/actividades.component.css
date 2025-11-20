@@ -12,8 +12,8 @@
 
 .actividades-title {
     font-size: 2.8rem;
-    font-weight: 700;
-    color: #2c3e50;
+    font-weight: 800;
+    color: #111827;
     margin-bottom: 0.5rem;
 }
 
@@ -361,4 +361,77 @@
     max-width: 1600px; /* Ancho máximo del contenido */
     margin: 0 auto; /* Centra el contenedor horizontalmente */
     padding: 0 1rem; /* Añade un poco de espacio en pantallas más pequeñas */
+}
+
+/* =================================
+   Estilos Modo Oscuro
+   ================================= */
+
+.actividades-main.dark-mode {
+    background-color: #111827;
+    color: #d1d5db;
+}
+
+.actividades-main.dark-mode .actividades-title {
+    color: #f9fafb;
+}
+
+.actividades-main.dark-mode .actividades-subtitle {
+    color: #9ca3af;
+}
+
+.actividades-main.dark-mode .table-container {
+    background-color: #1f2937;
+    border: 1px solid #374151;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
+}
+
+.actividades-main.dark-mode .form-title,
+.actividades-main.dark-mode .modal-title {
+    color: #f9fafb;
+    border-bottom-color: #374151;
+}
+
+.actividades-main.dark-mode .form-group label {
+    color: #9ca3af;
+}
+
+.actividades-main.dark-mode .form-group input,
+.actividades-main.dark-mode .form-group select,
+.actividades-main.dark-mode .form-group textarea {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #e5e7eb;
+}
+
+.actividades-main.dark-mode .actividades-table th {
+    background-color: #374151;
+    color: #e5e7eb;
+}
+
+.actividades-main.dark-mode .actividades-table td {
+    border-bottom-color: #374151;
+}
+
+.actividades-main.dark-mode .actividades-table tbody tr:hover {
+    background-color: #374151;
+}
+
+.actividades-main.dark-mode .loading-cell,
+.actividades-main.dark-mode .no-actividades {
+    color: #9ca3af;
+}
+
+.actividades-main.dark-mode .modal-content {
+    background-color: #1f2937;
+    border: 1px solid #4b5563;
+}
+
+.actividades-main.dark-mode .modal-body p {
+    color: #d1d5db;
+}
+
+.actividades-main.dark-mode .modal-image-placeholder {
+    background-color: #374151;
+    color: #9ca3af;
 }

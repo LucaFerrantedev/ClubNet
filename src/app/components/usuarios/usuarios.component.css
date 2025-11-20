@@ -301,3 +301,102 @@
   color: #991b1b;
   border: 1px solid #f87171;
 }
+
+/* =================================
+   Estilos Modo Oscuro
+   ================================= */
+
+.actividades-main.dark-mode {
+    background-color: #111827;
+    color: #d1d5db;
+}
+
+.actividades-main.dark-mode .actividades-title {
+    color: #f9fafb;
+}
+
+.actividades-main.dark-mode .actividades-subtitle {
+    color: #9ca3af;
+}
+
+.actividades-main.dark-mode .admin-pill {
+    background-color: #312e81;
+    color: #c7d2fe;
+}
+
+.actividades-main.dark-mode .table-container {
+    background-color: #1f2937;
+    border: 1px solid #374151;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
+}
+
+.actividades-main.dark-mode .form-title {
+    color: #f9fafb;
+    border-bottom-color: #374151;
+}
+
+.actividades-main.dark-mode .actividades-table th {
+    background-color: #374151;
+    color: #e5e7eb;
+}
+
+.actividades-main.dark-mode .actividades-table td {
+    border-bottom-color: #374151;
+}
+
+.actividades-main.dark-mode .actividades-table tbody tr:hover {
+    background-color: #374151;
+}
+
+.actividades-main.dark-mode .loading-cell,
+.actividades-main.dark-mode .no-actividades {
+    color: #9ca3af;
+}
+
+.actividades-main.dark-mode .badge-activo {
+    background-color: #064e3b;
+    color: #a7f3d0;
+}
+
+.actividades-main.dark-mode .badge-inactivo {
+    background-color: #7f1d1d;
+    color: #fecaca;
+}
+
+.actividades-main.dark-mode .btn-editar-tabla:hover,
+.actividades-main.dark-mode .btn-eliminar-tabla:hover {
+    background-color: #374151;
+}
+
+.actividades-main.dark-mode .modal-content {
+    background-color: #1f2937;
+    border: 1px solid #4b5563;
+}
+
+.actividades-main.dark-mode .modal-title {
+    color: #f9fafb;
+}
+
+.actividades-main.dark-mode .modal-close {
+    color: #6b7280;
+}
+
+.actividades-main.dark-mode .form-group label {
+    color: #9ca3af;
+}
+
+.actividades-main.dark-mode .form-group input,
+.actividades-main.dark-mode .form-group select {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #e5e7eb;
+}
+
+.actividades-main.dark-mode .btn-cancelar {
+    background-color: #374151;
+    color: #d1d5db;
+}
+
+.actividades-main.dark-mode .btn-cancelar:hover {
+    background-color: #4b5563;
+}

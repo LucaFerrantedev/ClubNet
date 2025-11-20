@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class LoginService {
   private tokenKey = 'authToken';
   url = "https://localhost:7121/api/login";
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) { }
 
   // Metodos para gestionar login y registro y manejo de token
 
@@ -30,23 +31,32 @@ export class LoginService {
 
   // Metodos para manejar el token en el localStorage
   setToken(token: string): void {
-    localStorage.setItem(this.tokenKey, token);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem(this.tokenKey, token);
+    }
   }
 
   // Obtener el token de localStorage
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem(this.tokenKey);
+    }
+    return null;
   }
 
   // Eliminar el token de localStorage
   removeToken(): void {
-    localStorage.removeItem(this.tokenKey);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(this.tokenKey);
+    }
   }
 
   // Metodo para cerrar sesion
   logout(): void {
     this.removeToken();
-    localStorage.removeItem('email');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('email');
+    }
   }
 
   // Metodo para verificar si el usuario ya inicio sesion
@@ -77,8 +87,10 @@ export class LoginService {
     if (token && !this.isTokenExpired(token)) {
       return true;
     }
-    this.removeToken(); // Limpia el token si es inválido o ha expirado
+    if (isPlatformBrowser(this.platformId)) {
+      this.removeToken();
+    }
     return false;
   }
-  
+
 }
