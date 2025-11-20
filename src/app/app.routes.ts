@@ -8,6 +8,7 @@ import { authGuard } from './guards/auth.guard';
 import { ClasesComponent } from './components/clases/clases.component';
 import { InscripcionComponent } from './components/inscripcion/inscripcion.component';
 import { UsuariosComponent } from './components/usuarios/usuarios.component';
+import { PagoResultadoComponent } from './components/pago-resultado-component/pago-resultado-component';
 
 export const routes: Routes = [
   // Redirección de la ruta raíz ("") a "/home"
@@ -34,6 +35,21 @@ export const routes: Routes = [
     children: [
       { path: "", component: LoginComponent }
     ]
+  },
+  { 
+    path: 'pago/exito', 
+    component: PagoResultadoComponent,
+    data: { estado: 'exito' } 
+  },
+  { 
+    path: 'pago/fallo', 
+    component: PagoResultadoComponent, 
+    data: { estado: 'fallo' }
+  },
+  { 
+    path: 'pago/pendiente', 
+    component: PagoResultadoComponent, 
+    data: { estado: 'pendiente' } 
   },
   {
     path: "dashboard",
