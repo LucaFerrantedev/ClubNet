@@ -45,4 +45,9 @@ export class UsuariosService {
     const headers = this.loginService.getAuthHeaders();
     return this.httpClient.delete(this.url + "/DeleteUsuario?id=" + id, { headers });
   }
+
+  GetUsuariosByRol(rol: number) {
+    const headers = this.loginService.getAuthHeaders();
+    return this.httpClient.get(this.url + "/GetUsuariosByRol?rol=" + rol, { headers });
+  }
 }

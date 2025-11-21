@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActividadesService } from '../../services/actividades.service';
+import { UsuariosService } from '../../services/usuarios.service';
 import { NavbarComponent } from "../navbar/navbar.component";
 import { Router } from '@angular/router';
 
@@ -19,11 +20,12 @@ export class ActividadesComponent implements OnInit {
   isEditMode = false;
   actividadParaEditar: any = {};
   actividadParaEliminar: any | null = null;
+  entrenadorSeleccionado: number | null = null;
 
   isDarkMode = false;
   nombre: any;
   descripcion: any;
-
+  listaEntrenadores: any[] = [];
   cupo: number = 0;
   cuota_valor: number = 0;
   estado: boolean = true;
@@ -35,7 +37,10 @@ export class ActividadesComponent implements OnInit {
   esUsuarioNormal = false;
   email = ''
 
-  constructor(private actividadesService: ActividadesService, private router: Router) { }
+  constructor(
+    private actividadesService: ActividadesService,
+    private usuariosService: UsuariosService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.email = localStorage.getItem('email') || '';
@@ -49,15 +54,21 @@ export class ActividadesComponent implements OnInit {
     this.isDarkMode = darkModePref === 'true';
 
     console.log("es usuario normal? ",this.esUsuarioNormal)
-    this.CargarActividades();
-
+    this.CargarEntrenadores(); // Esto ahora también llamará a CargarActividades
   }
 
   CargarActividades() {
     this.isLoading = true;
     this.actividadesService.GetActividades().subscribe({
       next: (data: any) => {
-        this.actividades = data;
+        // Mapeamos las actividades para agregar el nombre del entrenador si no viene
+        this.actividades = data.map((actividad: any) => {
+          if (!actividad.entrenador && actividad.entrenador_id) {
+            const entrenador = this.listaEntrenadores.find(e => e.persona_id === actividad.entrenador_id);
+            actividad.entrenador = entrenador ? `${entrenador.nombre} ${entrenador.apellido}` : 'No asignado';
+          }
+          return actividad;
+        });
         this.isLoading = false;
       },
       error: (err) => {
@@ -81,7 +92,8 @@ export class ActividadesComponent implements OnInit {
       "cuota_valor": Number(this.cuota_valor),
       "estado": this.estado,
       "url_imagen": this.url_imagen,
-      "inicio": this.inicio ? Number(this.inicio.replace('-', '')) : null
+      "inicio": this.inicio ? Number(this.inicio.replace('-', '')) : null,
+      "entrenador_id": this.entrenadorSeleccionado
     };
 
     this.actividadesService.CreateActividad(obj).subscribe({
@@ -131,6 +143,14 @@ export class ActividadesComponent implements OnInit {
     });
   }
 
+  CargarEntrenadores() {
+    // Asumiendo que el rol ID 2 es Entrenador
+    this.usuariosService.GetUsuariosByRol(2).subscribe((data: any) => {
+       // Filtramos solo los que tienen rol de entrenador (ajusta el ID 2 según tu DB)
+       this.listaEntrenadores = data.filter((u: any) => u.rol_id === 2);
+       this.CargarActividades(); // Llamamos a cargar actividades DESPUÉS de tener los entrenadores
+    });
+  }
 
   solicitarConfirmacionEliminar(actividad: any) {
     this.actividadParaEliminar = actividad;
@@ -157,18 +177,22 @@ export class ActividadesComponent implements OnInit {
   }
 
   CargarUsuario(email: string) {
-    this.actividadesService.GetUsuario(email).subscribe({
-      next: (x) => {
-        this.DataSourceUsuario = x;
-        this.esAdmin = this.DataSourceUsuario?.rol_id === 1;
-        this.esUsuarioNormal = this.DataSourceUsuario?.rol_id === 3;
-        console.log("Datos del usuario recibidos:", this.DataSourceUsuario);
-      },
-      error: (err) => {
-        console.error("Error al cargar los datos del usuario:", err);
-      }
-    });
-  }
+      this.actividadesService.GetUsuario(email).subscribe({
+        next: (x) => {
+          this.DataSourceUsuario = x;
+          this.esAdmin = this.DataSourceUsuario?.rol_id === 1;
+          this.esUsuarioNormal = this.DataSourceUsuario?.rol_id === 3;
+          
+          // NUEVO: Solo cargamos la lista si es Admin
+          if (this.esAdmin) {
+            this.CargarEntrenadores();
+          }
+        },
+        error: (err) => {
+          console.error("Error al cargar los datos del usuario:", err);
+        }
+      });
+    }
 
   Inscribirse(actividad_id:number){
     this.router.navigate(['/inscripcion'], {
