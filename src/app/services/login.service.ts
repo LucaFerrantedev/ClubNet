@@ -29,6 +29,15 @@ export class LoginService {
     return this.httpClient.post(`${this.url}/Register`, obj);
   }
 
+  RecuperarClave(email: string): Observable<any> {
+    return this.httpClient.post(`${this.url}/RecuperarClave`, { email: email });
+  }
+
+  CambiarClave(obj: any): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.httpClient.post(`${this.url}/CambiarClave`, obj, { headers });
+  }
+
   // Metodos para manejar el token en el localStorage
   setToken(token: string): void {
     if (isPlatformBrowser(this.platformId)) {
