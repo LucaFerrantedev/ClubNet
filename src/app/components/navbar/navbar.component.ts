@@ -52,8 +52,6 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  // --- LÓGICA DEL MODAL ---
-
   abrirModalPassword() {
     this.showPasswordModal = true;
     this.resetPassForm();
@@ -69,7 +67,6 @@ export class NavbarComponent implements OnInit {
   }
 
   cambiarPassword() {
-    // Validaciones básicas
     if (!this.passData.actual || !this.passData.nueva || !this.passData.confirmar) {
       this.mostrarMensaje('Todos los campos son obligatorios', 'error');
       return;
@@ -82,8 +79,8 @@ export class NavbarComponent implements OnInit {
 
     // Objeto para enviar al backend
     const dto = {
-      ClaveActual: this.passData.actual,  // Antes era PasswordActual
-      NuevaClave: this.passData.nueva     // Antes era NuevaPassword
+      ClaveActual: this.passData.actual,
+      NuevaClave: this.passData.nueva
     };
 
     this.loginService.CambiarClave(dto).subscribe({
@@ -102,7 +99,6 @@ export class NavbarComponent implements OnInit {
   mostrarMensaje(texto: string, tipo: string) {
     this.mensajePass = texto;
     this.tipoMensajePass = tipo;
-    // Si es error, borramos el mensaje a los 3 segundos
     if (tipo === 'error') {
       setTimeout(() => {
         this.mensajePass = '';
