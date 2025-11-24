@@ -9,6 +9,8 @@ import { ClasesComponent } from './components/clases/clases.component';
 import { InscripcionComponent } from './components/inscripcion/inscripcion.component';
 import { UsuariosComponent } from './components/usuarios/usuarios.component';
 import { PagoResultadoComponent } from './components/pago-resultado-component/pago-resultado-component';
+import { InscripcionesComponent } from './components/inscripciones/inscripciones.component';
+import { CobranzaComponent } from './components/cobranza/cobranza.component';
 
 export const routes: Routes = [
   // Redirección de la ruta raíz ("") a "/home"
@@ -89,6 +91,22 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: "", component: UsuariosComponent }
+    ]
+  },
+  {
+    path: "inscripciones-detalle",
+    component: ContainerComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: "", component: InscripcionesComponent }
+    ]
+  },
+  {
+    path: "pagos",
+    component: ContainerComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: "", component: CobranzaComponent }
     ]
   },
   // Captura cualquier URL no definida y redirige a /home
