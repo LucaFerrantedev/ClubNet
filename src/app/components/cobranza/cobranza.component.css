@@ -1,0 +1,51 @@
+/* Animación de entrada suave */
+.animate-fadein {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Badges estilo "Subtle" */
+.bg-success-subtle { background-color: #d1e7dd; color: #0f5132; }
+.bg-warning-subtle { background-color: #fff3cd; color: #664d03; }
+.bg-danger-subtle { background-color: #f8d7da; color: #842029; }
+
+/* Avatar redondo para el Admin */
+.avatar-circle {
+    width: 32px;
+    height: 32px;
+    background-color: #e9ecef;
+    color: #495057;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+/* Tabla más aireada */
+.table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 1rem;
+    font-weight: 700;
+    color: #6c757d;
+}
+
+.table td {
+    vertical-align: middle;
+    padding: 1rem;
+    font-size: 0.95rem;
+}
+
+/* Hover suave */
+.table-hover tbody tr:hover {
+    background-color: rgba(0,0,0,0.02);
+    transition: background-color 0.2s ease;
+}
