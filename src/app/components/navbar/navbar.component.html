@@ -1,58 +1,96 @@
 @if (isLoggedIn$ | async) {
 <nav class="navbar">
-  <div class="navbar-container"> <!-- Contenedor principal para Flexbox -->
+  <div class="navbar-container">
     <div class="navbar-left">
-      <div class="navbar-logo" style="cursor: pointer;" routerLink="/dashboard" routerLinkActive="active-link"
-        [routerLinkActiveOptions]="{exact: true}">
+      <div class="navbar-logo" style="cursor: pointer;" routerLink="/dashboard">
         <img src="https://img.icons8.com/color/48/football2.png" alt="Logo Club" height="40" />
         <span class="navbar-title">ClubNet</span>
       </div>
     </div>
+
     <div class="navbar-center">
-      <div class="navbar-links">
-        <!-- Rol: Administrador (1) -->
-        @if (userRole === 1) {
-        <a class="navbar-link" routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
-        <a class="navbar-link" routerLink="/actividades" routerLinkActive="active-link">Actividades</a>
-        <a class="navbar-link" routerLink="/usuarios" routerLinkActive="active-link">Usuarios</a>
-        <a class="navbar-link" routerLink="/clases" routerLinkActive="active-link">Clases</a>
-        <a class="navbar-link" routerLink="/pagos" routerLinkActive="active-link">Pagos</a>
-        <div class="navbar-user-dropdown">
-          <span class="navbar-user-label navbar-link">Comunicación</span>
-          <div class="navbar-dropdown-content">
-            <a routerLink="/novedades/notificaciones">Novedades</a>
-            <a routerLink="/novedades/notificaciones">Notificaciones</a>
-          </div>
-        </div>
-        <a class="navbar-link" routerLink="/reportes" routerLinkActive="active-link">Reportes</a>
-        }
-
-        <!-- Rol: Entrenador (2) -->
-        @if (userRole === 2) {
-        <a class="navbar-link" routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
-        <a class="navbar-link" routerLink="/mis-clases" routerLinkActive="active-link">Mis Clases</a>
-        <a class="navbar-link" routerLink="/actividades" routerLinkActive="active-link">Actividades</a>
-        }
-
-        <!-- Rol: Usuario (3) -->
-        @if (userRole === 3) {
-        <a class="navbar-link" routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
-        <a class="navbar-link" routerLink="/actividades" routerLinkActive="active-link">Actividades</a>
-        <a class="navbar-link" routerLink="/mis-inscripciones" routerLinkActive="active-link">Mis Inscripciones</a>
-        <a class="navbar-link" routerLink="/estado-cuenta" routerLinkActive="active-link">Estado de Cuenta</a>
-        }
-      </div>
+        <div class="navbar-links">
+            @if (userRole === 1) {
+                <a class="navbar-link" routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
+                <a class="navbar-link" routerLink="/actividades" routerLinkActive="active-link">Actividades</a>
+                <a class="navbar-link" routerLink="/usuarios" routerLinkActive="active-link">Usuarios</a>
+                <!-- <a class="navbar-link" routerLink="/clases" routerLinkActive="active-link">Clases</a> -->
+                <a class="navbar-link" routerLink="/pagos" routerLinkActive="active-link">Pagos</a>
+                <div class="navbar-user-dropdown">
+                  <span class="navbar-user-label navbar-link">Comunicación</span>
+                  <div class="navbar-dropdown-content">
+                    <a routerLink="/novedades/notificaciones">Novedades</a>
+                    <a routerLink="/novedades/notificaciones">Notificaciones</a>
+                  </div>
+                </div>
+                <a class="navbar-link" routerLink="/reportes" routerLinkActive="active-link">Reportes</a>
+                }
+        
+                @if (userRole === 2) {
+                <a class="navbar-link" routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
+                <!-- <a class="navbar-link" routerLink="/mis-clases" routerLinkActive="active-link">Mis Clases</a> -->
+                <a class="navbar-link" routerLink="/actividades" routerLinkActive="active-link">Actividades</a>
+                }
+        
+                @if (userRole === 3) {
+                <a class="navbar-link" routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
+                <a class="navbar-link" routerLink="/actividades" routerLinkActive="active-link">Actividades</a>
+                <a class="navbar-link" routerLink="/inscripciones-detalle" routerLinkActive="active-link">Mis Inscripciones</a>
+                <a class="navbar-link" routerLink="/pagos" routerLinkActive="active-link">Estado de Cuenta</a>
+                }
+         </div>
     </div>
+
     <div class="navbar-right">
       <div class="navbar-user">
         <div class="navbar-user-dropdown">
           <span class="navbar-user-label">Cuenta</span>
           <div class="navbar-dropdown-content">
-            <a (click)="logout()" style="cursor: pointer;">Cerrar sesión</a>
+            <a (click)="abrirModalPassword()" style="cursor: pointer;">Cambiar Contraseña</a>
+            <a (click)="logout()" style="cursor: pointer; color: #ef4444;">Cerrar sesión</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </nav>
+
+@if (showPasswordModal) {
+<div class="modal-backdrop" (click)="cerrarModalPassword()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="cerrarModalPassword()">&times;</button>
+    
+    <h2 class="modal-title">Cambio de Contraseña</h2>
+    <p class="modal-subtitle">Asegura tu cuenta actualizando tu clave.</p>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Contraseña Actual</label>
+        <input type="password" [(ngModel)]="passData.actual" placeholder="Ingresa tu clave actual">
+      </div>
+      <div class="form-group">
+        <label>Nueva Contraseña</label>
+        <input type="password" [(ngModel)]="passData.nueva" placeholder="Nueva clave">
+      </div>
+      <div class="form-group">
+        <label>Confirmar Nueva</label>
+        <input type="password" [(ngModel)]="passData.confirmar" placeholder="Repite la nueva clave">
+      </div>
+    </div>
+
+    @if (mensajePass) {
+      <div class="modern-message" 
+           [ngClass]="tipoMensajePass === 'error' ? 'error' : 'success'" 
+           style="margin: 1rem 0;">
+        {{ mensajePass }}
+      </div>
+    }
+
+    <div class="modal-actions">
+      <button type="button" class="btn-cancelar" (click)="cerrarModalPassword()">Cancelar</button>
+      <button type="button" class="btn-guardar" (click)="cambiarPassword()">Guardar</button>
+    </div>
+  </div>
+</div>
+}
 }

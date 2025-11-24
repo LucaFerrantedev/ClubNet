@@ -17,9 +17,8 @@ export class LoginService {
   Login(obj: any): Observable<any> {
     return this.httpClient.post<any>(`${this.url}/Login`, obj).pipe(
       tap(response => {
-        // La respuesta del backend viene en la propiedad 'data'
         if (response && response.data) {
-          this.setToken(response.data); // Acceder directamente a 'data'
+          this.setToken(response.data);
         }
       })
     );
@@ -27,6 +26,15 @@ export class LoginService {
 
   Register(obj: any): Observable<any> {
     return this.httpClient.post(`${this.url}/Register`, obj);
+  }
+
+  RecuperarClave(email: string): Observable<any> {
+    return this.httpClient.post(`${this.url}/RecuperarClave`, { email: email });
+  }
+
+  CambiarClave(obj: any): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.httpClient.post(`${this.url}/CambiarClave`, obj, { headers });
   }
 
   // Metodos para manejar el token en el localStorage
@@ -78,7 +86,7 @@ export class LoginService {
       const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
       return (Math.floor((new Date).getTime() / 1000)) >= expiry;
     } catch (e) {
-      return true; // Si hay un error al decodificar, el token es inválido
+      return true;
     }
   }
 

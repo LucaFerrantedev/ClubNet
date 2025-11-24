@@ -37,4 +37,9 @@ export class ActividadesService {
     const headers = this.loginService.getAuthHeaders();
     return this.http.get(this.url_user + "/GetUsuario?email=" + email, { headers: headers });
   }
+
+  GetInscripcionesUsuario(email: string){
+    const headers = this.loginService.getAuthHeaders();
+    return this.http.get(this.url + "/GetInscripciones/" + email, { headers: headers });
+  }
 }

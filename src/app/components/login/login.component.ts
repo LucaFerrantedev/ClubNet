@@ -36,11 +36,12 @@ export class LoginComponent implements OnInit {
   datasourceRegister: any;
   datasourceLogin: any;
   mensaje: any;
+  recoveryEmail: string = '';
 
   // Controla la pestaña activa (login o register)
-  activeTab: 'login' | 'register' = 'login';
+  activeTab: 'login' | 'register' | 'recovery' = 'login';
 
-  // Esto pasa cuando se apreta el boton de iniciar sesion
+  // Cuando se clickea el boton de iniciar sesion
   onLogin() {
     let obj = {
       "email": this.email,
@@ -66,7 +67,6 @@ export class LoginComponent implements OnInit {
         this.resetForm();
         setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
       },
-      // Error de cuando no se puede conectar al backend
       error: () => {
         this.mensaje = 'Error de conexión.';
         this.mensajeTipo = 'error';
@@ -124,14 +124,49 @@ export class LoginComponent implements OnInit {
 
   }
 
-  // Resetea los campos del formulario
-  resetForm() {
-    this.dni = '';
-    this.nombre = '';
-    this.apellido = '';
-    this.email = '';
-    this.clave = '';
-    this.confirmarClave = '';
+  switchToRecovery() {
+    this.activeTab = 'recovery';
+    this.mensaje = '';
   }
 
-}
+  backToLogin() {
+    this.activeTab = 'login';
+    this.mensaje = '';
+  }
+
+  onRecovery() {
+    if (!this.recoveryEmail) {
+      this.mensaje = 'Ingresa tu email.';
+      this.mensajeTipo = 'error';
+      return;
+    }
+
+    this.loginService.RecuperarClave(this.recoveryEmail).subscribe({
+      next: (res: any) => {
+        if (res.success) {
+          this.mensaje = 'Revisa tu correo con la nueva contraseña.';
+          this.mensajeTipo = 'success';
+          setTimeout(() => this.backToLogin(), 4000);
+        } else {
+          this.mensaje = res.message || 'Error al recuperar.';
+          this.mensajeTipo = 'error';
+        }
+      },
+      error: () => {
+        this.mensaje = 'Error de conexión.';
+        this.mensajeTipo = 'error';
+      }
+    });
+  }
+
+    // Resetea los campos del formulario
+    resetForm() {
+      this.dni = '';
+      this.nombre = '';
+      this.apellido = '';
+      this.email = '';
+      this.clave = '';
+      this.confirmarClave = '';
+    }
+
+  }
