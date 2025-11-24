@@ -1,1 +1,74 @@
-<p>inscripciones.component works!</p>
+<app-navbar></app-navbar>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-primary">
+      <i class="bi bi-card-checklist"></i> Mis Inscripciones
+    </h2>
+    <button class="btn btn-outline-secondary btn-sm" onclick="window.print()">
+      <i class="bi bi-printer"></i> Imprimir
+    </button>
+  </div>
+
+  @if (isLoading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2 text-muted">Cargando tus actividades...</p>
+    </div>
+  } 
+  @else if (inscripciones.length === 0) {
+    <div class="alert alert-info text-center shadow-sm" role="alert">
+      <h4 class="alert-heading"><i class="bi bi-info-circle"></i> Sin inscripciones</h4>
+      <p>Todavía no te has inscripto a ninguna actividad.</p>
+    </div>
+  } 
+  @else {
+    <div class="row">
+      @for (item of inscripciones; track item.actividad_id) {
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm border-0 inscripcion-card">
+            
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+              <div class="d-flex justify-content-between align-items-start">
+                <h5 class="card-title fw-bold text-dark mb-0">{{ item.actividad_nombre }}</h5>
+                
+                <span class="badge rounded-pill" 
+                  [ngClass]="item.actividad_estado ? 'bg-success' : 'bg-danger'">
+                  {{ item.actividad_estado ? 'ACTIVO' : 'INACTIVO' }}
+                </span>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="info-group mb-3">
+                <label class="text-muted small text-uppercase fw-bold">Inscripto</label>
+                <p class="mb-0 fw-medium text-primary">
+                  <i class="bi bi-person-fill"></i> {{ item.nombre }} {{ item.apellido }}
+                </p>
+              </div>
+
+              <div class="info-group mb-3">
+                <label class="text-muted small text-uppercase fw-bold">Horario / Turno</label>
+                <p class="mb-0">{{ item.horario || 'A confirmar' }}</p>
+              </div>
+
+              <div class="row">
+                <div class="col-6">
+                  <label class="text-muted small text-uppercase fw-bold">Fecha Alta</label>
+                  <p class="mb-0">{{ item.fecha_inscripcion | date:'dd/MM/yyyy' }}</p>
+                </div>
+                <div class="col-6">
+                  <label class="text-muted small text-uppercase fw-bold">Cuota Base</label>
+                  <p class="mb-0">${{ item.cuota_valor }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer bg-light border-top-0 text-end">
+              <small class="text-muted">Ref. Actividad: #{{ item.actividad_id }}</small>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
