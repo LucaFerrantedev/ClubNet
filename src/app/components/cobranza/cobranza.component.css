@@ -29,23 +29,129 @@
 }
 
 /* Tabla más aireada */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
 .table th {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.5px;
     padding: 1rem;
-    font-weight: 700;
-    color: #6c757d;
+    font-weight: 600;
+    color: #495057;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    border-top: none;
 }
 
 .table td {
     vertical-align: middle;
     padding: 1rem;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    border-top: 1px solid #e9ecef;
 }
 
-/* Hover suave */
-.table-hover tbody tr:hover {
-    background-color: rgba(0,0,0,0.02);
-    transition: background-color 0.2s ease;
+/* --- Estilos Modo Oscuro --- */
+.cobranza-main {
+    min-height: calc(100vh - 56px); /* Ajustar según altura del navbar */
+    background-color: #f8f9fa;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+    transition: background-color 0.3s ease;
+}
+
+.cobranza-main.dark-mode {
+    background-color: #111827;
+    color: #d1d5db;
+}
+
+.cobranza-main.dark-mode .text-secondary {
+    color: #adb5bd !important;
+}
+
+.cobranza-main.dark-mode .text-muted {
+    color: #6c757d !important;
+}
+
+.cobranza-main.dark-mode .border-bottom {
+    border-color: #374151 !important;
+}
+
+.cobranza-main.dark-mode .card,
+.cobranza-main.dark-mode .alert {
+    background-color: #1f2937;
+    border-color: #374151 !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2), 0 2px 8px 0 rgba(0, 0, 0, 0.34) !important;
+}
+
+.cobranza-main.dark-mode .card.bg-light {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+}
+
+.cobranza-main.dark-mode .form-control,
+.cobranza-main.dark-mode .form-select {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #e5e7eb;
+}
+
+.cobranza-main.dark-mode .form-control::placeholder {
+    color: #9ca3af;
+}
+
+.cobranza-main.dark-mode .alert-primary {
+    background-color: #1c3b55;
+    color: #aed6f1;
+}
+
+.cobranza-main.dark-mode .alert-success {
+    background-color: #1e463b;
+    color: #a7d7c5;
+}
+
+.cobranza-main.dark-mode .table {
+    color: #d1d5db;
+}
+
+.cobranza-main.dark-mode .table th {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #e5e7eb;
+}
+
+.cobranza-main.dark-mode .table-hover tbody tr:hover {
+    background-color: #2b3748; /* Un hover un poco más notorio */
+}
+
+.cobranza-main.dark-mode .table > :not(caption) > * > * {
+    background-color: transparent;
+    border-color: #374151;
+}
+
+.cobranza-main.dark-mode .table td {
+    box-shadow: none; /* Elimina cualquier sombra interna de las celdas */
+}
+
+.cobranza-main.dark-mode .avatar-circle {
+    background-color: #4b5563;
+    color: #e5e7eb;
+}
+
+.cobranza-main.dark-mode .btn-light {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #e5e7eb;
+}
+
+.cobranza-main.dark-mode .btn-light:hover {
+    background-color: #4b5563;
+    border-color: #6b7280;
+    color: #fff;
+}
+
+.cobranza-main.dark-mode .text-dark {
+    color: #e5e7eb !important;
 }

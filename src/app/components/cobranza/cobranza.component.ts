@@ -24,6 +24,7 @@ export class CobranzaComponent implements OnInit {
   
   isLoading = true;
   esAdmin = false;
+  isDarkMode = false;
   miPersonaId: number | null = null;
 
   filtroTexto: string = '';
@@ -52,6 +53,11 @@ export class CobranzaComponent implements OnInit {
       console.error("No se encontró un email en localStorage.");
       this.isLoading = false;
     }
+
+    // Cargar preferencia de modo oscuro
+    const darkModePref = localStorage.getItem('darkMode');
+    this.isDarkMode = darkModePref === 'true';
+    this.applyDarkMode();
   }
 
   CargarUsuario(email: string) {
@@ -239,5 +245,19 @@ export class CobranzaComponent implements OnInit {
       },
       error: (err) => console.error("Error cargando actividades:", err)
     });
+  }
+
+  private applyDarkMode(): void {
+    // Esta función no necesita modificar el body directamente si el CSS está bien estructurado.
+    // La clase [class.dark-mode] en el HTML se encargará de aplicar los estilos.
+    // Si necesitas un control global, la lógica del DashboardComponent que modifica
+    // document.body es la correcta. Por ahora, lo mantenemos a nivel de componente.
+  }
+
+  // Opcional: Si tienes un botón para cambiar el modo oscuro DENTRO de este componente.
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
+    localStorage.setItem('darkMode', this.isDarkMode.toString());
+    this.applyDarkMode();
   }
 }

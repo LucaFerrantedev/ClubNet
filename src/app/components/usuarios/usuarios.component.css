@@ -1,24 +1,34 @@
+/* Animación de entrada suave */
+.animate-fadein {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* Contenedor principal */
-.actividades-main {
+.usuarios-main {
 	padding: 2rem;
 	background-color: #f9fafb;
 	min-height: calc(100vh - 64px); /* 100% de la altura menos la navbar */
 }
 
 /* Encabezado de la sección */
-.actividades-header {
+.usuarios-header {
 	text-align: center;
 	margin-bottom: 2.5rem;
 }
 
-.actividades-title {
+.usuarios-title {
 	font-size: 2.5rem;
 	font-weight: 800;
 	color: #111827;
 	margin-bottom: 0.5rem;
 }
 
-.actividades-subtitle {
+.usuarios-subtitle {
 	font-size: 1.1rem;
 	color: #4b5563;
 	max-width: 600px;
@@ -66,31 +76,31 @@
 }
 
 /* Tabla de usuarios */
-.actividades-table {
+.usuarios-table {
 	width: 100%;
 	border-collapse: collapse;
 	font-size: 0.9rem;
 }
 
-.actividades-table th,
-.actividades-table td {
+.usuarios-table th,
+.usuarios-table td {
 	padding: 0.75rem 1rem;
 	text-align: left;
 	border-bottom: 1px solid #e5e7eb;
 }
 
-.actividades-table th {
+.usuarios-table th {
 	background-color: #f9fafb;
 	font-weight: 600;
 	color: #374151;
 }
 
-.actividades-table tbody tr:hover {
+.usuarios-table tbody tr:hover {
 	background-color: #f3f4f6;
 }
 
 .loading-cell,
-.no-actividades {
+.no-usuarios {
 	text-align: center;
 	padding: 2rem;
 	color: #6b7280;
@@ -306,97 +316,97 @@
    Estilos Modo Oscuro
    ================================= */
 
-.actividades-main.dark-mode {
+.usuarios-main.dark-mode {
     background-color: #111827;
     color: #d1d5db;
 }
 
-.actividades-main.dark-mode .actividades-title {
+.usuarios-main.dark-mode .usuarios-title {
     color: #f9fafb;
 }
 
-.actividades-main.dark-mode .actividades-subtitle {
+.usuarios-main.dark-mode .usuarios-subtitle {
     color: #9ca3af;
 }
 
-.actividades-main.dark-mode .admin-pill {
+.usuarios-main.dark-mode .admin-pill {
     background-color: #312e81;
     color: #c7d2fe;
 }
 
-.actividades-main.dark-mode .table-container {
+.usuarios-main.dark-mode .table-container {
     background-color: #1f2937;
     border: 1px solid #374151;
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
 }
 
-.actividades-main.dark-mode .form-title {
+.usuarios-main.dark-mode .form-title {
     color: #f9fafb;
     border-bottom-color: #374151;
 }
 
-.actividades-main.dark-mode .actividades-table th {
+.usuarios-main.dark-mode .usuarios-table th {
     background-color: #374151;
     color: #e5e7eb;
 }
 
-.actividades-main.dark-mode .actividades-table td {
+.usuarios-main.dark-mode .usuarios-table td {
     border-bottom-color: #374151;
 }
 
-.actividades-main.dark-mode .actividades-table tbody tr:hover {
+.usuarios-main.dark-mode .usuarios-table tbody tr:hover {
     background-color: #374151;
 }
 
-.actividades-main.dark-mode .loading-cell,
-.actividades-main.dark-mode .no-actividades {
+.usuarios-main.dark-mode .loading-cell,
+.usuarios-main.dark-mode .no-usuarios {
     color: #9ca3af;
 }
 
-.actividades-main.dark-mode .badge-activo {
+.usuarios-main.dark-mode .badge-activo {
     background-color: #064e3b;
     color: #a7f3d0;
 }
 
-.actividades-main.dark-mode .badge-inactivo {
+.usuarios-main.dark-mode .badge-inactivo {
     background-color: #7f1d1d;
     color: #fecaca;
 }
 
-.actividades-main.dark-mode .btn-editar-tabla:hover,
-.actividades-main.dark-mode .btn-eliminar-tabla:hover {
+.usuarios-main.dark-mode .btn-editar-tabla:hover,
+.usuarios-main.dark-mode .btn-eliminar-tabla:hover {
     background-color: #374151;
 }
 
-.actividades-main.dark-mode .modal-content {
+.usuarios-main.dark-mode .modal-content {
     background-color: #1f2937;
     border: 1px solid #4b5563;
 }
 
-.actividades-main.dark-mode .modal-title {
+.usuarios-main.dark-mode .modal-title {
     color: #f9fafb;
 }
 
-.actividades-main.dark-mode .modal-close {
+.usuarios-main.dark-mode .modal-close {
     color: #6b7280;
 }
 
-.actividades-main.dark-mode .form-group label {
+.usuarios-main.dark-mode .form-group label {
     color: #9ca3af;
 }
 
-.actividades-main.dark-mode .form-group input,
-.actividades-main.dark-mode .form-group select {
+.usuarios-main.dark-mode .form-group input,
+.usuarios-main.dark-mode .form-group select {
     background-color: #374151;
     border-color: #4b5563;
     color: #e5e7eb;
 }
 
-.actividades-main.dark-mode .btn-cancelar {
+.usuarios-main.dark-mode .btn-cancelar {
     background-color: #374151;
     color: #d1d5db;
 }
 
-.actividades-main.dark-mode .btn-cancelar:hover {
+.usuarios-main.dark-mode .btn-cancelar:hover {
     background-color: #4b5563;
 }

@@ -1,12 +1,12 @@
 <app-navbar></app-navbar>
 
-<div class="actividades-main" [class.dark-mode]="isDarkMode">
-    <div class="actividades-header animate-fadein">
+<div class="usuarios-main" [class.dark-mode]="isDarkMode">
+    <div class="usuarios-header animate-fadein">
         @if (isAdmin) {
             <span class="admin-pill">✨ Poderes de Admin</span>
         }
-        <h1 class="actividades-title">Gestión de Usuarios</h1>
-        <p class="actividades-subtitle">Control total sobre las cuentas de los miembros del club.</p>
+        <h1 class="usuarios-title">Gestión de Usuarios</h1>
+        <p class="usuarios-subtitle">Control total sobre las cuentas de los miembros del club.</p>
     </div>
 
     <div class="content-wrapper">
@@ -76,9 +76,9 @@
             } @else {
             <h2 class="form-title">Lista de Usuarios</h2>
             @if (usuarios.length === 0) {
-            <p class="no-actividades">No hay usuarios registrados o no se pudieron cargar.</p>
+            <p class="no-usuarios">No hay usuarios registrados o no se pudieron cargar.</p>
             } @else {
-            <table class="actividades-table">
+            <table class="usuarios-table">
                 <thead>
                     <tr>
                         <th>ID</th>

@@ -1,17 +1,18 @@
 <app-navbar></app-navbar>
 
+<div class="cobranza-main" [class.dark-mode]="isDarkMode">
 <div class="container mt-4 animate-fadein">
 
   <!-- CABECERA -->
   <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
     <div>
-      <h2 class="text-secondary fw-bold mb-0">
+      <h1 class="text-secondary fw-bold mb-0">
         @if (esAdmin) { 
           <i class="bi bi-shield-lock"></i> Gestión de Cobranzas 
         } @else { 
           <i class="bi bi-wallet2"></i> Mis Pagos 
         }
-      </h2>
+      </h1>
       <small class="text-muted">
         @if (esAdmin) { 
           Control total de pagos de socios. 
@@ -111,7 +112,7 @@
   <div class="card shadow-sm border-0">
     <div class="table-responsive">
       <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
+        <thead>
           <tr>
             <th class="ps-4">Periodo</th>
             @if(esAdmin) { <th>Socio</th> }
@@ -201,4 +202,5 @@
       </table>
     </div>
   </div>
+</div>
 </div>
