@@ -91,6 +91,15 @@
     border-color: #374151 !important;
 }
 
+.cobranza-title {
+    color: #111827; /* el color que querés */
+}
+
+/* si querés que en dark mode se vea clarito, tipo actividades */
+.cobranza-main.dark-mode .cobranza-title {
+    color: #f9fafb;
+}
+
 .cobranza-main.dark-mode .form-control,
 .cobranza-main.dark-mode .form-select {
     background-color: #374151;

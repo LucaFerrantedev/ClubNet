@@ -1,13 +1,94 @@
-.inscripcion-card {
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+/* Base Layout (Igualando a Actividades) */
+.main-container {
+    background-color: #f8f9fa; /* Fondo gris muy suave */
+    min-height: 100vh;
+    padding-bottom: 3rem;
 }
 
-.inscripcion-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+.page-header {
+    background-color: #fff;
+    padding: 2rem 0 1.5rem; /* Espaciado generoso arriba */
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 2rem;
+    padding-left: max(1rem, calc((100% - 1200px) / 2)); /* Centrado responsivo */
+    padding-right: max(1rem, calc((100% - 1200px) / 2));
 }
 
-.badge {
+.page-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #2c3e50;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.2rem;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Tarjetas */
+.shadow-card {
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.shadow-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
+}
+
+.status-strip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+}
+
+/* Tipografía de Datos */
+.data-label {
     font-size: 0.7rem;
-    padding: 0.5em 0.8em;
+    text-transform: uppercase;
+    color: #adb5bd;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+    display: block;
 }
+
+.data-value {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #343a40;
+}
+
+/* Estado Vacío */
+.empty-state {
+    background: #fff;
+    border-radius: 12px;
+    padding: 4rem 2rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    border: 1px dashed #dee2e6;
+}
+.icon-box {
+    font-size: 3rem;
+    color: #dee2e6;
+    margin-bottom: 1rem;
+}
+
+/* Badges Modernos (Estilo "Subtle" manual) */
+.bg-success-subtle { background-color: #d1e7dd; color: #0a3622; }
+.bg-danger-subtle { background-color: #f8d7da; color: #58151c; }
+
+/* Animación */
+.animate-fadein { animation: fadeIn 0.5s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

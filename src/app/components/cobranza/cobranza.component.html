@@ -6,13 +6,13 @@
   <!-- CABECERA -->
   <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
     <div>
-      <h1 class="text-secondary fw-bold mb-0">
-        @if (esAdmin) { 
-          <i class="bi bi-shield-lock"></i> Gestión de Cobranzas 
-        } @else { 
-          <i class="bi bi-wallet2"></i> Mis Pagos 
-        }
-      </h1>
+      <h1 class="cobranza-title fw-bold mb-0">
+  @if (esAdmin) { 
+    <i class="bi bi-shield-lock"></i> Gestión de Cobranzas 
+  } @else { 
+    <i class="bi bi-wallet2"></i> Mis Pagos 
+  }
+</h1>
       <small class="text-muted">
         @if (esAdmin) { 
           Control total de pagos de socios. 

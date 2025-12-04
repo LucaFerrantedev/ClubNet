@@ -117,6 +117,13 @@
                   </button>
                 </div>
                 }
+                @if (esEntrenador) {
+                <div>
+                  <button class="btn btn-success btn-sm" (click)="GestionClases(actividad.actividad_id)">
+                    Gestionar clases
+                  </button>
+                </div>
+                }
               </div>
             </td>
           </tr>

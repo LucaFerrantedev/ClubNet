@@ -35,6 +35,7 @@ export class ActividadesComponent implements OnInit {
   DataSourceUsuario: any;
   esAdmin = false;
   esUsuarioNormal = false;
+  esEntrenador=false;
   email = ''
 
   constructor(
@@ -182,6 +183,7 @@ export class ActividadesComponent implements OnInit {
           this.DataSourceUsuario = x;
           this.esAdmin = this.DataSourceUsuario?.rol_id === 1;
           this.esUsuarioNormal = this.DataSourceUsuario?.rol_id === 3;
+          this.esEntrenador=this.DataSourceUsuario?.rol_id === 2;
           
           // NUEVO: Solo cargamos la lista si es Admin
           if (this.esAdmin) {
@@ -196,6 +198,13 @@ export class ActividadesComponent implements OnInit {
 
   Inscribirse(actividad_id:number){
     this.router.navigate(['/inscripcion'], {
+    state: {
+      actividadId: actividad_id 
+    }
+  });
+  }
+    GestionClases(actividad_id:number){
+    this.router.navigate(['/clases'], {
     state: {
       actividadId: actividad_id 
     }
