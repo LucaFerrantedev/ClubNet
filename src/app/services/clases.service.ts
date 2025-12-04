@@ -13,9 +13,9 @@ export class ClasesService {
 
   // Metodos para gestionar CRUD de Clases
 
-  GetClases() {
+  GetClases(idActividad:any) {
     const headers = this.loginService.getAuthHeaders();
-    return this.http.get(this.url + "/GetClases", { headers: headers });
+    return this.http.get(this.url + "/GetClases?actividadId="+idActividad, { headers: headers });
   }
 
   CreateClase(obj: any) {

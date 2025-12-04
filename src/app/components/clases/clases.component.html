@@ -1,33 +1,150 @@
 <app-navbar></app-navbar>
-<div class="clases-main" [class.dark-mode]="isDarkMode">
-  <div class="clases-header animate-fadein">
-    <h1 class="clases-title">Clases del Club</h1>
-    <p class="clases-subtitle">Consulta el listado de clases disponibles.</p>
-  </div>
 
-  <div class="content-wrapper">
-    <div class="table-container animate-slidein">
-      <table class="clases-table">
-        <thead>
-          <tr>
-            <th>Título</th>
-            <th>Detalle</th>
-          </tr>
-        </thead>
-        <tbody>
-          @if (isLoading) {
-          <tr>
-            <td colspan="2" class="loading-cell">Cargando clases...</td>
-          </tr>
-          }
-          @for (clase of clases; track clase.clase_id) {
-          <tr>
-            <td>{{ clase.titulo }}</td>
-            <td>{{ clase.detalle }}</td>
-          </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+<div class="clases-main" [class.dark-mode]="isDarkMode">
+  <div class="clases-wrapper">
+
+    <!-- CABECERA -->
+    <header class="clases-header">
+      <div>
+        <h1 class="clases-title">Clases correspondientes a (aca mostrar la actividad)</h1>
+        <p class="clases-subtitle">Consultá el listado de clases o creá una.</p>
+      </div>
+
+      <button class="btn-crear-clase" (click)="crearNuevaClase()">
+        + Crear clase
+      </button>
+    </header>
+
+    <!-- LISTA DE CLASES -->
+    <section class="clases-card">
+
+      @if (isLoading) {
+        <div class="no-actividades text-center p-3">
+          Cargando clases...
+        </div>
+      } @else {
+
+        @if (clases.length === 0) {
+          <div class="no-actividades text-center p-3">
+            No hay clases cargadas.
+          </div>
+        }
+
+        @for (clase of clases; track clase.clase_id) {
+          <article
+            class="clase-item"
+            (click)="seleccionarClase(clase)"
+            [class.clase-activa]="claseEnEdicion && claseEnEdicion.clase_id === clase.clase_id"
+          >
+            <!-- Izquierda -->
+            <div class="clase-info">
+              <div class="clase-icon">
+                📋
+              </div>
+              <div>
+                <h2 class="clase-titulo">{{ clase.titulo }}</h2>
+                <p class="clase-detalle">{{ clase.detalle }}</p>
+              </div>
+            </div>
+
+            <!-- Derecha: solo etiqueta de intensidad -->
+            <div class="clase-actions">
+              <div class="clase-intensidad">
+                <span class="clase-intensidad-label">INTENSIDAD</span>
+                <span
+                  class="badge-intensidad"
+                  [ngClass]="getIntensidadClass(clase.intensidad)"
+                >
+                  {{ clase.intensidad | lowercase }}
+                </span>
+              </div>
+            </div>
+          </article>
+        }
+      }
+    </section>
+
+    <!-- MODAL EDICIÓN / CREACIÓN -->
+    @if (mostrarModal && claseEnEdicion) {
+      <div class="modal-backdrop" (click)="cerrarModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+
+          <button class="modal-close" (click)="cerrarModal()">
+            &times;
+          </button>
+
+          <h2 class="editor-title">
+            {{ claseEnEdicion.clase_id === 0 ? 'Crear nueva clase' : 'Editar clase: ' + claseEnEdicion.titulo }}
+          </h2>
+
+          <div class="editor-grid">
+
+            <div class="editor-group">
+              <label for="titulo-edit">Título</label>
+              <input
+                id="titulo-edit"
+                type="text"
+                [(ngModel)]="claseEnEdicion.titulo"
+              />
+            </div>
+
+            <div class="editor-group">
+              <label for="detalle-edit">Detalle</label>
+              <textarea
+                id="detalle-edit"
+                rows="3"
+                [(ngModel)]="claseEnEdicion.detalle"
+              ></textarea>
+            </div>
+
+            <div class="editor-group">
+              <label for="intensidad-edit">Intensidad</label>
+              <select
+                id="intensidad-edit"
+                [(ngModel)]="claseEnEdicion.intensidad"
+                [ngClass]="['intensidad-select', getIntensidadClass(claseEnEdicion.intensidad)]"
+              >
+                <option value="ALTA">alta</option>
+                <option value="MEDIA">media</option>
+                <option value="BAJA">baja</option>
+              </select>
+
+            </div>
+
+            <div class="editor-group">
+              <label for="video-edit">Video de la clase</label>
+              <div class="video-upload">
+                <input
+                  id="video-edit"
+                  type="file"
+                  accept="video/*"
+                  (change)="onFileSelected($event)"
+                />
+              </div>
+              <small class="editor-help">
+                Subí un archivo de video desde tu computadora.
+              </small>
+              @if (selectedVideoName) {
+                <div class="archivo-seleccionado">
+                  Archivo seleccionado: {{ selectedVideoName }}
+                </div>
+              }
+            </div>
+
+          </div>
+
+          <div class="editor-actions">
+            <button class="btn-secundario" (click)="cancelarEdicion()">
+              Cancelar
+            </button>
+            <button class="btn-principal" (click)="guardarCambios()">
+              Guardar cambios
+            </button>
+          </div>
+
+        </div>
+      </div>
+    }
+
   </div>
 </div>
