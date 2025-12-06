@@ -6,8 +6,10 @@ import { NavbarComponent } from '../navbar/navbar.component';
 interface Clase {
   clase_id: number;
   actividad_id: number;
+  actividad: string;
   titulo: string;
   detalle: string;
+  intensidad: string;
 }
 
 @Component({
@@ -25,7 +27,6 @@ export class ClasesComponent implements OnInit {
   constructor(private clasesService: ClasesService) { }
 
   ngOnInit(): void {
-    // Cargar preferencia de modo oscuro
     const darkModePref = localStorage.getItem('darkMode');
     this.isDarkMode = darkModePref === 'true';
 

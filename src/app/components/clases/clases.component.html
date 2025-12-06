@@ -10,8 +10,10 @@
       <table class="clases-table">
         <thead>
           <tr>
+            <th>Actividad</th>
             <th>Título</th>
             <th>Detalle</th>
+            <th>Intensidad</th>
           </tr>
         </thead>
         <tbody>
@@ -22,8 +24,10 @@
           }
           @for (clase of clases; track clase.clase_id) {
           <tr>
+            <td>{{ clase.actividad }}</td>
             <td>{{ clase.titulo }}</td>
             <td>{{ clase.detalle }}</td>
+            <td>{{ clase.intensidad }}</td>
           </tr>
           }
         </tbody>

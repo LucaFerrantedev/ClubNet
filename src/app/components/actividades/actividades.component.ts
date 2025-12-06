@@ -36,7 +36,7 @@ export class ActividadesComponent implements OnInit {
   esAdmin = false;
   esUsuarioNormal = false;
   email = '';
-  
+
   // Agregamos un array para guardar los IDs de las actividades donde ya está inscripto
   inscripcionesIds: number[] = [];
 
@@ -55,8 +55,8 @@ export class ActividadesComponent implements OnInit {
     const darkModePref = localStorage.getItem('darkMode');
     this.isDarkMode = darkModePref === 'true';
 
-    console.log("es usuario normal? ",this.esUsuarioNormal)
-    this.CargarEntrenadores(); 
+    console.log("es usuario normal? ", this.esUsuarioNormal)
+    this.CargarEntrenadores();
   }
 
   CargarActividades() {
@@ -100,8 +100,8 @@ export class ActividadesComponent implements OnInit {
     this.actividadesService.CreateActividad(obj).subscribe({
       next: () => {
         console.log('Actividad creada con éxito');
-        this.CargarActividades(); 
-        this.resetFormulario(); 
+        this.CargarActividades();
+        this.resetFormulario();
       },
       error: (err) => console.error('Error al crear la actividad:', err)
     });
@@ -119,9 +119,9 @@ export class ActividadesComponent implements OnInit {
     this.actividadesService.UpdateActividad(this.actividadParaEditar).subscribe({
       next: () => {
         console.log('Actividad modificada con éxito');
-        this.CargarActividades(); 
-        this.resetFormulario(); 
-        this.cerrarModal(); 
+        this.CargarActividades();
+        this.resetFormulario();
+        this.cerrarModal();
       },
       error: (err) => console.error('Error al modificar la actividad:', err)
     });
@@ -136,8 +136,8 @@ export class ActividadesComponent implements OnInit {
     this.actividadesService.DeleteActividad(id).subscribe({
       next: () => {
         console.log('Actividad eliminada con éxito');
-        this.CargarActividades(); 
-        this.actividadParaEliminar = null; 
+        this.CargarActividades();
+        this.actividadParaEliminar = null;
       },
       error: (err) => console.error('Error al eliminar la actividad:', err)
     });
@@ -145,8 +145,8 @@ export class ActividadesComponent implements OnInit {
 
   CargarEntrenadores() {
     this.usuariosService.GetUsuariosByRol(2).subscribe((data: any) => {
-       this.listaEntrenadores = data.filter((u: any) => u.rol_id === 2);
-       this.CargarActividades(); 
+      this.listaEntrenadores = data.filter((u: any) => u.rol_id === 2);
+      this.CargarActividades();
     });
   }
 
@@ -160,7 +160,7 @@ export class ActividadesComponent implements OnInit {
 
   abrirModal(actividad: any, editMode: boolean = false) {
     this.selectedActividad = actividad;
-    this.actividadParaEditar = { ...actividad }; 
+    this.actividadParaEditar = { ...actividad };
     this.isEditMode = editMode;
   }
 
@@ -175,26 +175,26 @@ export class ActividadesComponent implements OnInit {
   }
 
   CargarUsuario(email: string) {
-      this.actividadesService.GetUsuario(email).subscribe({
-        next: (x) => {
-          this.DataSourceUsuario = x;
-          this.esAdmin = this.DataSourceUsuario?.rol_id === 1;
-          this.esUsuarioNormal = this.DataSourceUsuario?.rol_id === 3;
-          
-          if (this.esAdmin) {
-            this.CargarEntrenadores();
-          }
-          
-          // Si es usuario normal, cargamos sus inscripciones para verificar duplicados
-          if (this.esUsuarioNormal) {
-            this.CargarInscripciones();
-          }
-        },
-        error: (err) => {
-          console.error("Error al cargar los datos del usuario:", err);
+    this.actividadesService.GetUsuario(email).subscribe({
+      next: (x) => {
+        this.DataSourceUsuario = x;
+        this.esAdmin = this.DataSourceUsuario?.rol_id === 1;
+        this.esUsuarioNormal = this.DataSourceUsuario?.rol_id === 3;
+
+        if (this.esAdmin) {
+          this.CargarEntrenadores();
         }
-      });
-    }
+
+        // Si es usuario normal, cargamos sus inscripciones para verificar duplicados
+        if (this.esUsuarioNormal) {
+          this.CargarInscripciones();
+        }
+      },
+      error: (err) => {
+        console.error("Error al cargar los datos del usuario:", err);
+      }
+    });
+  }
 
   // Método nuevo para obtener inscripciones
   CargarInscripciones() {
@@ -214,12 +214,12 @@ export class ActividadesComponent implements OnInit {
     return this.inscripcionesIds.includes(actividadId);
   }
 
-  Inscribirse(actividad_id:number){
+  Inscribirse(actividad_id: number) {
     this.router.navigate(['/inscripcion'], {
-    state: {
-      actividadId: actividad_id 
-    }
-  });
+      state: {
+        actividadId: actividad_id
+      }
+    });
   }
 
   resetFormulario() {
