@@ -159,14 +159,14 @@ export class LoginComponent implements OnInit {
     });
   }
 
-    // Resetea los campos del formulario
-    resetForm() {
-      this.dni = '';
-      this.nombre = '';
-      this.apellido = '';
-      this.email = '';
-      this.clave = '';
-      this.confirmarClave = '';
-    }
-
+  // Resetea los campos del formulario
+  resetForm() {
+    this.dni = '';
+    this.nombre = '';
+    this.apellido = '';
+    this.email = '';
+    this.clave = '';
+    this.confirmarClave = '';
   }
+
+}

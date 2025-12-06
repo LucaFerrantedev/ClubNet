@@ -35,7 +35,10 @@ export class ActividadesComponent implements OnInit {
   DataSourceUsuario: any;
   esAdmin = false;
   esUsuarioNormal = false;
-  email = ''
+  email = '';
+  
+  // Agregamos un array para guardar los IDs de las actividades donde ya está inscripto
+  inscripcionesIds: number[] = [];
 
   constructor(
     private actividadesService: ActividadesService,
@@ -49,19 +52,17 @@ export class ActividadesComponent implements OnInit {
     } else {
       console.error("No se encontró un email en localStorage. No se puede cargar el usuario.");
     }
-    // Cargar preferencia de modo oscuro
     const darkModePref = localStorage.getItem('darkMode');
     this.isDarkMode = darkModePref === 'true';
 
     console.log("es usuario normal? ",this.esUsuarioNormal)
-    this.CargarEntrenadores(); // Esto ahora también llamará a CargarActividades
+    this.CargarEntrenadores(); 
   }
 
   CargarActividades() {
     this.isLoading = true;
     this.actividadesService.GetActividades().subscribe({
       next: (data: any) => {
-        // Mapeamos las actividades para agregar el nombre del entrenador si no viene
         this.actividades = data.map((actividad: any) => {
           if (!actividad.entrenador && actividad.entrenador_id) {
             const entrenador = this.listaEntrenadores.find(e => e.persona_id === actividad.entrenador_id);
@@ -99,8 +100,8 @@ export class ActividadesComponent implements OnInit {
     this.actividadesService.CreateActividad(obj).subscribe({
       next: () => {
         console.log('Actividad creada con éxito');
-        this.CargarActividades(); // Recargar la lista de actividades
-        this.resetFormulario(); // Limpiar el formulario
+        this.CargarActividades(); 
+        this.resetFormulario(); 
       },
       error: (err) => console.error('Error al crear la actividad:', err)
     });
@@ -112,16 +113,15 @@ export class ActividadesComponent implements OnInit {
       return;
     }
 
-    // para asegurar que los valores sean numeros
     this.actividadParaEditar.cupo = Number(this.actividadParaEditar.cupo);
     this.actividadParaEditar.cuota_valor = Number(this.actividadParaEditar.cuota_valor);
 
     this.actividadesService.UpdateActividad(this.actividadParaEditar).subscribe({
       next: () => {
         console.log('Actividad modificada con éxito');
-        this.CargarActividades(); // recarga la lista de actividades
-        this.resetFormulario(); // limpia el formulario
-        this.cerrarModal(); // y cierra el modal
+        this.CargarActividades(); 
+        this.resetFormulario(); 
+        this.cerrarModal(); 
       },
       error: (err) => console.error('Error al modificar la actividad:', err)
     });
@@ -136,19 +136,17 @@ export class ActividadesComponent implements OnInit {
     this.actividadesService.DeleteActividad(id).subscribe({
       next: () => {
         console.log('Actividad eliminada con éxito');
-        this.CargarActividades(); // recarga la lista de actividades
-        this.actividadParaEliminar = null; // Cierra el modal de confirmación
+        this.CargarActividades(); 
+        this.actividadParaEliminar = null; 
       },
       error: (err) => console.error('Error al eliminar la actividad:', err)
     });
   }
 
   CargarEntrenadores() {
-    // Asumiendo que el rol ID 2 es Entrenador
     this.usuariosService.GetUsuariosByRol(2).subscribe((data: any) => {
-       // Filtramos solo los que tienen rol de entrenador (ajusta el ID 2 según tu DB)
        this.listaEntrenadores = data.filter((u: any) => u.rol_id === 2);
-       this.CargarActividades(); // Llamamos a cargar actividades DESPUÉS de tener los entrenadores
+       this.CargarActividades(); 
     });
   }
 
@@ -162,7 +160,7 @@ export class ActividadesComponent implements OnInit {
 
   abrirModal(actividad: any, editMode: boolean = false) {
     this.selectedActividad = actividad;
-    this.actividadParaEditar = { ...actividad }; // Clonar para edición
+    this.actividadParaEditar = { ...actividad }; 
     this.isEditMode = editMode;
   }
 
@@ -183,9 +181,13 @@ export class ActividadesComponent implements OnInit {
           this.esAdmin = this.DataSourceUsuario?.rol_id === 1;
           this.esUsuarioNormal = this.DataSourceUsuario?.rol_id === 3;
           
-          // NUEVO: Solo cargamos la lista si es Admin
           if (this.esAdmin) {
             this.CargarEntrenadores();
+          }
+          
+          // Si es usuario normal, cargamos sus inscripciones para verificar duplicados
+          if (this.esUsuarioNormal) {
+            this.CargarInscripciones();
           }
         },
         error: (err) => {
@@ -193,6 +195,24 @@ export class ActividadesComponent implements OnInit {
         }
       });
     }
+
+  // Método nuevo para obtener inscripciones
+  CargarInscripciones() {
+    this.actividadesService.GetInscripcionesUsuario(this.email).subscribe({
+      next: (res: any) => {
+        if (res) {
+          // Guardamos solo los IDs de las actividades
+          this.inscripcionesIds = res.map((i: any) => i.actividad_id);
+        }
+      },
+      error: (err) => console.error('Error cargando inscripciones:', err)
+    });
+  }
+
+  // Helper para verificar si ya está inscripto
+  estaInscripto(actividadId: number): boolean {
+    return this.inscripcionesIds.includes(actividadId);
+  }
 
   Inscribirse(actividad_id:number){
     this.router.navigate(['/inscripcion'], {
@@ -207,7 +227,6 @@ export class ActividadesComponent implements OnInit {
     this.descripcion = '';
     this.cupo = 0;
     this.cuota_valor = 0;
-    //this.estado = true;
     this.inicio = '';
     this.url_imagen = '';
   }
