@@ -8,8 +8,8 @@ import { Router } from '@angular/router';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit{
-  DataSource:any;
-  constructor(private homeService:HomeService, private router: Router) { }
+  DataSource: any;
+  constructor(private homeService: HomeService, private router: Router) { }
 
   ngOnInit(): void {
     this.GetActividades();
@@ -20,9 +20,10 @@ export class HomeComponent implements OnInit{
   }
 
   GetActividades(){
-    this.homeService.GetActividades().subscribe(x=>{
-      this.DataSource=x;
+    this.homeService.GetActividades().subscribe((x: any) => {
+      // FILTRO: Solo mostramos las actividades donde estado es true (Activo)
+      this.DataSource = x.filter((act: any) => act.estado === true);
       console.log(this.DataSource);
-    })
+    });
   }
 }
