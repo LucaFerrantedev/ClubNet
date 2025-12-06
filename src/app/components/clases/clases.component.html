@@ -1,10 +1,10 @@
 <app-navbar></app-navbar>
 <div class="clases-main" [class.dark-mode]="isDarkMode">
 
-  @if (esEntrenador && actividadId) {
+  @if (esEntrenador) {
   <div class="clases-header animate-fadein">
     <h1 class="clases-title">Gestión de Clases</h1>
-    <p class="clases-subtitle">Administra el cronograma para esta actividad.</p>
+    <p class="clases-subtitle">Administra el cronograma de tus actividades.</p>
 
     <button class="btn-crear mt-3" (click)="abrirModal()">
       + Nueva Clase
@@ -12,6 +12,19 @@
   </div>
 
   <div class="content-wrapper">
+
+    @if(actividadesDelEntrenador.length > 0) {
+    <div class="mb-4 d-flex justify-content-center align-items-center gap-2">
+      <label class="fw-bold">Viendo clases de:</label>
+      <select class="form-select w-auto" [ngModel]="actividadId" (ngModelChange)="cambiarActividadVisualizada($event)">
+        <option [ngValue]="null" disabled>Selecciona una actividad</option>
+        @for (act of actividadesDelEntrenador; track act.actividad_id) {
+        <option [ngValue]="act.actividad_id">{{ act.nombre }}</option>
+        }
+      </select>
+    </div>
+    }
+
     <div class="table-container animate-slidein">
       <table class="clases-table">
         <thead>
@@ -28,16 +41,19 @@
           }
           @for (clase of clasesEntrenador; track clase.clase_id) {
           <tr>
-            <td>{{ clase.actividad }}</td>
             <td>{{ clase.titulo }}</td>
             <td>{{ clase.detalle }}</td>
-            <td>{{ clase.intensidad }}</td>
-            <td>{{ clase.url_multimedia }}</td>
           </tr>
           } @empty {
           @if (!isLoading) {
           <tr>
-            <td colspan="2" class="no-clases">No hay clases creadas aún.</td>
+            <td colspan="2" class="no-clases">
+              @if(actividadId) {
+              No hay clases creadas para esta actividad.
+              } @else {
+              Selecciona una actividad para ver sus clases.
+              }
+            </td>
           </tr>
           }
           }
@@ -53,81 +69,92 @@
       <h2 class="modal-title">Crear Clase</h2>
       <form (ngSubmit)="crearClase()">
         <div class="form-grid">
+
           <div class="form-group">
             <label>Actividad</label>
-            <input type="text" [(ngModel)]="nuevaClase.actividad" name="actividad" required>
+            <select [(ngModel)]="nuevaClase.actividad_id" name="actividad_id" required>
+              <option [ngValue]="0" disabled>Selecciona una actividad...</option>
+              @for (act of actividadesDelEntrenador; track act.actividad_id) {
+              <option [ngValue]="act.actividad_id">{{ act.nombre }}</option>
+              }
+            </select>
           </div>
+
           <div class="form-group">
             <label>Título</label>
-            <input type="text" [(ngModel)]="nuevaClase.titulo" name="titulo" required>
+            <input type="text" [(ngModel)]="nuevaClase.titulo" name="titulo" required placeholder="Ej: Clase Táctica">
           </div>
           <div class="form-group">
             <label>Detalle</label>
-            <textarea [(ngModel)]="nuevaClase.detalle" name="detalle" required></textarea>
+            <textarea [(ngModel)]="nuevaClase.detalle" name="detalle" required
+              placeholder="Descripción de la clase..."></textarea>
           </div>
           <div class="form-group">
-            <label>Url multimedia</label>
-            <input type="text" [(ngModel)]="nuevaClase.url_multimedia" name="url_multimedia" required>
+            <label>Intensidad</label>
+            <textarea [(ngModel)]="nuevaClase.intensidad" name="intensidad" required
+              placeholder="Intenisdad de la clase..."></textarea>
           </div>
-        </div>
-        <div class="modal-actions">
-          <button type="button" class="btn-cancelar" (click)="cerrarModal()">Cancelar</button>
-          <button type="submit" class="btn-guardar">Guardar</button>
+          <div class="form-group">
+            <label>URL Multimedia (opcional)</label>
+            <input type="text" [(ngModel)]="nuevaClase.url_multimedia" name="url_multimedia"
+              placeholder="Ej: https://...">
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-cancelar" (click)="cerrarModal()">Cancelar</button>
+            <button type="submit" class="btn-guardar">Guardar</button>
+          </div>
         </div>
       </form>
     </div>
   </div>
-  }
-  }
-
-  @else {
-  <div class="clases-header animate-fadein">
-    <h1 class="clases-title">Mis Clases</h1>
-    <p class="clases-subtitle">Consulta el cronograma de tus actividades.</p>
-  </div>
-
-  <div class="content-wrapper">
-    @if (isLoading) {
-    <div class="text-center py-5">
-      <div class="spinner-border text-primary" role="status"></div>
-      <p class="mt-2 text-muted">Buscando tus clases...</p>
-    </div>
     }
-    @else if (misClases.length === 0) {
-    <div class="table-container animate-fadein text-center">
-      <p class="no-clases">No tienes clases asignadas.</p>
-    </div>
-    }
+
     @else {
-    @for (grupo of misClases; track grupo.actividad) {
-    <div class="mb-5 animate-slidein">
-      <h3 class="mb-3 px-2 border-start border-4 border-primary fw-bold text-secondary">
-        {{ grupo.actividad }}
-      </h3>
+    <div class="clases-header animate-fadein">
+      <h1 class="clases-title">Mis Clases</h1>
+      <p class="clases-subtitle">Consulta el cronograma de tus actividades.</p>
+    </div>
 
-      <div class="table-container">
-        <table class="clases-table">
-          <thead>
-            <tr>
-              <th>Actividad</th>
-              <th>Título de la Clase</th>
-              <th>Detalle</th>
-              <th>Intensidad</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (clase of grupo.listaClases; track clase.clase_id) {
-            <tr>
-              <td class="fw-medium">{{ clase.titulo }}</td>
-              <td class="text-muted">{{ clase.detalle }}</td>
-            </tr>
-            }
-          </tbody>
-        </table>
+    <div class="content-wrapper">
+      @if (isLoading) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2 text-muted">Buscando tus clases...</p>
       </div>
+      }
+      @else if (misClases.length === 0) {
+      <div class="table-container animate-fadein text-center">
+        <p class="no-clases">No tienes clases asignadas.</p>
+      </div>
+      }
+      @else {
+      @for (grupo of misClases; track grupo.actividad) {
+      <div class="mb-5 animate-slidein">
+        <h3 class="mb-3 px-2 border-start border-4 border-primary fw-bold text-secondary">
+          {{ grupo.actividad }}
+        </h3>
+
+        <div class="table-container">
+          <table class="clases-table">
+            <thead>
+              <tr>
+                <th>Título de la Clase</th>
+                <th>Detalle / Horario</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (clase of grupo.listaClases; track clase.clase_id) {
+              <tr>
+                <td class="fw-medium">{{ clase.titulo }}</td>
+                <td class="text-muted">{{ clase.detalle }}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      }
+      }
     </div>
     }
-    }
-  </div>
   }
-</div>

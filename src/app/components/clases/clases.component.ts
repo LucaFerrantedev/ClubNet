@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Importar FormsModule
-import { ActivatedRoute } from '@angular/router'; // Importar ActivatedRoute
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ClasesService } from '../../services/clases.service';
 import { ActividadesService } from '../../services/actividades.service';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { url } from 'inspector';
 
 interface GrupoClases {
   actividad: string;
@@ -21,7 +20,7 @@ interface GrupoClases {
 })
 export class ClasesComponent implements OnInit {
   misClases: GrupoClases[] = [];
-  clasesEntrenador: any[] = []; // Lista simple para el entrenador
+  clasesEntrenador: any[] = [];
   
   isLoading = true;
   isDarkMode = false;
@@ -29,8 +28,13 @@ export class ClasesComponent implements OnInit {
   
   // Variables Entrenador
   esEntrenador = false;
-  actividadId: number | null = null;
-  nuevaClase = { actividad: '', titulo: '', detalle: '', intensidad: '', url_multimedia: ''};
+  actividadId: number | null = null; // ID de la actividad que se está visualizando
+  
+  // Lista de actividades asignadas al entrenador (para el select del modal)
+  actividadesDelEntrenador: any[] = []; 
+
+  // Modelo para el formulario (ahora incluye actividad_id)
+  nuevaClase = { actividad_id: 0, titulo: '', detalle: '', intensidad: '', url_multimedia: '' };
   showModal = false;
 
   constructor(
@@ -57,18 +61,22 @@ export class ClasesComponent implements OnInit {
         this.esEntrenador = user?.rol_id === 2;
 
         if (this.esEntrenador) {
-          // Si es entrenador, miramos si viene un ID en la URL
+          // 1. Cargar las actividades asignadas a este entrenador
+          this.cargarActividadesAsignadas(user.persona_id);
+
+          // 2. Revisar si viene un ID por URL para cargar la tabla inicial
           this.route.queryParams.subscribe(params => {
             this.actividadId = params['actividadId'] ? Number(params['actividadId']) : null;
             
             if (this.actividadId) {
               this.cargarClasesActividad(this.actividadId);
+              // Pre-seleccionar esta actividad en el modal
+              this.nuevaClase.actividad_id = this.actividadId;
             } else {
-              this.isLoading = false; // No hay actividad seleccionada
+              this.isLoading = false; 
             }
           });
         } else {
-          // Si es usuario normal, cargamos sus inscripciones
           this.cargarMisClases();
         }
       },
@@ -76,7 +84,64 @@ export class ClasesComponent implements OnInit {
     });
   }
 
-  // Lógica USUARIO NORMAL
+  // --- Lógica ENTRENADOR ---
+
+  cargarActividadesAsignadas(personaId: number) {
+    this.actividadesService.GetActividades().subscribe({
+      next: (data: any) => {
+        // Filtramos solo las actividades donde el entrenador coincide
+        this.actividadesDelEntrenador = data.filter((a: any) => a.entrenador_id === personaId);
+      }
+    });
+  }
+
+  cargarClasesActividad(id: number) {
+    this.isLoading = true;
+    this.actividadId = id; // Actualizamos el ID actual
+    this.clasesService.GetClases(id).subscribe({
+      next: (data: any) => {
+        this.clasesEntrenador = data;
+        this.isLoading = false;
+      },
+      error: () => this.isLoading = false
+    });
+  }
+
+  // Método auxiliar para cambiar de actividad desde la vista (si quisieras un dropdown de filtro)
+  cambiarActividadVisualizada(id: number) {
+    this.cargarClasesActividad(id);
+  }
+
+  crearClase() {
+    // Validar que se haya seleccionado una actividad
+    if (!this.nuevaClase.actividad_id) {
+      alert("Por favor selecciona una actividad.");
+      return;
+    }
+
+    const obj = {
+      actividad_id: this.nuevaClase.actividad_id,
+      titulo: this.nuevaClase.titulo,
+      detalle: this.nuevaClase.detalle,
+      intensidad: this.nuevaClase.intensidad,
+      url_multimedia: this.nuevaClase.url_multimedia || ''
+    };
+
+    this.clasesService.CreateClase(obj).subscribe({
+      next: () => {
+        // Si la clase creada corresponde a la actividad que estamos viendo, recargamos la lista
+        if (this.actividadId === this.nuevaClase.actividad_id) {
+          this.cargarClasesActividad(this.actividadId);
+        }
+        this.cerrarModal();
+        // Resetear form pero mantener la actividad seleccionada por comodidad
+        this.nuevaClase = { actividad_id: this.nuevaClase.actividad_id, titulo: '', detalle: '', intensidad: '', url_multimedia: '' };
+      },
+      error: (err) => console.error("Error creando clase", err)
+    });
+  }
+
+  // --- Lógica USUARIO NORMAL ---
   cargarMisClases() {
     this.actividadesService.GetInscripcionesUsuario(this.email).subscribe({
       next: (inscripciones: any) => {
@@ -107,39 +172,13 @@ export class ClasesComponent implements OnInit {
     });
   }
 
-  // Lógica ENTRENADOR
-  cargarClasesActividad(id: number) {
-    this.isLoading = true;
-    this.clasesService.GetClases(id).subscribe({
-      next: (data: any) => {
-        this.clasesEntrenador = data;
-        this.isLoading = false;
-      },
-      error: () => this.isLoading = false
-    });
+  abrirModal() { 
+    this.showModal = true;
+    // Asegurar que si hay una actividad visualizándose, sea la default en el modal
+    if (this.actividadId) {
+        this.nuevaClase.actividad_id = this.actividadId;
+    }
   }
-
-  crearClase() {
-    if (!this.actividadId) return;
-    const obj = {
-      actividad_id: this.actividadId,
-      actividad: this.nuevaClase.actividad,
-      titulo: this.nuevaClase.titulo,
-      detalle: this.nuevaClase.detalle,
-      url_multimedia: this.nuevaClase.url_multimedia
-    };
-
-    this.clasesService.CreateClase(obj).subscribe({
-      next: () => {
-        // Recargar lista y cerrar modal
-        this.cargarClasesActividad(this.actividadId!);
-        this.cerrarModal();
-        this.nuevaClase = { actividad: '', titulo: '', detalle: '', intensidad: '', url_multimedia: ''};
-      },
-      error: (err) => console.error("Error creando clase", err)
-    });
-  }
-
-  abrirModal() { this.showModal = true; }
+  
   cerrarModal() { this.showModal = false; }
 }

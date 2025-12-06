@@ -1,96 +1,245 @@
 /* Contenedor principal */
 .clases-main {
-	padding: 2rem;
-	background-color: #f9fafb;
-	min-height: calc(100vh - 64px); /* 100% de la altura menos la navbar */
+  padding: 2rem;
+  background-color: #f9fafb;
+  min-height: calc(100vh - 64px);
 }
 
 /* Encabezado de la sección */
 .clases-header {
-	text-align: center;
-	margin-bottom: 2.5rem;
+  text-align: center;
+  margin-bottom: 2.5rem;
 }
 
 .clases-title {
-	font-size: 2.5rem;
-	font-weight: 800;
-	color: #111827;
-	margin-bottom: 0.5rem;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 0.5rem;
 }
 
 .clases-subtitle {
-	font-size: 1.1rem;
-	color: #4b5563;
-	max-width: 600px;
-	margin: 0 auto;
+  font-size: 1.1rem;
+  color: #4b5563;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-/* Contenedor del contenido (tablas, formularios, etc.) */
+/* Contenedor del contenido */
 .content-wrapper {
-	display: flex;
-	flex-direction: column;
-	gap: 2rem;
-	max-width: 1200px;
-	margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* Contenedor de la tabla y formularios */
+/* Contenedor de la tabla */
 .table-container {
-	background-color: #fff;
-	padding: 2rem;
-	border-radius: 0.75rem;
-	box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
 /* Tabla de clases */
 .clases-table {
-	width: 100%;
-	border-collapse: collapse;
-	font-size: 0.9rem;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
 }
 
 .clases-table th,
 .clases-table td {
-	padding: 0.75rem 1rem;
-	text-align: left;
-	border-bottom: 1px solid #e5e7eb;
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .clases-table th {
-	background-color: #f9fafb;
-	font-weight: 600;
-	color: #374151;
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
 }
 
 .clases-table tbody tr:hover {
-	background-color: #f3f4f6;
+  background-color: #f3f4f6;
 }
 
 .loading-cell,
 .no-clases {
-	text-align: center;
-	padding: 2rem;
-	color: #6b7280;
-	font-style: italic;
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* --- ESTILOS DEL MODAL (NUEVO) --- */
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px); /* Efecto borroso de fondo */
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 1rem; /* Bordes redondeados modernos */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  animation: slideInUp 0.4s ease-out;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  color: #4b5563;
+}
+
+.modal-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Formularios dentro del modal */
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Botones */
+.modal-actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.btn-crear {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.btn-crear:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.btn-guardar {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.6rem 1.25rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-guardar:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-cancelar {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  padding: 0.6rem 1.25rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-cancelar:hover {
+  background-color: #e5e7eb;
+  color: #1f2937;
 }
 
 /* Animaciones */
-.animate-fadein {
-    animation: fadeIn 0.5s ease-in-out;
-}
-
-.animate-slidein {
-    animation: slideInUp 0.6s ease-in-out;
-}
+.animate-fadein { animation: fadeIn 0.5s ease-in-out; }
+.animate-slidein { animation: slideInUp 0.6s ease-in-out; }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slideInUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 /* =================================
@@ -98,38 +247,81 @@
    ================================= */
 
 .clases-main.dark-mode {
-    background-color: #111827;
-    color: #d1d5db;
+  background-color: #111827;
+  color: #d1d5db;
 }
 
 .clases-main.dark-mode .clases-title {
-    color: #f9fafb;
+  color: #f9fafb;
 }
 
 .clases-main.dark-mode .clases-subtitle {
-    color: #9ca3af;
+  color: #9ca3af;
 }
 
+/* Tabla Dark Mode */
 .clases-main.dark-mode .table-container {
-    background-color: #1f2937;
-    border: 1px solid #374151;
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  box-shadow: none;
 }
 
 .clases-main.dark-mode .clases-table th {
-    background-color: #374151;
-    color: #e5e7eb;
+  background-color: #374151;
+  color: #e5e7eb;
+  border-bottom-color: #4b5563;
 }
 
 .clases-main.dark-mode .clases-table td {
-    border-bottom-color: #374151;
+  border-bottom-color: #374151;
+  color: #d1d5db;
 }
 
 .clases-main.dark-mode .clases-table tbody tr:hover {
-    background-color: #374151;
+  background-color: #374151;
 }
 
-.clases-main.dark-mode .loading-cell,
-.clases-main.dark-mode .no-clases {
-    color: #9ca3af;
+/* Modal Dark Mode */
+.clases-main.dark-mode .modal-content {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.clases-main.dark-mode .modal-title {
+  color: #f9fafb;
+}
+
+.clases-main.dark-mode .modal-close {
+  color: #6b7280;
+}
+.clases-main.dark-mode .modal-close:hover {
+  color: #e5e7eb;
+}
+
+.clases-main.dark-mode .form-group label {
+  color: #d1d5db;
+}
+
+.clases-main.dark-mode .form-group input,
+.clases-main.dark-mode .form-group textarea {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+.clases-main.dark-mode .form-group input:focus,
+.clases-main.dark-mode .form-group textarea:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+.clases-main.dark-mode .btn-cancelar {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
+.clases-main.dark-mode .btn-cancelar:hover {
+  background-color: #4b5563;
 }
