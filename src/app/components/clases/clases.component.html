@@ -28,8 +28,11 @@
           }
           @for (clase of clasesEntrenador; track clase.clase_id) {
           <tr>
+            <td>{{ clase.actividad }}</td>
             <td>{{ clase.titulo }}</td>
             <td>{{ clase.detalle }}</td>
+            <td>{{ clase.intensidad }}</td>
+            <td>{{ clase.url_multimedia }}</td>
           </tr>
           } @empty {
           @if (!isLoading) {
@@ -51,12 +54,20 @@
       <form (ngSubmit)="crearClase()">
         <div class="form-grid">
           <div class="form-group">
+            <label>Actividad</label>
+            <input type="text" [(ngModel)]="nuevaClase.actividad" name="actividad" required>
+          </div>
+          <div class="form-group">
             <label>Título</label>
             <input type="text" [(ngModel)]="nuevaClase.titulo" name="titulo" required>
           </div>
           <div class="form-group">
             <label>Detalle</label>
             <textarea [(ngModel)]="nuevaClase.detalle" name="detalle" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Url multimedia</label>
+            <input type="text" [(ngModel)]="nuevaClase.url_multimedia" name="url_multimedia" required>
           </div>
         </div>
         <div class="modal-actions">
@@ -98,8 +109,10 @@
         <table class="clases-table">
           <thead>
             <tr>
+              <th>Actividad</th>
               <th>Título de la Clase</th>
-              <th>Detalle / Horario</th>
+              <th>Detalle</th>
+              <th>Intensidad</th>
             </tr>
           </thead>
           <tbody>

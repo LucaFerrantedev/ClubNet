@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router'; // Importar ActivatedRoute
 import { ClasesService } from '../../services/clases.service';
 import { ActividadesService } from '../../services/actividades.service';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { url } from 'inspector';
 
 interface GrupoClases {
   actividad: string;
@@ -29,7 +30,7 @@ export class ClasesComponent implements OnInit {
   // Variables Entrenador
   esEntrenador = false;
   actividadId: number | null = null;
-  nuevaClase = { actividad: '', titulo: '', detalle: '', intensidad: '' };
+  nuevaClase = { actividad: '', titulo: '', detalle: '', intensidad: '', url_multimedia: ''};
   showModal = false;
 
   constructor(
@@ -124,7 +125,8 @@ export class ClasesComponent implements OnInit {
       actividad_id: this.actividadId,
       actividad: this.nuevaClase.actividad,
       titulo: this.nuevaClase.titulo,
-      detalle: this.nuevaClase.detalle
+      detalle: this.nuevaClase.detalle,
+      url_multimedia: this.nuevaClase.url_multimedia
     };
 
     this.clasesService.CreateClase(obj).subscribe({
@@ -132,7 +134,7 @@ export class ClasesComponent implements OnInit {
         // Recargar lista y cerrar modal
         this.cargarClasesActividad(this.actividadId!);
         this.cerrarModal();
-        this.nuevaClase = { actividad: '', titulo: '', detalle: '', intensidad: ''}; // Reset form
+        this.nuevaClase = { actividad: '', titulo: '', detalle: '', intensidad: '', url_multimedia: ''};
       },
       error: (err) => console.error("Error creando clase", err)
     });
