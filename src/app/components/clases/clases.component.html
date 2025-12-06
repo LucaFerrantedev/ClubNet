@@ -1,8 +1,14 @@
 <app-navbar></app-navbar>
 <div class="clases-main" [class.dark-mode]="isDarkMode">
+
+  @if (esEntrenador && actividadId) {
   <div class="clases-header animate-fadein">
-    <h1 class="clases-title">Clases del Club</h1>
-    <p class="clases-subtitle">Consulta el listado de clases disponibles.</p>
+    <h1 class="clases-title">Gestión de Clases</h1>
+    <p class="clases-subtitle">Administra el cronograma para esta actividad.</p>
+
+    <button class="btn-crear mt-3" (click)="abrirModal()">
+      + Nueva Clase
+    </button>
   </div>
 
   <div class="content-wrapper">
@@ -10,28 +16,105 @@
       <table class="clases-table">
         <thead>
           <tr>
-            <th>Actividad</th>
             <th>Título</th>
             <th>Detalle</th>
-            <th>Intensidad</th>
           </tr>
         </thead>
         <tbody>
           @if (isLoading) {
           <tr>
-            <td colspan="2" class="loading-cell">Cargando clases...</td>
+            <td colspan="2" class="loading-cell">Cargando...</td>
           </tr>
           }
-          @for (clase of clases; track clase.clase_id) {
+          @for (clase of clasesEntrenador; track clase.clase_id) {
           <tr>
-            <td>{{ clase.actividad }}</td>
             <td>{{ clase.titulo }}</td>
             <td>{{ clase.detalle }}</td>
-            <td>{{ clase.intensidad }}</td>
           </tr>
+          } @empty {
+          @if (!isLoading) {
+          <tr>
+            <td colspan="2" class="no-clases">No hay clases creadas aún.</td>
+          </tr>
+          }
           }
         </tbody>
       </table>
     </div>
   </div>
+
+  @if (showModal) {
+  <div class="modal-backdrop" (click)="cerrarModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="modal-close" (click)="cerrarModal()">&times;</button>
+      <h2 class="modal-title">Crear Clase</h2>
+      <form (ngSubmit)="crearClase()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Título</label>
+            <input type="text" [(ngModel)]="nuevaClase.titulo" name="titulo" required>
+          </div>
+          <div class="form-group">
+            <label>Detalle</label>
+            <textarea [(ngModel)]="nuevaClase.detalle" name="detalle" required></textarea>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancelar" (click)="cerrarModal()">Cancelar</button>
+          <button type="submit" class="btn-guardar">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  }
+  }
+
+  @else {
+  <div class="clases-header animate-fadein">
+    <h1 class="clases-title">Mis Clases</h1>
+    <p class="clases-subtitle">Consulta el cronograma de tus actividades.</p>
+  </div>
+
+  <div class="content-wrapper">
+    @if (isLoading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2 text-muted">Buscando tus clases...</p>
+    </div>
+    }
+    @else if (misClases.length === 0) {
+    <div class="table-container animate-fadein text-center">
+      <p class="no-clases">No tienes clases asignadas.</p>
+    </div>
+    }
+    @else {
+    @for (grupo of misClases; track grupo.actividad) {
+    <div class="mb-5 animate-slidein">
+      <h3 class="mb-3 px-2 border-start border-4 border-primary fw-bold text-secondary">
+        {{ grupo.actividad }}
+      </h3>
+
+      <div class="table-container">
+        <table class="clases-table">
+          <thead>
+            <tr>
+              <th>Título de la Clase</th>
+              <th>Detalle / Horario</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (clase of grupo.listaClases; track clase.clase_id) {
+            <tr>
+              <td class="fw-medium">{{ clase.titulo }}</td>
+              <td class="text-muted">{{ clase.detalle }}</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    }
+    }
+  </div>
+  }
 </div>

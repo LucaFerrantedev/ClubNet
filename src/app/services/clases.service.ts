@@ -11,11 +11,11 @@ export class ClasesService {
 
   constructor(private http: HttpClient, private loginService: LoginService) { }
 
-  // Metodos para gestionar CRUD de Clases
-
-  GetClases() {
+  // Metodo actualizado para filtrar por actividad
+  GetClases(actividadId: number) {
     const headers = this.loginService.getAuthHeaders();
-    return this.http.get(this.url + "/GetClases", { headers: headers });
+    // Se agrega el parámetro actividadId a la query string
+    return this.http.get(this.url + "/GetClases?actividadId=" + actividadId, { headers: headers });
   }
 
   CreateClase(obj: any) {
@@ -37,5 +37,4 @@ export class ClasesService {
     const headers = this.loginService.getAuthHeaders();
     return this.http.get(this.url_user + "/GetUsuario?email=" + email, { headers: headers });
   }
-
 }

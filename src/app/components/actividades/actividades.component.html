@@ -91,6 +91,13 @@
                     <circle cx="12" cy="12" r="3" />
                   </svg>
                 </button>
+
+                @if (esEntrenador && actividad.entrenador_id === DataSourceUsuario?.persona_id) {
+                <button class="btn btn-primary btn-sm ms-1" (click)="VerClases(actividad.actividad_id)">
+                  Ver Clases
+                </button>
+                }
+
                 @if (esAdmin) {
                 <button class="btn-editar-tabla" (click)="abrirModal(actividad, true)" title="Editar Actividad">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -109,16 +116,17 @@
                   </svg>
                 </button>
                 }
+
                 @if (esUsuarioNormal) {
                 <div>
                   @if (!estaInscripto(actividad.actividad_id)) {
-                    <button class="btn btn-success btn-sm" (click)="Inscribirse(actividad.actividad_id)">
-                      Anotarse
-                    </button>
+                  <button class="btn btn-success btn-sm" (click)="Inscribirse(actividad.actividad_id)">
+                    Anotarse
+                  </button>
                   } @else {
-                    <button class="btn btn-secondary btn-sm" disabled>
-                      Ya inscripto
-                    </button>
+                  <button class="btn btn-secondary btn-sm" disabled>
+                    Ya inscripto
+                  </button>
                   }
                 </div>
                 }
