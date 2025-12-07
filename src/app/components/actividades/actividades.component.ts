@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActividadesService } from '../../services/actividades.service';
-import { UsuariosService } from '../../services/usuarios.service';
-import { NavbarComponent } from "../navbar/navbar.component";
 import { Router } from '@angular/router';
+import { NavbarComponent } from "../navbar/navbar.component";
+import { ActividadesService, Actividad } from '../../services/actividades.service';
+import { LoginService } from '../../services/login.service';
+import { UsuariosService } from '../../services/usuarios.service';
 
 @Component({
   selector: 'app-actividades',
@@ -14,167 +15,206 @@ import { Router } from '@angular/router';
   standalone: true
 })
 export class ActividadesComponent implements OnInit {
-  actividades: any[] = [];
-  selectedActividad: any | null = null;
+  
+  // Inyección de dependencias moderna
+  private actividadesService = inject(ActividadesService);
+  public loginService = inject(LoginService); // Público para usar en el HTML
+  private usuariosService = inject(UsuariosService);
+  private router = inject(Router);
+
+  // Estado del componente
+  actividades: Actividad[] = [];
+  listaEntrenadores: any[] = [];
+  inscripcionesIds: number[] = [];
+  
   isLoading = true;
   isEditMode = false;
-  actividadParaEditar: any = {};
-  actividadParaEliminar: any | null = null;
-  entrenadorSeleccionado: number | null = null;
+  isDarkMode = false; // Se podría mover a un ThemeService global
 
-  isDarkMode = false;
-  nombre: any;
-  descripcion: any;
-  listaEntrenadores: any[] = [];
-  cupo: number = 0;
-  cuota_valor: number = 0;
-  estado: boolean = true;
-  url_imagen: any;
-  inicio: string = '';
+  // Formularios y selección
+  actividadForm: Actividad = this.initActividad();
+  selectedActividad: Actividad | null = null;
+  actividadParaEliminar: Actividad | null = null;
 
-  DataSourceUsuario: any;
-  esAdmin = false;
-  esUsuarioNormal = false;
-  esEntrenador = false; // NUEVO
-  email = '';
-  inscripcionesIds: number[] = [];
-
-  constructor(
-    private actividadesService: ActividadesService,
-    private usuariosService: UsuariosService,
-    private router: Router) { }
+  // Getters para roles (Usan el Signal de LoginService, ¡Reactivo!)
+  get esAdmin() { return this.loginService.currentUser()?.rol_id === 1; }
+  get esEntrenador() { return this.loginService.currentUser()?.rol_id === 2; }
+  get esUsuarioNormal() { return this.loginService.currentUser()?.rol_id === 3; }
 
   ngOnInit(): void {
-    this.email = localStorage.getItem('email') || '';
-    if (this.email) {
-      this.CargarUsuario(this.email);
-    }
+    // Manejo de tema oscuro
     const darkModePref = localStorage.getItem('darkMode');
     this.isDarkMode = darkModePref === 'true';
+
+    // Carga inicial de datos
+    this.CargarDatos();
   }
 
-  // ... (CargarActividades, CrearActividad, ModificarActividad, EliminarActividad, CargarEntrenadores sin cambios)
-  // Asegúrate de mantener todos los métodos existentes del paso anterior.
-  CargarActividades() {
+  CargarDatos() {
     this.isLoading = true;
+    
+    // Si el usuario no está en el Signal, intentamos cargarlo (fallback)
+    const email = localStorage.getItem('email');
+    if (!this.loginService.currentUser() && email) {
+        this.loginService.loadUser(email);
+    }
+
+    // Lógica condicional basada en roles
+    if (this.esAdmin) {
+      this.CargarEntrenadores(); // Carga entrenadores y luego actividades
+    } else {
+      this.CargarActividades();
+      if (this.esUsuarioNormal && email) {
+        this.CargarInscripciones(email);
+      }
+    }
+  }
+
+  CargarActividades() {
     this.actividadesService.GetActividades().subscribe({
-      next: (data: any) => {
-        this.actividades = data.map((actividad: any) => {
-          if (!actividad.entrenador && actividad.entrenador_id) {
-            const entrenador = this.listaEntrenadores.find(e => e.persona_id === actividad.entrenador_id);
-            actividad.entrenador = entrenador ? `${entrenador.nombre} ${entrenador.apellido}` : 'No asignado';
+      next: (res) => {
+        // Mapeo seguro de datos
+        const datos = res.data || (Array.isArray(res) ? res : []);
+        
+        this.actividades = datos.map((act) => {
+          // Lógica de presentación para nombre de entrenador
+          if (!act.ent_nombre && act.entrenador_id) {
+            const entrenador = this.listaEntrenadores.find(e => e.persona_id === act.entrenador_id);
+            if (entrenador) {
+                act.ent_nombre = entrenador.nombre;
+                act.ent_apellido = entrenador.apellido;
+            }
           }
-          return actividad;
+          return act;
         });
         this.isLoading = false;
       },
-      error: (err) => { this.isLoading = false; }
-    });
-  }
-  
-  // ... Métodos CRUD (Crear, Modificar, Eliminar) igual que antes ...
-  CrearActividad() {
-    // ... tu código existente ...
-    let obj = {
-      "actividad_id": 0,
-      "nombre": this.nombre,
-      "descripcion": this.descripcion,
-      "cupo": Number(this.cupo),
-      "cuota_valor": Number(this.cuota_valor),
-      "estado": this.estado,
-      "url_imagen": this.url_imagen,
-      "inicio": this.inicio ? Number(this.inicio.replace('-', '')) : null,
-      "entrenador_id": this.entrenadorSeleccionado
-    };
-    this.actividadesService.CreateActividad(obj).subscribe({
-      next: () => { this.CargarActividades(); this.resetFormulario(); },
-      error: (err) => console.error(err)
-    });
-  }
-
-  ModificarActividad() {
-     // ... tu código existente ...
-     this.actividadParaEditar.cupo = Number(this.actividadParaEditar.cupo);
-     this.actividadParaEditar.cuota_valor = Number(this.actividadParaEditar.cuota_valor);
-     this.actividadesService.UpdateActividad(this.actividadParaEditar).subscribe({
-      next: () => { this.CargarActividades(); this.resetFormulario(); this.cerrarModal(); },
-      error: (err) => console.error(err)
-    });
-  }
-
-  EliminarActividad(id: number) {
-     // ... tu código existente ...
-     this.actividadesService.DeleteActividad(id).subscribe({
-      next: () => { this.CargarActividades(); this.actividadParaEliminar = null; },
-      error: (err) => console.error(err)
+      error: (err) => { 
+        console.error(err); 
+        this.isLoading = false; 
+      }
     });
   }
 
   CargarEntrenadores() {
+    // Asumimos que UsuariosService también se refactorizará para devolver tipos, por ahora any
     this.usuariosService.GetUsuariosByRol(2).subscribe((data: any) => {
-       this.listaEntrenadores = data.filter((u: any) => u.rol_id === 2);
+       // Filtramos o asignamos directamente dependiendo de la respuesta de tu API
+       this.listaEntrenadores = Array.isArray(data) ? data : (data.data || []);
        this.CargarActividades(); 
     });
   }
-  
-  // Modales
-  solicitarConfirmacionEliminar(actividad: any) { this.actividadParaEliminar = actividad; }
-  cancelarEliminacion() { this.actividadParaEliminar = null; }
-  abrirModal(actividad: any, editMode: boolean = false) {
-    this.selectedActividad = actividad;
-    this.actividadParaEditar = { ...actividad }; 
-    this.isEditMode = editMode;
+
+  CargarInscripciones(email: string) {
+    this.actividadesService.GetInscripcionesUsuario(email).subscribe({
+      next: (res: any) => { 
+        const datos = res.data || (Array.isArray(res) ? res : []);
+        this.inscripcionesIds = datos.map((i: any) => i.actividad_id); 
+      }
+    });
   }
+
+  // --- Lógica CRUD Unificada ---
+
+  GuardarActividad() {
+    // Preparamos los datos (conversion de tipos si el HTML devuelve strings)
+    const payload = { ...this.actividadForm };
+    payload.cupo = Number(payload.cupo);
+    payload.cuota_valor = Number(payload.cuota_valor);
+    
+    // Si 'inicio' viene como 'YYYY-MM', lo convertimos a número YYYYMM
+    if (typeof payload.inicio === 'string') {
+        payload.inicio = Number((payload.inicio as string).replace('-', ''));
+    }
+
+    const request = this.isEditMode 
+        ? this.actividadesService.UpdateActividad(payload)
+        : this.actividadesService.CreateActividad(payload);
+
+    request.subscribe({
+        next: () => {
+            this.CargarActividades();
+            this.cerrarModal();
+        },
+        error: (err) => console.error("Error al guardar:", err)
+    });
+  }
+
+  EliminarActividad() {
+    if (!this.actividadParaEliminar) return;
+    
+    this.actividadesService.DeleteActividad(this.actividadParaEliminar.actividad_id).subscribe({
+      next: () => { 
+        this.CargarActividades(); 
+        this.actividadParaEliminar = null; 
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  // --- Helpers de UI ---
+
+  abrirModal(actividad?: Actividad, editMode: boolean = false) {
+    this.isEditMode = editMode;
+    if (actividad) {
+      this.selectedActividad = actividad;
+      // Copia para editar sin afectar la vista tabla
+      this.actividadForm = { ...actividad };
+      
+      // Formatear fecha para el input type="month" (YYYYMM -> YYYY-MM)
+      if (this.actividadForm.inicio) {
+          const inicioStr = this.actividadForm.inicio.toString();
+          // Hack rápido para que el input lo lea
+          (this.actividadForm.inicio as any) = `${inicioStr.substring(0, 4)}-${inicioStr.substring(4, 6)}`;
+      }
+    } else {
+      this.actividadForm = this.initActividad();
+    }
+  }
+
   cerrarModal() {
     this.selectedActividad = null;
     this.isEditMode = false;
-    this.actividadParaEditar = {};
-  }
-  toggleEditMode(): void { this.isEditMode = !this.isEditMode; }
-
-  // ACTUALIZADO: Lógica de carga de usuario y roles
-  CargarUsuario(email: string) {
-    this.actividadesService.GetUsuario(email).subscribe({
-      next: (x) => {
-        this.DataSourceUsuario = x;
-        this.esAdmin = this.DataSourceUsuario?.rol_id === 1;
-        this.esEntrenador = this.DataSourceUsuario?.rol_id === 2; // NUEVO
-        this.esUsuarioNormal = this.DataSourceUsuario?.rol_id === 3;
-
-        if (this.esAdmin) {
-          this.CargarEntrenadores(); // Carga entrenadores y luego actividades
-        } else {
-          this.CargarActividades(); // Si no es admin, cargamos actividades directo
-          if (this.esUsuarioNormal) {
-            this.CargarInscripciones();
-          }
-        }
-      },
-      error: (err) => console.error("Error usuario:", err)
-    });
+    this.actividadForm = this.initActividad();
   }
 
-  CargarInscripciones() {
-    this.actividadesService.GetInscripcionesUsuario(this.email).subscribe({
-      next: (res: any) => { if (res) this.inscripcionesIds = res.map((i: any) => i.actividad_id); }
-    });
+  toggleEditMode() {
+    this.isEditMode = !this.isEditMode;
+  }
+
+  solicitarConfirmacionEliminar(actividad: Actividad) {
+    this.actividadParaEliminar = actividad;
+  }
+
+  cancelarEliminacion() {
+    this.actividadParaEliminar = null;
+  }
+
+  // Navegación
+  Inscribirse(actividad_id: number) {
+    this.router.navigate(['/inscripcion'], { state: { actividadId: actividad_id } });
+  }
+
+  VerClases(id: number) {
+    this.router.navigate(['/clases'], { queryParams: { actividadId: id } });
   }
 
   estaInscripto(actividadId: number): boolean {
     return this.inscripcionesIds.includes(actividadId);
   }
 
-  Inscribirse(actividad_id: number) {
-    this.router.navigate(['/inscripcion'], { state: { actividadId: actividad_id } });
-  }
-
-  // NUEVO: Método para que el entrenador vaya a gestionar clases
-  VerClases(id: number) {
-    this.router.navigate(['/clases'], { queryParams: { actividadId: id } });
-  }
-
-  resetFormulario() {
-    this.nombre = ''; this.descripcion = ''; this.cupo = 0; this.cuota_valor = 0;
-    this.inicio = ''; this.url_imagen = '';
+  // Factory para objeto vacío
+  private initActividad(): Actividad {
+    return {
+      actividad_id: 0,
+      nombre: '',
+      descripcion: '',
+      cupo: 0,
+      cuota_valor: 0,
+      estado: true,
+      url_imagen: '',
+      inicio: 0,
+      entrenador_id: null
+    };
   }
 }
