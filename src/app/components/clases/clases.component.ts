@@ -6,7 +6,9 @@ import { ClasesService } from '../../services/clases.service';
 import { ActividadesService } from '../../services/actividades.service';
 import { NavbarComponent } from '../navbar/navbar.component';
 
+// MODIFICADO: Agregamos 'id' a la interfaz para poder filtrar
 interface GrupoClases {
+  id: number;
   actividad: string;
   listaClases: any[];
 }
@@ -26,14 +28,17 @@ export class ClasesComponent implements OnInit {
   isDarkMode = false;
   email = '';
   
-  // Variables Entrenador
   esEntrenador = false;
-  actividadId: number | null = null; // ID de la actividad que se está visualizando
+  actividadId: number | null = null; 
   
-  // Lista de actividades asignadas al entrenador (para el select del modal)
   actividadesDelEntrenador: any[] = []; 
+  
+  // NUEVO: Lista de actividades donde está inscripto el usuario (para el select)
+  inscripcionesUsuario: any[] = [];
+  
+  // NUEVO: Variable específica para el filtro del usuario
+  filtroUsuarioId: number | null = null;
 
-  // Modelo para el formulario (ahora incluye actividad_id)
   nuevaClase = { actividad_id: 0, actividad: '', titulo: '', detalle: '', intensidad: '', url_multimedia: '' };
   showModal = false;
 
@@ -48,11 +53,20 @@ export class ClasesComponent implements OnInit {
     this.isDarkMode = darkModePref === 'true';
     this.email = localStorage.getItem('email') || '';
 
-    if (this.email) {
-      this.verificarUsuarioYRol();
-    } else {
-      this.isLoading = false;
-    }
+    this.route.queryParams.subscribe(params => {
+      this.actividadId = params['actividadId'] ? Number(params['actividadId']) : null;
+      
+      // Si llega un ID por URL, lo usamos como filtro inicial
+      if(this.actividadId) {
+        this.filtroUsuarioId = this.actividadId;
+      }
+
+      if (this.email) {
+        this.verificarUsuarioYRol();
+      } else {
+        this.isLoading = false;
+      }
+    });
   }
 
   verificarUsuarioYRol() {
@@ -61,21 +75,14 @@ export class ClasesComponent implements OnInit {
         this.esEntrenador = user?.rol_id === 2;
 
         if (this.esEntrenador) {
-          // 1. Cargar las actividades asignadas a este entrenador
           this.cargarActividadesAsignadas(user.persona_id);
-
-          // 2. Revisar si viene un ID por URL para cargar la tabla inicial
-          this.route.queryParams.subscribe(params => {
-            this.actividadId = params['actividadId'] ? Number(params['actividadId']) : null;
-            
-            if (this.actividadId) {
-              this.cargarClasesActividad(this.actividadId);
-              // Pre-seleccionar esta actividad en el modal
-              this.nuevaClase.actividad_id = this.actividadId;
-            } else {
-              this.isLoading = false; 
-            }
-          });
+          
+          if (this.actividadId) {
+            this.cargarClasesActividad(this.actividadId);
+            this.nuevaClase.actividad_id = this.actividadId;
+          } else {
+            this.isLoading = false; 
+          }
         } else {
           this.cargarMisClases();
         }
@@ -85,11 +92,9 @@ export class ClasesComponent implements OnInit {
   }
 
   // --- Lógica ENTRENADOR ---
-
   cargarActividadesAsignadas(personaId: number) {
     this.actividadesService.GetActividades().subscribe({
       next: (data: any) => {
-        // Filtramos solo las actividades donde el entrenador coincide
         this.actividadesDelEntrenador = data.filter((a: any) => a.entrenador_id === personaId);
       }
     });
@@ -97,7 +102,7 @@ export class ClasesComponent implements OnInit {
 
   cargarClasesActividad(id: number) {
     this.isLoading = true;
-    this.actividadId = id; // Actualizamos el ID actual
+    this.actividadId = id; 
     this.clasesService.GetClases(id).subscribe({
       next: (data: any) => {
         this.clasesEntrenador = data;
@@ -107,28 +112,23 @@ export class ClasesComponent implements OnInit {
     });
   }
 
-  // Método auxiliar para cambiar de actividad desde la vista (si quisieras un dropdown de filtro)
   cambiarActividadVisualizada(id: number) {
     this.cargarClasesActividad(id);
   }
 
-crearClase() {
-    // Validar que se haya seleccionado una actividad
+  crearClase() {
     if (!this.nuevaClase.actividad_id) {
       alert("Por favor selecciona una actividad.");
       return;
     }
 
-    // 1. Buscamos el objeto actividad completo para obtener su nombre
     const actividadSeleccionada = this.actividadesDelEntrenador.find(
       a => a.actividad_id === this.nuevaClase.actividad_id
     );
 
-    // 2. Construimos el objeto con los datos correctos
-    // Asegúrate de que las mayúsculas coincidan con tu DTO en C# (CreateClaseDTO)
     const obj = {
       Actividad_id: this.nuevaClase.actividad_id, 
-      Actividad: actividadSeleccionada ? actividadSeleccionada.nombre : 'Sin Nombre', // Aquí asignamos el nombre real
+      Actividad: actividadSeleccionada ? actividadSeleccionada.nombre : 'Sin Nombre', 
       Titulo: this.nuevaClase.titulo,
       Detalle: this.nuevaClase.detalle,
       Intensidad: this.nuevaClase.intensidad,
@@ -137,13 +137,10 @@ crearClase() {
 
     this.clasesService.CreateClase(obj).subscribe({
       next: () => {
-        console.log('Clase creada con éxito');
-        // Si la clase creada corresponde a la actividad que estamos viendo, recargamos la lista
         if (this.actividadId === this.nuevaClase.actividad_id) {
           this.cargarClasesActividad(this.actividadId);
         }
         this.cerrarModal();
-        // Resetear form pero mantener la actividad seleccionada por comodidad
         this.nuevaClase = { 
           actividad_id: this.nuevaClase.actividad_id, 
           actividad: '', 
@@ -162,12 +159,18 @@ crearClase() {
     this.actividadesService.GetInscripcionesUsuario(this.email).subscribe({
       next: (inscripciones: any) => {
         if (Array.isArray(inscripciones) && inscripciones.length > 0) {
+          
+          // Guardamos las inscripciones para llenar el selector
+          this.inscripcionesUsuario = inscripciones;
+
+          // Cargamos SIEMPRE todas las clases para permitir filtrado rápido en cliente
           let solicitudesCompletadas = 0;
           inscripciones.forEach((ins: any) => {
             this.clasesService.GetClases(ins.actividad_id).subscribe({
               next: (clases: any) => {
                 if (Array.isArray(clases) && clases.length > 0) {
                   this.misClases.push({
+                    id: ins.actividad_id, // Guardamos ID para filtrar
                     actividad: ins.actividad_nombre,
                     listaClases: clases
                   });
@@ -188,9 +191,16 @@ crearClase() {
     });
   }
 
+  // NUEVO: Getter para filtrar la vista sin recargar datos
+  get clasesFiltradasUsuario() {
+    if (!this.filtroUsuarioId) {
+      return this.misClases;
+    }
+    return this.misClases.filter(g => g.id === this.filtroUsuarioId);
+  }
+
   abrirModal() { 
     this.showModal = true;
-    // Asegurar que si hay una actividad visualizándose, sea la default en el modal
     if (this.actividadId) {
         this.nuevaClase.actividad_id = this.actividadId;
     }

@@ -121,6 +121,19 @@
     </div>
 
     <div class="content-wrapper">
+      
+      @if(inscripcionesUsuario.length > 0) {
+        <div class="mb-4 d-flex justify-content-center align-items-center gap-2 animate-fadein">
+          <label class="fw-bold text-secondary">Filtrar por actividad:</label>
+          <select class="form-select w-auto shadow-sm" [(ngModel)]="filtroUsuarioId">
+            <option [ngValue]="null">Todas mis actividades</option>
+            @for (ins of inscripcionesUsuario; track ins.actividad_id) {
+              <option [ngValue]="ins.actividad_id">{{ ins.actividad_nombre }}</option>
+            }
+          </select>
+        </div>
+      }
+
       @if (isLoading) {
       <div class="text-center py-5">
         <div class="spinner-border text-primary" role="status"></div>
@@ -133,7 +146,7 @@
       </div>
       }
       @else {
-      @for (grupo of misClases; track grupo.actividad) {
+      @for (grupo of clasesFiltradasUsuario; track grupo.id) {
       <div class="mb-5 animate-slidein">
         <h3 class="mb-3 px-2 border-start border-4 border-primary fw-bold text-secondary">
           {{ grupo.actividad }}
