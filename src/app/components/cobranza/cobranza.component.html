@@ -10,7 +10,10 @@
       @if (esAdmin) { Control total de pagos de socios. } @else { Gestiona tus cuotas al día. }
     </p>
     
-    <button class="btn-base" style="position: absolute; right: 0; top: 0; background: transparent; border: 1px solid var(--border-color); color: var(--text-muted);" (click)="cargarDatos()" title="Actualizar datos">
+    <button class="btn-base" 
+            style="background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); margin-top: 1rem;" 
+            (click)="cargarDatos()" 
+            title="Actualizar datos">
       <i class="bi bi-arrow-clockwise"></i>
     </button>
   </div>
