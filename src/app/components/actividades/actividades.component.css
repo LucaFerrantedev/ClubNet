@@ -1,447 +1,65 @@
-/* Animación de entrada suave */
-.animate-fadein {
-    animation: fadeIn 0.5s ease-in-out;
+/* Los estilos principales ahora están en styles.css para mantener consistencia */
+
+.full-width {
+  grid-column: 1 / -1;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Estilos generales del componente */
-.actividades-main {
-    padding: 2rem;
-    background-color: #f4f7f6;
-    min-height: calc(100vh - 60px); /* Ajustar según la altura del navbar */
-}
-
-.actividades-header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-}
-
-.actividades-title {
-    font-size: 2.8rem;
-    font-weight: 800;
-    color: #111827;
-    margin-bottom: 0.5rem;
-}
-
-.actividades-subtitle {
-    font-size: 1.1rem;
-    color: #7f8c8d;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-/* Contenedor para el formulario y la tabla */
-.table-container {
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
-    margin-bottom: 2rem;
-}
-
-/* Estilos del formulario */
-.form-title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #34495e;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #ecf0f1;
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #555;
-    margin-bottom: 0.5rem;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 0.8rem 1rem;
-    border: 1px solid #dcdfe6;
-    border-radius: 6px;
-    font-size: 1rem;
-    color: #333;
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-}
-
-.form-group textarea {
-    min-height: 80px;
-    resize: vertical;
-}
-
-.btn-crear {
-    display: inline-block;
-    padding: 0.8rem 1.8rem;
-    background-color: #27ae60;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.btn-crear:hover:not(:disabled) {
-    background-color: #229954;
-    transform: translateY(-2px);
-}
-
-.btn-crear:disabled {
-    background-color: #95a5a6;
-    cursor: not-allowed;
-}
-
-/* Estilos de la tabla (ya existentes, para referencia) */
-.actividades-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.actividades-table th,
-.actividades-table td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid #ecf0f1;
-}
-
-.actividades-table th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #34495e;
-}
-
-/* Badges de estado */
-.badge {
-    padding: 0.3em 0.7em;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: white;
-    text-transform: uppercase;
-}
-
-.badge-activo {
-    background-color: #27ae60; /* Verde */
-}
-
-.badge-inactivo {
-    background-color: #e74c3c; /* Rojo */
-}
-
-/* Animaciones (ya existentes) */
-.animate-fadein {
-    animation: fadeIn 0.8s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* Estilos del Modal */
+/* Modal específico */
 .modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    animation: fadeIn 0.3s ease-in-out;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Fondo más oscuro */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px); /* Efecto blur moderno */
 }
 
 .modal-content {
-    background-color: white;
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: 700px;
-    position: relative;
-    animation: slideInUp 0.4s ease-out;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+  /* Hereda el card-custom del HTML para el fondo */
 }
 
 .modal-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    font-size: 2rem;
-    color: #aaa;
-    background: none;
-    border: none;
-    cursor: pointer;
-    line-height: 1;
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s;
 }
+.modal-close:hover { color: var(--text-main); }
 
-.modal-title {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #34495e;
-    margin-top: 0;
-    margin-bottom: 1rem;
-}
-
-.modal-image-container, .modal-image-placeholder {
-    width: 100%;
-    height: 250px;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    background-color: #ecf0f1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #95a5a6;
+.modal-image-container {
+  width: 100%;
+  height: 250px;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
 }
 
 .modal-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.modal-body p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: #555;
-}
-
-.modal-actions {
-    margin-top: 1.5rem;
-    display: flex;    
-    justify-content: flex-end;
-    gap: 0.75rem;
-}
-
-.btn-editar, .btn-guardar, .btn-cancelar {
-    padding: 0.7rem 1.5rem;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-editar {
-    background-color: #3498db;
-    color: white;
-}
-.btn-editar:hover {
-    background-color: #2980b9;
-    transform: translateY(-2px);
-}
-
-.btn-eliminar {
-    background-color: #e74c3c;
-    color: white;
-}
-
-
-.btn-guardar {
-    background-color: #27ae60;
-    color: white;
-}
-
-.btn-guardar:hover:not(:disabled) {
-    background-color: #229954;
-    transform: translateY(-2px);
-}
-
-.btn-guardar:disabled {
-    background-color: #95a5a6;
-    cursor: not-allowed;
-}
-
-.btn-cancelar {
-    background-color: #ecf0f1;
-    color: #34495e;
-    border: 1px solid #bdc3c7;
-}
-
-/* Estilos para los botones de acción en la tabla */
-.actions-cell {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-.btn-ver-mas {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.3rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease-in-out;
-    color: #7f8c8d;
-}
-
-.btn-editar-tabla {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.3rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease-in-out;
-    color: #bd9f5f;
-}
-
-.btn-eliminar-tabla {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.3rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease-in-out;
-    color: #bd5f5f;
-}
-
-.btn-ver-mas:hover {
-    background-color: #ecf0f1;
-    color: #3498db;
-}
-
-.btn-editar-tabla:hover {
-    background-color: #ecf0f1;
-    color: #dbae34;
-}
-
-.btn-eliminar-tabla:hover {
-    background-color: #ecf0f1;
-    color: #db3434;
-}
-
-@keyframes slideInUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-/* Estilos para el modal de confirmación */
-.modal-confirmacion {
-    max-width: 450px;
-    text-align: center;
-}
-
-.modal-confirmacion .text-muted {
-    font-size: 0.9rem;
-}
-
-/* Contenedor para centrar el contenido principal */
-.content-wrapper {
-    max-width: 1600px; /* Ancho máximo del contenido */
-    margin: 0 auto; /* Centra el contenedor horizontalmente */
-    padding: 0 1rem; /* Añade un poco de espacio en pantallas más pequeñas */
-}
-
-/* =================================
-   Estilos Modo Oscuro
-   ================================= */
-
-.actividades-main.dark-mode {
-    background-color: #111827;
-    color: #d1d5db;
-}
-
-.actividades-main.dark-mode .actividades-title {
-    color: #f9fafb;
-}
-
-.actividades-main.dark-mode .actividades-subtitle {
-    color: #9ca3af;
-}
-
-.actividades-main.dark-mode .table-container {
-    background-color: #1f2937;
-    border: 1px solid #374151;
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
-}
-
-.actividades-main.dark-mode .form-title,
-.actividades-main.dark-mode .modal-title {
-    color: #f9fafb;
-    border-bottom-color: #374151;
-}
-
-.actividades-main.dark-mode .form-group label {
-    color: #9ca3af;
-}
-
-.actividades-main.dark-mode .form-group input,
-.actividades-main.dark-mode .form-group select,
-.actividades-main.dark-mode .form-group textarea {
-    background-color: #374151;
-    border-color: #4b5563;
-    color: #e5e7eb;
-}
-
-.actividades-main.dark-mode .actividades-table th {
-    background-color: #374151;
-    color: #e5e7eb;
-}
-
-.actividades-main.dark-mode .actividades-table td {
-    border-bottom-color: #374151;
-}
-
-.actividades-main.dark-mode .actividades-table tbody tr:hover {
-    background-color: #374151;
-}
-
-.actividades-main.dark-mode .loading-cell,
-.actividades-main.dark-mode .no-actividades {
-    color: #9ca3af;
-}
-
-.actividades-main.dark-mode .modal-content {
-    background-color: #1f2937;
-    border: 1px solid #4b5563;
-}
-
-.actividades-main.dark-mode .modal-body p {
-    color: #d1d5db;
-}
-
-.actividades-main.dark-mode .modal-image-placeholder {
-    background-color: #374151;
-    color: #9ca3af;
+.modal-image-placeholder {
+  width: 100%;
+  height: 200px;
+  background-color: var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
 }

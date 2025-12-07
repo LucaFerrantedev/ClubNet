@@ -1,87 +1,129 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
+
+// --- INTERFACES CENTRALIZADAS ---
+export interface Usuario {
+  persona_id: number;
+  nombre: string;
+  apellido: string;
+  email: string;
+  rol_id: number;
+  dni?: number;
+  estado?: boolean;
+}
+
+export interface ApiResponse<T = any> {
+  success: boolean;
+  message: string;
+  data: T;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
   private tokenKey = 'authToken';
+  // Centraliza tus URLs aquí si no usas environment.ts
   url = "https://localhost:7121/api/login";
+  userUrl = "https://localhost:7121/api/usuario";
 
-  constructor(private httpClient: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) { }
+  // SIGNAL: Estado reactivo del usuario logueado
+  currentUser = signal<Usuario | null>(null);
 
-  // Metodos para gestionar login y registro y manejo de token
+  constructor(private httpClient: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) { 
+    // Al recargar la página, intentamos recuperar el usuario si hay sesión
+    if (this.isUserAuthenticated()) {
+      const email = this.getEmail();
+      if (email) this.loadUser(email);
+    }
+  }
 
-  Login(obj: any): Observable<any> {
-    return this.httpClient.post<any>(`${this.url}/Login`, obj).pipe(
+  // --- Lógica de Autenticación Optimizada ---
+
+  Login(obj: any): Observable<ApiResponse<string>> {
+    return this.httpClient.post<ApiResponse<string>>(`${this.url}/Login`, obj).pipe(
       tap(response => {
-        if (response && response.data) {
+        if (response.success && response.data) {
           this.setToken(response.data);
+          if (obj.email) {
+            this.setEmail(obj.email);
+            this.loadUser(obj.email); // Cargamos datos del usuario al instante
+          }
         }
       })
     );
   }
 
-  Register(obj: any): Observable<any> {
-    return this.httpClient.post(`${this.url}/Register`, obj);
+  // Carga datos del usuario y actualiza el Signal
+  loadUser(email: string) {
+    this.httpClient.get<Usuario>(`${this.userUrl}/GetUsuario?email=${email}`)
+      .subscribe({
+        next: (user) => {
+          this.currentUser.set(user);
+          // Opcional: Guardar rol en storage si se necesita síncronamente
+        },
+        error: (err) => console.error('Error cargando usuario', err)
+      });
   }
 
-  RecuperarClave(email: string): Observable<any> {
-    return this.httpClient.post(`${this.url}/RecuperarClave`, { email: email });
-  }
-
-  CambiarClave(obj: any): Observable<any> {
-    const headers = this.getAuthHeaders();
-    return this.httpClient.post(`${this.url}/CambiarClave`, obj, { headers });
-  }
-
-  // Metodos para manejar el token en el localStorage
-  setToken(token: string): void {
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem(this.tokenKey, token);
-    }
-  }
-
-  // Obtener el token de localStorage
-  getToken(): string | null {
-    if (isPlatformBrowser(this.platformId)) {
-      return localStorage.getItem(this.tokenKey);
-    }
-    return null;
-  }
-
-  // Eliminar el token de localStorage
-  removeToken(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem(this.tokenKey);
-    }
-  }
-
-  // Metodo para cerrar sesion
   logout(): void {
     this.removeToken();
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('email');
     }
+    this.currentUser.set(null); // Limpiamos el estado
   }
 
-  // Metodo para verificar si el usuario ya inicio sesion
+  // --- Métodos existentes (sin cambios lógicos mayores) ---
 
+  Register(obj: any): Observable<ApiResponse> {
+    return this.httpClient.post<ApiResponse>(`${this.url}/Register`, obj);
+  }
+
+  RecuperarClave(email: string): Observable<ApiResponse> {
+    return this.httpClient.post<ApiResponse>(`${this.url}/RecuperarClave`, { email });
+  }
+
+  CambiarClave(obj: any): Observable<ApiResponse> {
+    // El interceptor pondrá el token, no hace falta headers manuales
+    return this.httpClient.post<ApiResponse>(`${this.url}/CambiarClave`, obj);
+  }
+
+  // --- Manejo de Token y Storage ---
+
+  setToken(token: string): void {
+    if (isPlatformBrowser(this.platformId)) localStorage.setItem(this.tokenKey, token);
+  }
+
+  getToken(): string | null {
+    if (isPlatformBrowser(this.platformId)) return localStorage.getItem(this.tokenKey);
+    return null;
+  }
+
+  removeToken(): void {
+    if (isPlatformBrowser(this.platformId)) localStorage.removeItem(this.tokenKey);
+  }
+
+  setEmail(email: string): void {
+    if (isPlatformBrowser(this.platformId)) localStorage.setItem('email', email);
+  }
+
+  getEmail(): string | null {
+    if (isPlatformBrowser(this.platformId)) return localStorage.getItem('email');
+    return null;
+  }
+
+  // Mantenemos este método por compatibilidad con componentes viejos,
+  // pero ya NO es necesario usarlo en los servicios nuevos.
   getAuthHeaders(): HttpHeaders {
     const token = this.getToken();
-    if (token) {
-      return new HttpHeaders({
-        'Authorization': `Bearer ${token}`
-      });
-    }
-    return new HttpHeaders();
+    return token ? new HttpHeaders({ 'Authorization': `Bearer ${token}` }) : new HttpHeaders();
   }
+
   isTokenExpired(token: string): boolean {
-    if (!token) {
-      return true;
-    }
+    if (!token) return true;
     try {
       const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
       return (Math.floor((new Date).getTime() / 1000)) >= expiry;
@@ -92,13 +134,8 @@ export class LoginService {
 
   isUserAuthenticated(): boolean {
     const token = this.getToken();
-    if (token && !this.isTokenExpired(token)) {
-      return true;
-    }
-    if (isPlatformBrowser(this.platformId)) {
-      this.removeToken();
-    }
+    if (token && !this.isTokenExpired(token)) return true;
+    this.removeToken();
     return false;
   }
-
 }

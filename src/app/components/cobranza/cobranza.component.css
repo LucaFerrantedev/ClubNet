@@ -1,157 +1,23 @@
-/* Animación de entrada suave */
-.animate-fadein {
-    animation: fadeIn 0.5s ease-in-out;
+/* src/app/components/cobranza/cobranza.component.css */
+
+/* El contenedor principal hereda de styles.css (.main-container) */
+
+/* Ajustes específicos para el encabezado de esta página */
+.header-section {
+  text-align: center;
+  position: relative; /* Para el botón absoluto */
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+/* En pantallas muy chicas, el botón absoluto podría molestar, lo ajustamos */
+@media (max-width: 768px) {
+  .header-section button {
+    position: static;
+    display: block;
+    margin: 1rem auto 0 auto;
+  }
 }
 
-/* Badges estilo "Subtle" */
-.bg-success-subtle { background-color: #d1e7dd; color: #0f5132; }
-.bg-warning-subtle { background-color: #fff3cd; color: #664d03; }
-.bg-danger-subtle { background-color: #f8d7da; color: #842029; }
-
-/* Avatar redondo para el Admin */
-.avatar-circle {
-    width: 32px;
-    height: 32px;
-    background-color: #e9ecef;
-    color: #495057;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-}
-
-/* Tabla más aireada */
-.table {
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-.table th {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 1rem;
-    font-weight: 600;
-    color: #495057;
-    background-color: #f8f9fa;
-    border-bottom: 2px solid #dee2e6;
-    border-top: none;
-}
-
-.table td {
-    vertical-align: middle;
-    padding: 1rem;
-    font-size: 0.9rem;
-    border-top: 1px solid #e9ecef;
-}
-
-/* --- Estilos Modo Oscuro --- */
-.cobranza-main {
-    min-height: calc(100vh - 56px); /* Ajustar según altura del navbar */
-    background-color: #f8f9fa;
-    padding-top: 1rem;
-    padding-bottom: 2rem;
-    transition: background-color 0.3s ease;
-}
-
-.cobranza-main.dark-mode {
-    background-color: #111827;
-    color: #d1d5db;
-}
-
-.cobranza-main.dark-mode .text-secondary {
-    color: #adb5bd !important;
-}
-
-.cobranza-main.dark-mode .text-muted {
-    color: #6c757d !important;
-}
-
-.cobranza-main.dark-mode .border-bottom {
-    border-color: #374151 !important;
-}
-
-.cobranza-main.dark-mode .card,
-.cobranza-main.dark-mode .alert {
-    background-color: #1f2937;
-    border-color: #374151 !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2), 0 2px 8px 0 rgba(0, 0, 0, 0.34) !important;
-}
-
-.cobranza-main.dark-mode .card.bg-light {
-    background-color: #1f2937 !important;
-    border-color: #374151 !important;
-}
-
-.cobranza-main.dark-mode .form-control,
-.cobranza-main.dark-mode .form-select {
-    background-color: #374151;
-    border-color: #4b5563;
-    color: #e5e7eb;
-}
-
-.cobranza-main.dark-mode .form-control::placeholder {
-    color: #9ca3af;
-}
-
-.cobranza-main.dark-mode .alert-primary {
-    background-color: #1c3b55;
-    color: #aed6f1;
-}
-
-.cobranza-main.dark-mode .alert-success {
-    background-color: #1e463b;
-    color: #a7d7c5;
-}
-
-.cobranza-main.dark-mode .table {
-    color: #d1d5db;
-}
-
-.cobranza-main.dark-mode .table th {
-    background-color: #374151;
-    border-color: #4b5563;
-    color: #e5e7eb;
-}
-
-.cobranza-main.dark-mode .table-hover tbody tr:hover {
-    background-color: #2b3748; /* Un hover un poco más notorio */
-}
-
-.cobranza-main.dark-mode .table > :not(caption) > * > * {
-    background-color: transparent;
-    border-color: #374151;
-}
-
-.cobranza-main.dark-mode .table td {
-    box-shadow: none; /* Elimina cualquier sombra interna de las celdas */
-}
-
-.cobranza-main.dark-mode .avatar-circle {
-    background-color: #4b5563;
-    color: #e5e7eb;
-}
-
-.cobranza-main.dark-mode .btn-light {
-    background-color: #374151;
-    border-color: #4b5563;
-    color: #e5e7eb;
-}
-
-.cobranza-main.dark-mode .btn-light:hover {
-    background-color: #4b5563;
-    border-color: #6b7280;
-    color: #fff;
-}
-
-.cobranza-main.dark-mode .text-dark {
-    color: #e5e7eb !important;
+/* Utilidad para el texto principal en modo oscuro/claro */
+.text-main {
+  color: var(--text-main) !important;
 }

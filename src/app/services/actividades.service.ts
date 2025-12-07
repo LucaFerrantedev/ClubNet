@@ -1,6 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LoginService } from './login.service';
+import { ApiResponse, Usuario } from './login.service'; // Reutilizamos tipos
+
+// --- INTERFAZ ESPECÍFICA ---
+export interface Actividad {
+  actividad_id: number;
+  nombre: string;
+  descripcion: string;
+  cupo: number;
+  inicio: number; // Formato YYYYMM
+  cuota_valor: number;
+  estado: boolean;
+  url_imagen: string;
+  entrenador_id?: number | null;
+  ent_nombre?: string;
+  ent_apellido?: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -9,37 +24,30 @@ export class ActividadesService {
   url = "https://localhost:7121/api/actividad";
   url_user = "https://localhost:7121/api/usuario";
 
-  constructor(private http: HttpClient, private loginService: LoginService) { }
-
-  // Metodos para gestionar CRUD de Actividades
+  // Ya no necesitamos LoginService aquí, el interceptor maneja la auth
+  constructor(private http: HttpClient) { }
 
   GetActividades() {
-    const headers = this.loginService.getAuthHeaders();
-    return this.http.get(this.url + "/GetActividades", { headers: headers });
+    return this.http.get<ApiResponse<Actividad[]>>(`${this.url}/GetActividades`);
   }
 
-  CreateActividad(obj: any) {
-    const headers = this.loginService.getAuthHeaders();
-    return this.http.post(this.url + "/CreateActividad", obj, { headers: headers });
+  CreateActividad(obj: Actividad) {
+    return this.http.post<ApiResponse>(`${this.url}/CreateActividad`, obj);
   }
 
-  UpdateActividad(obj: any) {
-    const headers = this.loginService.getAuthHeaders();
-    return this.http.put(this.url + "/UpdateActividad", obj, { headers: headers });
+  UpdateActividad(obj: Actividad) {
+    return this.http.put<ApiResponse>(`${this.url}/UpdateActividad`, obj);
   }
 
   DeleteActividad(id: number) {
-    const headers = this.loginService.getAuthHeaders();
-    return this.http.delete(this.url + "/DeleteActividad?id=" + id, { headers: headers });
+    return this.http.delete<ApiResponse>(`${this.url}/DeleteActividad?id=${id}`);
   }
 
   GetUsuario(email: string) {
-    const headers = this.loginService.getAuthHeaders();
-    return this.http.get(this.url_user + "/GetUsuario?email=" + email, { headers: headers });
+    return this.http.get<Usuario>(`${this.url_user}/GetUsuario?email=${email}`);
   }
 
-  GetInscripcionesUsuario(email: string){
-    const headers = this.loginService.getAuthHeaders();
-    return this.http.get(this.url + "/GetInscripciones/" + email, { headers: headers });
+  GetInscripcionesUsuario(email: string) {
+    return this.http.get<ApiResponse<any[]>>(`${this.url}/GetInscripciones/${email}`);
   }
 }
