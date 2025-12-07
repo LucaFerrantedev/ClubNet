@@ -325,3 +325,76 @@
 .clases-main.dark-mode .btn-cancelar:hover {
   background-color: #4b5563;
 }
+
+/* ... (Estilos anteriores) ... */
+
+/* --- Estilos para Acciones (Iconos) --- */
+.actions-cell {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.btn-editar-tabla {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease-in-out;
+  color: #bd9f5f; /* Color amarillo/dorado */
+}
+
+.btn-editar-tabla:hover {
+  background-color: #ecf0f1;
+  color: #dbae34;
+}
+
+.btn-eliminar-tabla {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease-in-out;
+  color: #bd5f5f; /* Color rojo suave */
+}
+
+.btn-eliminar-tabla:hover {
+  background-color: #ecf0f1;
+  color: #db3434;
+}
+
+/* Botón Rojo para el Modal de Borrar */
+.btn-eliminar {
+  background-color: #ef4444;
+  color: white;
+  padding: 0.6rem 1.25rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-eliminar:hover {
+  background-color: #dc2626;
+}
+
+/* Modal de confirmación (hacerlo un poco más chico/centrado si se desea) */
+.modal-confirmacion {
+  text-align: center;
+  max-width: 450px;
+}
+
+/* Ajustes Dark Mode para los nuevos elementos */
+.clases-main.dark-mode .btn-editar-tabla:hover,
+.clases-main.dark-mode .btn-eliminar-tabla:hover {
+  background-color: #374151;
+}

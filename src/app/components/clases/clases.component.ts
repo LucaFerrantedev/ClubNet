@@ -6,7 +6,6 @@ import { ClasesService } from '../../services/clases.service';
 import { ActividadesService } from '../../services/actividades.service';
 import { NavbarComponent } from '../navbar/navbar.component';
 
-// MODIFICADO: Agregamos 'id' a la interfaz para poder filtrar
 interface GrupoClases {
   id: number;
   actividad: string;
@@ -32,15 +31,23 @@ export class ClasesComponent implements OnInit {
   actividadId: number | null = null; 
   
   actividadesDelEntrenador: any[] = []; 
-  
-  // NUEVO: Lista de actividades donde está inscripto el usuario (para el select)
   inscripcionesUsuario: any[] = [];
-  
-  // NUEVO: Variable específica para el filtro del usuario
   filtroUsuarioId: number | null = null;
 
-  nuevaClase = { actividad_id: 0, actividad: '', titulo: '', detalle: '', intensidad: '', url_multimedia: '' };
+  // Modelo actualizado para incluir clase_id (opcional para creación)
+  nuevaClase: any = { 
+    clase_id: 0, 
+    actividad_id: 0, 
+    actividad: '', 
+    titulo: '', 
+    detalle: '', 
+    intensidad: '', 
+    url_multimedia: '' 
+  };
+
   showModal = false;
+  isEditMode = false; // Bandera para saber si editamos
+  claseParaEliminar: any | null = null; // Para el modal de borrar
 
   constructor(
     private clasesService: ClasesService,
@@ -55,11 +62,7 @@ export class ClasesComponent implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       this.actividadId = params['actividadId'] ? Number(params['actividadId']) : null;
-      
-      // Si llega un ID por URL, lo usamos como filtro inicial
-      if(this.actividadId) {
-        this.filtroUsuarioId = this.actividadId;
-      }
+      if(this.actividadId) this.filtroUsuarioId = this.actividadId;
 
       if (this.email) {
         this.verificarUsuarioYRol();
@@ -73,10 +76,8 @@ export class ClasesComponent implements OnInit {
     this.clasesService.GetUsuario(this.email).subscribe({
       next: (user: any) => {
         this.esEntrenador = user?.rol_id === 2;
-
         if (this.esEntrenador) {
           this.cargarActividadesAsignadas(user.persona_id);
-          
           if (this.actividadId) {
             this.cargarClasesActividad(this.actividadId);
             this.nuevaClase.actividad_id = this.actividadId;
@@ -116,16 +117,22 @@ export class ClasesComponent implements OnInit {
     this.cargarClasesActividad(id);
   }
 
-  crearClase() {
+  // Método unificado para guardar (Crear o Editar)
+  guardarClase() {
     if (!this.nuevaClase.actividad_id) {
       alert("Por favor selecciona una actividad.");
       return;
     }
 
-    const actividadSeleccionada = this.actividadesDelEntrenador.find(
-      a => a.actividad_id === this.nuevaClase.actividad_id
-    );
+    if (this.isEditMode) {
+      this.actualizarClase();
+    } else {
+      this.crearClase();
+    }
+  }
 
+  crearClase() {
+    const actividadSeleccionada = this.actividadesDelEntrenador.find(a => a.actividad_id === this.nuevaClase.actividad_id);
     const obj = {
       Actividad_id: this.nuevaClase.actividad_id, 
       Actividad: actividadSeleccionada ? actividadSeleccionada.nombre : 'Sin Nombre', 
@@ -136,22 +143,76 @@ export class ClasesComponent implements OnInit {
     };
 
     this.clasesService.CreateClase(obj).subscribe({
-      next: () => {
-        if (this.actividadId === this.nuevaClase.actividad_id) {
-          this.cargarClasesActividad(this.actividadId);
-        }
-        this.cerrarModal();
-        this.nuevaClase = { 
-          actividad_id: this.nuevaClase.actividad_id, 
-          actividad: '', 
-          titulo: '', 
-          detalle: '', 
-          intensidad: '', 
-          url_multimedia: '' 
-        };
-      },
+      next: () => { this.finalizarAccion(); },
       error: (err) => console.error("Error creando clase", err)
     });
+  }
+
+  actualizarClase() {
+    // Buscar nombre de actividad por si cambió
+    const actividadSeleccionada = this.actividadesDelEntrenador.find(a => a.actividad_id === this.nuevaClase.actividad_id);
+    
+    const obj = {
+      Clase_id: this.nuevaClase.clase_id, // Necesario para el Update
+      Actividad: actividadSeleccionada ? actividadSeleccionada.nombre : 'Sin Nombre',
+      Titulo: this.nuevaClase.titulo,
+      Detalle: this.nuevaClase.detalle,
+      Intensidad: this.nuevaClase.intensidad,
+      Url_multimedia: this.nuevaClase.url_multimedia
+    };
+
+    this.clasesService.UpdateClase(obj).subscribe({
+      next: () => { 
+        console.log("Clase actualizada");
+        this.finalizarAccion(); 
+      },
+      error: (err) => console.error("Error actualizando", err)
+    });
+  }
+
+  // Confirmación de eliminación
+  solicitarConfirmacionEliminar(clase: any) {
+    this.claseParaEliminar = clase;
+  }
+
+  cancelarEliminacion() {
+    this.claseParaEliminar = null;
+  }
+
+  eliminarClase() {
+    if (!this.claseParaEliminar) return;
+
+    this.clasesService.DeleteClase(this.claseParaEliminar.clase_id).subscribe({
+      next: () => {
+        // Recargar si estamos viendo esa actividad
+        if (this.actividadId) this.cargarClasesActividad(this.actividadId);
+        this.claseParaEliminar = null;
+      },
+      error: (err) => console.error("Error eliminando", err)
+    });
+  }
+
+// --- Helpers ---
+  finalizarAccion() {
+    // Si la clase modificada corresponde a la actividad visualizada, recargar lista
+    if (this.actividadId === this.nuevaClase.actividad_id) {
+      // CORRECCIÓN: Usamos this.nuevaClase.actividad_id que seguro es number, o el '!'
+      this.cargarClasesActividad(this.nuevaClase.actividad_id);
+    }
+    this.cerrarModal();
+    this.resetForm();
+  }
+
+  resetForm() {
+    this.nuevaClase = { 
+      clase_id: 0,
+      actividad_id: this.actividadId || 0, // Mantener selección actual si existe
+      actividad: '', 
+      titulo: '', 
+      detalle: '', 
+      intensidad: '', 
+      url_multimedia: '' 
+    };
   }
 
   // --- Lógica USUARIO NORMAL ---
@@ -159,18 +220,14 @@ export class ClasesComponent implements OnInit {
     this.actividadesService.GetInscripcionesUsuario(this.email).subscribe({
       next: (inscripciones: any) => {
         if (Array.isArray(inscripciones) && inscripciones.length > 0) {
-          
-          // Guardamos las inscripciones para llenar el selector
           this.inscripcionesUsuario = inscripciones;
-
-          // Cargamos SIEMPRE todas las clases para permitir filtrado rápido en cliente
           let solicitudesCompletadas = 0;
           inscripciones.forEach((ins: any) => {
             this.clasesService.GetClases(ins.actividad_id).subscribe({
               next: (clases: any) => {
                 if (Array.isArray(clases) && clases.length > 0) {
                   this.misClases.push({
-                    id: ins.actividad_id, // Guardamos ID para filtrar
+                    id: ins.actividad_id,
                     actividad: ins.actividad_nombre,
                     listaClases: clases
                   });
@@ -191,20 +248,26 @@ export class ClasesComponent implements OnInit {
     });
   }
 
-  // NUEVO: Getter para filtrar la vista sin recargar datos
   get clasesFiltradasUsuario() {
-    if (!this.filtroUsuarioId) {
-      return this.misClases;
-    }
+    if (!this.filtroUsuarioId) return this.misClases;
     return this.misClases.filter(g => g.id === this.filtroUsuarioId);
   }
 
-  abrirModal() { 
+  // Abrir modal: Si recibe 'clase', es edición. Si no, es creación.
+  abrirModal(clase: any = null) { 
     this.showModal = true;
-    if (this.actividadId) {
-        this.nuevaClase.actividad_id = this.actividadId;
+    if (clase) {
+      this.isEditMode = true;
+      // Copiamos los datos para no modificar la tabla en tiempo real antes de guardar
+      this.nuevaClase = { ...clase };
+    } else {
+      this.isEditMode = false;
+      this.resetForm();
     }
   }
   
-  cerrarModal() { this.showModal = false; }
+  cerrarModal() { 
+    this.showModal = false;
+    this.isEditMode = false;
+  }
 }
