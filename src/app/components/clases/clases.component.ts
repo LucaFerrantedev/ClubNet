@@ -34,7 +34,7 @@ export class ClasesComponent implements OnInit {
   actividadesDelEntrenador: any[] = []; 
 
   // Modelo para el formulario (ahora incluye actividad_id)
-  nuevaClase = { actividad_id: 0, titulo: '', detalle: '', intensidad: '', url_multimedia: '' };
+  nuevaClase = { actividad_id: 0, actividad: '', titulo: '', detalle: '', intensidad: '', url_multimedia: '' };
   showModal = false;
 
   constructor(
@@ -112,19 +112,21 @@ export class ClasesComponent implements OnInit {
     this.cargarClasesActividad(id);
   }
 
-  crearClase() {
+crearClase() {
     // Validar que se haya seleccionado una actividad
     if (!this.nuevaClase.actividad_id) {
       alert("Por favor selecciona una actividad.");
       return;
     }
 
+    // AJUSTE: Enviamos 'Actividad' como string para satisfacer al backend actual
     const obj = {
-      actividad_id: this.nuevaClase.actividad_id,
-      titulo: this.nuevaClase.titulo,
-      detalle: this.nuevaClase.detalle,
-      intensidad: this.nuevaClase.intensidad,
-      url_multimedia: this.nuevaClase.url_multimedia || ''
+      Actividad_ID: this.nuevaClase.actividad_id,
+      Actividad: this.nuevaClase.actividad,
+      Titulo: this.nuevaClase.titulo,
+      Detalle: this.nuevaClase.detalle,
+      Intensidad: this.nuevaClase.intensidad,
+      Url_Multimedia: this.nuevaClase.url_multimedia,
     };
 
     this.clasesService.CreateClase(obj).subscribe({
@@ -135,7 +137,7 @@ export class ClasesComponent implements OnInit {
         }
         this.cerrarModal();
         // Resetear form pero mantener la actividad seleccionada por comodidad
-        this.nuevaClase = { actividad_id: this.nuevaClase.actividad_id, titulo: '', detalle: '', intensidad: '', url_multimedia: '' };
+        this.nuevaClase = { actividad_id: this.nuevaClase.actividad_id, actividad: '', titulo: '', detalle: '', intensidad: '', url_multimedia: '' };
       },
       error: (err) => console.error("Error creando clase", err)
     });
