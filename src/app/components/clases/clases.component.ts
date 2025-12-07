@@ -119,25 +119,39 @@ crearClase() {
       return;
     }
 
-    // AJUSTE: Enviamos 'Actividad' como string para satisfacer al backend actual
+    // 1. Buscamos el objeto actividad completo para obtener su nombre
+    const actividadSeleccionada = this.actividadesDelEntrenador.find(
+      a => a.actividad_id === this.nuevaClase.actividad_id
+    );
+
+    // 2. Construimos el objeto con los datos correctos
+    // Asegúrate de que las mayúsculas coincidan con tu DTO en C# (CreateClaseDTO)
     const obj = {
-      Actividad_ID: this.nuevaClase.actividad_id,
-      Actividad: this.nuevaClase.actividad,
+      Actividad_id: this.nuevaClase.actividad_id, 
+      Actividad: actividadSeleccionada ? actividadSeleccionada.nombre : 'Sin Nombre', // Aquí asignamos el nombre real
       Titulo: this.nuevaClase.titulo,
       Detalle: this.nuevaClase.detalle,
       Intensidad: this.nuevaClase.intensidad,
-      Url_Multimedia: this.nuevaClase.url_multimedia,
+      Url_multimedia: this.nuevaClase.url_multimedia
     };
 
     this.clasesService.CreateClase(obj).subscribe({
       next: () => {
+        console.log('Clase creada con éxito');
         // Si la clase creada corresponde a la actividad que estamos viendo, recargamos la lista
         if (this.actividadId === this.nuevaClase.actividad_id) {
           this.cargarClasesActividad(this.actividadId);
         }
         this.cerrarModal();
         // Resetear form pero mantener la actividad seleccionada por comodidad
-        this.nuevaClase = { actividad_id: this.nuevaClase.actividad_id, actividad: '', titulo: '', detalle: '', intensidad: '', url_multimedia: '' };
+        this.nuevaClase = { 
+          actividad_id: this.nuevaClase.actividad_id, 
+          actividad: '', 
+          titulo: '', 
+          detalle: '', 
+          intensidad: '', 
+          url_multimedia: '' 
+        };
       },
       error: (err) => console.error("Error creando clase", err)
     });

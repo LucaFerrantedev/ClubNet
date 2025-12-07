@@ -29,8 +29,10 @@
       <table class="clases-table">
         <thead>
           <tr>
+            <th>Actividad</th>
             <th>Título</th>
             <th>Detalle</th>
+            <th>Intensidad</th>
           </tr>
         </thead>
         <tbody>
@@ -41,8 +43,10 @@
           }
           @for (clase of clasesEntrenador; track clase.clase_id) {
           <tr>
+            <td>{{ clase.actividad }}</td>
             <td>{{ clase.titulo }}</td>
             <td>{{ clase.detalle }}</td>
+            <td>{{ clase.intensidad }}</td>
           </tr>
           } @empty {
           @if (!isLoading) {
@@ -138,15 +142,19 @@
           <table class="clases-table">
             <thead>
               <tr>
+                <th>Actividad</th>
                 <th>Título de la Clase</th>
-                <th>Detalle / Horario</th>
+                <th>Detalle</th>
+                <th>Intensidad/th>
               </tr>
             </thead>
             <tbody>
               @for (clase of grupo.listaClases; track clase.clase_id) {
               <tr>
+                <td class="fw-medium">{{ grupo.actividad }}</td>
                 <td class="fw-medium">{{ clase.titulo }}</td>
                 <td class="text-muted">{{ clase.detalle }}</td>
+                <td class="text-muted">{{ clase.intensidad }}</td>
               </tr>
               }
             </tbody>
