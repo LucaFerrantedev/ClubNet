@@ -37,4 +37,13 @@ export class ClasesService {
     const headers = this.loginService.getAuthHeaders();
     return this.http.get(this.url_user + "/GetUsuario?email=" + email, { headers: headers });
   }
+  
+  UploadVideo(file: File) {
+    const headers = this.loginService.getAuthHeaders();
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post(this.url + '/UploadVideo',formData, { headers: headers });
+  }
+
 }
