@@ -41,7 +41,7 @@ export class ClasesComponent implements OnInit {
   // --- Modelo de Clase (Fusionado) ---
   nuevaClase: any = { 
     clase_id: 0, 
-    actividad_id: 0, 
+    actividad_id: this.actividadId, 
     actividad: '', 
     titulo: '', 
     detalle: '', 
@@ -54,6 +54,8 @@ export class ClasesComponent implements OnInit {
   showModal = false;
   isEditMode = false;
   claseParaEliminar: any | null = null;
+
+  videoVisibleId: number | null = null;
 
   constructor(
     private clasesService: ClasesService,
@@ -154,12 +156,28 @@ export class ClasesComponent implements OnInit {
 
     const file = input.files[0];
     this.selectedVideoName = file.name;
-    this.nuevaClase.videoFile = file;
     
-    // NOTA: Si tu backend aún no soporta archivos, aquí podrías simular llenar la URL
-    // o preparar un FormData. Por ahora mantenemos la lógica funcional original.
+    this.clasesService.UploadVideo(file).subscribe({
+    next: (res: any) => {
+      console.log(res.data);
+      this.nuevaClase.url_multimedia = res.data;  
+    },
+    error: (err) => {
+      console.error('Error subiendo video', err);
+    }
+  });
   }
 
+  // Función para alternar la visibilidad
+  toggleVideo(id: number, event: Event) {
+    event.stopPropagation(); // IMPORTANTE: Para que no se abra el modal de edición/click de la fila
+    
+    if (this.videoVisibleId === id) {
+      this.videoVisibleId = null; // Si ya está abierto, lo cerramos
+    } else {
+      this.videoVisibleId = id; // Abrimos este
+    }
+  }
 
   // --- ABM (CRUD) ---
 

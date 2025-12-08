@@ -54,10 +54,21 @@
               [class.clase-activa]="nuevaClase && nuevaClase.clase_id === clase.clase_id && showModal"
             >
               <div class="clase-info">
-                <div class="clase-icon">📋</div>
+                <div class="clase-icon">
+                  @if(clase.url_multimedia) { 🎬 } @else { 📋 }
+                </div>
                 <div>
                   <h2 class="clase-titulo">{{ clase.titulo }}</h2>
                   <p class="clase-detalle">{{ clase.detalle }}</p>
+                  @if (clase.url_multimedia) {
+            <button class="btn-ver-video mt-2" (click)="toggleVideo(clase.clase_id, $event)">
+              @if (videoVisibleId === clase.clase_id) {
+                Ocultar Video
+              } @else {
+                Ver Video
+              }
+            </button>
+          }
                 </div>
               </div>
 
@@ -83,6 +94,14 @@
 
               </div>
             </article>
+            @if (videoVisibleId === clase.clase_id && clase.url_multimedia) {
+      <div class="video-wrapper">
+        <video controls playsinline class="video-player">
+          <source [src]="clase.url_multimedia" type="video/mp4">
+          Tu navegador no soporta la reproducción de videos.
+        </video>
+      </div>
+    }
           }
         }
       </section>
@@ -101,7 +120,7 @@
 
             <div class="editor-grid">
 
-              <div class="editor-group">
+              <!-- <div class="editor-group">
                 <label>Actividad</label>
                 <select [(ngModel)]="nuevaClase.actividad_id" [disabled]="isEditMode">
                   <option [ngValue]="0" disabled>Selecciona...</option>
@@ -109,7 +128,7 @@
                     <option [ngValue]="act.actividad_id">{{ act.nombre }}</option>
                   }
                 </select>
-              </div>
+              </div> -->
 
               <div class="editor-group">
                 <label for="titulo-edit">Título</label>

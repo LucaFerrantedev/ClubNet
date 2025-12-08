@@ -389,3 +389,48 @@ select.intensidad-select option {
   border-color: #4b5563;
   color: #e5e7eb;
 }
+
+/* Contenedor del video desplegable */
+.video-wrapper {
+  padding: 0 1.5rem 1.5rem 1.5rem; /* Margen interno */
+  background-color: #ffffff; /* Mismo fondo de la tarjeta */
+  border-bottom: 1px solid #f3f4f6; /* Borde inferior para separar del siguiente item */
+  animation: slideDown 0.3s ease-out;
+}
+
+/* Estilo del reproductor */
+.video-player {
+  width: 100%;       /* Ocupa todo el ancho disponible */
+  max-height: 500px; /* Altura máxima para que no sea gigante */
+  border-radius: 12px;
+  background-color: #000; /* Fondo negro mientras carga */
+  display: block;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Animación suave al abrir */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Botón pequeño para ver video */
+.btn-ver-video {
+  font-size: 0.8rem;
+  color: #2563eb;
+  background-color: #eff6ff;
+  border: none;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.btn-ver-video:hover {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
