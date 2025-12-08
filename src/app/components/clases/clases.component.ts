@@ -187,6 +187,10 @@ export class ClasesComponent implements OnInit {
   // --- ABM (CRUD) ---
 
   guardarClase() {
+    if (this.isUploadingVideo) {
+    return;
+  }
+
     if (!this.nuevaClase.actividad_id) {
       alert("Por favor selecciona una actividad.");
       return;

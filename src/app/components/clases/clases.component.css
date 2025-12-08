@@ -434,3 +434,9 @@ select.intensidad-select option {
   background-color: #dbeafe;
   color: #1d4ed8;
 }
+
+.btn-principal[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
