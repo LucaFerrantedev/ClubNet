@@ -1,13 +1,14 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoginService } from './login.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
 
-  url = "https://localhost:7121/api/usuario";
+  url = environment.URL_API+"/usuario";
 
   constructor(private httpClient: HttpClient, private loginService: LoginService) { }
 

@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LoginService } from './login.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InscripcionService {
-  url_actividad = "https://localhost:7121/api/actividad";
-  url_usuario = "https://localhost:7121/api/usuario";
-  url_cobranza = "https://localhost:7121/api/cobranza";
+  url_actividad = environment.URL_API+"/actividad";
+  url_usuario = environment.URL_API+"/usuario";
+  url_cobranza = environment.URL_API+"/cobranza";
 
   constructor(private http:HttpClient, private loginService: LoginService){
   }

@@ -2,6 +2,7 @@ import { Inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
+import { environment } from '../../environments/environment';
 
 // --- INTERFACES CENTRALIZADAS ---
 export interface Usuario {
@@ -26,8 +27,8 @@ export interface ApiResponse<T = any> {
 export class LoginService {
   private tokenKey = 'authToken';
   // Centraliza tus URLs aquí si no usas environment.ts
-  url = "https://localhost:7121/api/login";
-  userUrl = "https://localhost:7121/api/usuario";
+  url = environment.URL_API+"/login";
+  userUrl = environment.URL_API+"/usuario";
 
   // SIGNAL: Estado reactivo del usuario logueado
   currentUser = signal<Usuario | null>(null);

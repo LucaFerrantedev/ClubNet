@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiResponse, Usuario } from './login.service'; // Reutilizamos tipos
+import { environment } from '../../environments/environment';
 
 // --- INTERFAZ ESPECÍFICA ---
 export interface Actividad {
@@ -21,8 +22,8 @@ export interface Actividad {
   providedIn: 'root'
 })
 export class ActividadesService {
-  url = "https://localhost:7121/api/actividad";
-  url_user = "https://localhost:7121/api/usuario";
+  url = environment.URL_API+"/actividad";
+  url_user = environment.URL_API+"/usuario";
 
   // Ya no necesitamos LoginService aquí, el interceptor maneja la auth
   constructor(private http: HttpClient) { }

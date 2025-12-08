@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IAService {
-  private apiUrl = 'https://localhost:7121/api/ia/sugerirActividad';
+  private apiUrl = environment.URL_API+'/ia/sugerirActividad';
 
   constructor(private http: HttpClient) { }
 
