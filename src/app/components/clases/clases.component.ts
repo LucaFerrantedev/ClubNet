@@ -56,6 +56,8 @@ export class ClasesComponent implements OnInit {
   claseParaEliminar: any | null = null;
 
   videoVisibleId: number | null = null;
+  isUploadingVideo = false;
+
 
   constructor(
     private clasesService: ClasesService,
@@ -156,14 +158,17 @@ export class ClasesComponent implements OnInit {
 
     const file = input.files[0];
     this.selectedVideoName = file.name;
+    this.isUploadingVideo = true;
     
     this.clasesService.UploadVideo(file).subscribe({
     next: (res: any) => {
       console.log(res.data);
       this.nuevaClase.url_multimedia = res.data;  
+      this.isUploadingVideo = false;
     },
     error: (err) => {
       console.error('Error subiendo video', err);
+      this.isUploadingVideo = false;
     }
   });
   }

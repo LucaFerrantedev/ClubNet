@@ -186,9 +186,11 @@
               <button class="btn-secundario" (click)="cerrarModal()">
                 Cancelar
               </button>
-              <button class="btn-principal" (click)="guardarClase()">
+              <!-- <button class="btn-principal" (click)="guardarClase()">
                 {{ isEditMode ? 'Guardar Cambios' : 'Crear Clase' }}
-              </button>
+              </button> -->
+              <button class="btn-principal" (click)="guardarClase()" [disabled]="isUploadingVideo">  {{ isEditMode ? 'Guardar Cambios' : 'Crear Clase' }} </button>
+
             </div>
 
           </div>
