@@ -5,6 +5,7 @@
 build/
 bin/
 obj/
+environments/
 
 .env
 *.local

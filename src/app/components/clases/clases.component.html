@@ -4,7 +4,6 @@
   <div class="clases-wrapper">
 
     @if (esEntrenador) {
-
       <header class="clases-header">
         <div>
           <h1 class="clases-title">
@@ -61,14 +60,14 @@
                   <h2 class="clase-titulo">{{ clase.titulo }}</h2>
                   <p class="clase-detalle">{{ clase.detalle }}</p>
                   @if (clase.url_multimedia) {
-            <button class="btn-ver-video mt-2" (click)="toggleVideo(clase.clase_id, $event)">
-              @if (videoVisibleId === clase.clase_id) {
-                Ocultar Video
-              } @else {
-                Ver Video
-              }
-            </button>
-          }
+                    <button class="btn-ver-video mt-2" (click)="toggleVideo(clase.clase_id, $event)">
+                      @if (videoVisibleId === clase.clase_id) {
+                        Ocultar Video
+                      } @else {
+                        Ver Video
+                      }
+                    </button>
+                  }
                 </div>
               </div>
 
@@ -95,13 +94,13 @@
               </div>
             </article>
             @if (videoVisibleId === clase.clase_id && clase.url_multimedia) {
-      <div class="video-wrapper">
-        <video controls playsinline class="video-player">
-          <source [src]="clase.url_multimedia" type="video/mp4">
-          Tu navegador no soporta la reproducción de videos.
-        </video>
-      </div>
-    }
+              <div class="video-wrapper">
+                <video controls playsinline class="video-player">
+                  <source [src]="clase.url_multimedia" type="video/mp4">
+                  Tu navegador no soporta la reproducción de videos.
+                </video>
+              </div>
+            }
           }
         }
       </section>
@@ -119,17 +118,6 @@
             </h2>
 
             <div class="editor-grid">
-
-              <!-- <div class="editor-group">
-                <label>Actividad</label>
-                <select [(ngModel)]="nuevaClase.actividad_id" [disabled]="isEditMode">
-                  <option [ngValue]="0" disabled>Selecciona...</option>
-                  @for (act of actividadesDelEntrenador; track act.actividad_id) {
-                    <option [ngValue]="act.actividad_id">{{ act.nombre }}</option>
-                  }
-                </select>
-              </div> -->
-
               <div class="editor-group">
                 <label for="titulo-edit">Título</label>
                 <input
@@ -186,9 +174,6 @@
               <button class="btn-secundario" (click)="cerrarModal()">
                 Cancelar
               </button>
-              <!-- <button class="btn-principal" (click)="guardarClase()">
-                {{ isEditMode ? 'Guardar Cambios' : 'Crear Clase' }}
-              </button> -->
               <button class="btn-principal" (click)="guardarClase()" [disabled]="isUploadingVideo">  {{ isEditMode ? 'Guardar Cambios' : 'Crear Clase' }} </button>
 
             </div>
@@ -248,10 +233,22 @@
                   @for (clase of grupo.listaClases; track clase.clase_id) {
                     <article class="clase-item" style="cursor: default;">
                       <div class="clase-info">
-                        <div class="clase-icon">💪</div>
+                        <div class="clase-icon">
+                           @if(clase.url_multimedia) { 🎬 } @else { 💪 } 
+                        </div>
                         <div>
                           <h2 class="clase-titulo">{{ clase.titulo }}</h2>
                           <p class="clase-detalle">{{ clase.detalle }}</p>
+                          
+                          @if (clase.url_multimedia) {
+                            <button class="btn-ver-video mt-2" (click)="toggleVideo(clase.clase_id, $event)">
+                              @if (videoVisibleId === clase.clase_id) {
+                                Ocultar Video
+                              } @else {
+                                Ver Video
+                              }
+                            </button>
+                          }
                         </div>
                       </div>
                       <div class="clase-actions">
@@ -260,6 +257,15 @@
                          </span>
                       </div>
                     </article>
+
+                    @if (videoVisibleId === clase.clase_id && clase.url_multimedia) {
+                      <div class="video-wrapper">
+                        <video controls playsinline class="video-player">
+                          <source [src]="clase.url_multimedia" type="video/mp4">
+                          Tu navegador no soporta la reproducción de videos.
+                        </video>
+                      </div>
+                    }
                   }
                 </section>
               </div>
