@@ -96,6 +96,9 @@
                   
                   @if (esEntrenador && actividad.entrenador_id === loginService.currentUser()?.persona_id) {
                     <button class="btn-primary" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;" (click)="VerClases(actividad.actividad_id)">Clases</button>
+                    <button class="btn-icon ms-1" style="color: #f59e0b;" title="Enviar Comunicado" (click)="abrirModalComunicado(actividad)">
+                        <i class="bi bi-megaphone-fill"></i>
+                    </button>
                   }
 
                   @if (esAdmin) {
@@ -180,4 +183,34 @@
     </div>
   </div>
   }
+
+  @if (showComunicadoModal && actividadParaComunicado) {
+    <div class="modal-backdrop" (click)="cerrarModalComunicado()">
+      <div class="modal-content card-custom" (click)="$event.stopPropagation()">
+        <button class="modal-close" (click)="cerrarModalComunicado()">&times;</button>
+        
+        <h2 class="section-title">Nuevo Comunicado</h2>
+        <p class="text-muted mb-3">Para: <strong>{{ actividadParaComunicado.nombre }}</strong></p>
+        
+        <form (ngSubmit)="enviarComunicado()">
+          <div class="form-grid" style="grid-template-columns: 1fr;">
+            <div class="form-group">
+              <label>Asunto <span class="text-danger">*</span></label>
+              <input type="text" [(ngModel)]="comunicadoData.asunto" name="cAsunto" required placeholder="Ej: Clase suspendida por lluvia">
+            </div>
+            
+            <div class="form-group">
+              <label>Detalles <span class="text-danger">*</span></label>
+              <textarea [(ngModel)]="comunicadoData.detalle" name="cDetalle" rows="4" required placeholder="Escriba el mensaje para los alumnos..."></textarea>
+            </div>
+          </div>
+    
+          <div class="mt-4 text-end">
+             <button type="button" class="btn-base me-2" (click)="cerrarModalComunicado()">Cancelar</button>
+             <button type="submit" class="btn-primary">Enviar <i class="bi bi-send-fill ms-1"></i></button>
+          </div>
+        </form>
+      </div>
+    </div>
+    }
 </div>

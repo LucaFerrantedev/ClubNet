@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { NavbarComponent } from "../navbar/navbar.component";
-import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { DashboardService } from '../../services/dashboard.service';
 import { IAService } from '../../services/ia.service';
+import { ActividadesService } from '../../services/actividades.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NavbarComponent, CommonModule, FormsModule],
+  imports: [NavbarComponent, CommonModule, FormsModule, RouterModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
   standalone: true
@@ -16,35 +17,37 @@ import { FormsModule } from '@angular/forms';
 
 export class DashboardComponent implements OnInit {
 
-  constructor(
-    private service: DashboardService,
-    private router: Router,
-    private ia: IAService) { }
+  private service = inject(DashboardService);
+  private ia = inject(IAService); // Se mantiene para los alumnos
+  private actividadesService = inject(ActividadesService);
+  
   DataSourceUsuario: any;
   isDarkMode = false;
-  
   email = '';
-  nombre = '';
-  apellido = '';
-  dni = '';
+
+  // Datos para IA (Alumnos)
   sugerencia: string | null = null;
   cargando = false;
-
-  // Propiedades para la entrada del usuario
   edadUsuario: number | null = null;
   interesesUsuario: string = '';
   historialUsuario: string = '';
 
+  // Datos para Alumnos (Panel Derecho)
+  misActividades: any[] = [];
+  loadingClases = false;
+
+  // Datos para Entrenadores
+  actividadesEntrenador: any[] = [];
+  loadingEntrenador = false;
 
   ngOnInit(): void {
     this.email = localStorage.getItem('email') || '';
     if (this.email) {
       this.CargarUsuario(this.email);
     } else {
-      console.error("No se encontró un email en localStorage. No se puede cargar el usuario.");
+      console.error("No se encontró un email en localStorage.");
     }
 
-    // Cargar preferencia de modo oscuro
     const darkModePref = localStorage.getItem('darkMode');
     this.isDarkMode = darkModePref === 'true';
     this.applyDarkMode();
@@ -54,27 +57,32 @@ export class DashboardComponent implements OnInit {
     this.service.GetUsuario(email).subscribe({
       next: (x) => {
         this.DataSourceUsuario = x;
-        console.log("Datos del usuario recibidos:", this.DataSourceUsuario);
+        
+        // Lógica según rol
+        if (this.DataSourceUsuario.rol_id === 2) {
+          // Es Entrenador: Cargar sus actividades
+          this.CargarActividadesComoEntrenador(this.DataSourceUsuario.persona_id);
+        } else {
+          // Es Alumno/Socio: Cargar inscripciones (y dejar disponible la IA)
+          this.CargarMisInscripciones(this.email);
+        }
       },
-      error: (err) => {
-        console.error("Error al cargar los datos del usuario:", err);
-      }
+      error: (err) => console.error(err)
     });
   }
 
-  getRolTexto(rolId: number): string {
-    switch (rolId) {
-      case 1:
-        return 'Administrador';
-      case 2:
-        return 'Entrenador';
-      case 3:
-        return 'Usuario';
-      case 4:
-        return 'Socio';
-      default:
-        return 'No asignado';
-    }
+  // --- Lógica Alumnos ---
+  CargarMisInscripciones(email: string) {
+    this.loadingClases = true;
+    this.actividadesService.GetInscripcionesUsuario(email).subscribe({
+      next: (res: any) => {
+        if (res.data) this.misActividades = res.data;
+        else if (Array.isArray(res)) this.misActividades = res;
+        else this.misActividades = [];
+        this.loadingClases = false;
+      },
+      error: () => this.loadingClases = false
+    });
   }
 
   pedirSugerencia() {
@@ -82,18 +90,15 @@ export class DashboardComponent implements OnInit {
     this.sugerencia = null;
 
     if (!this.edadUsuario || !this.interesesUsuario) {
-      this.sugerencia = 'Por favor, ingresa tu edad e intereses para obtener una sugerencia.';
+      this.sugerencia = 'Por favor, ingresa tu edad e intereses.';
       this.cargando = false;
       return;
     }
 
-    const interesesArray = this.interesesUsuario.split(',').map(item => item.trim()).filter(item => item);
-    const historialArray = this.historialUsuario.split(',').map(item => item.trim()).filter(item => item);
-
     const datosUsuario = {
       Edad: this.edadUsuario,
-      Intereses: interesesArray,
-      Historial: historialArray
+      Intereses: this.interesesUsuario.split(','),
+      Historial: this.historialUsuario.split(',')
     };
 
     this.ia.sugerirActividad(datosUsuario).subscribe({
@@ -102,10 +107,33 @@ export class DashboardComponent implements OnInit {
         this.cargando = false;
       },
       error: () => {
-        this.sugerencia = '¡😐 Algo salio mal! Intenta de nuevo.';
+        this.sugerencia = '¡😐 Algo salió mal! Intenta de nuevo.';
         this.cargando = false;
       }
     });
+  }
+
+  // --- Lógica Entrenadores ---
+  CargarActividadesComoEntrenador(personaId: number) {
+    this.loadingEntrenador = true;
+    this.actividadesService.GetActividades().subscribe({
+      next: (res: any) => {
+        const todas = res.data || (Array.isArray(res) ? res : []);
+        this.actividadesEntrenador = todas.filter((a: any) => a.entrenador_id === personaId);
+        this.loadingEntrenador = false;
+      },
+      error: () => this.loadingEntrenador = false
+    });
+  }
+
+  getRolTexto(rolId: number): string {
+    switch (rolId) {
+      case 1: return 'Administrador';
+      case 2: return 'Entrenador';
+      case 3: return 'Usuario';
+      case 4: return 'Socio';
+      default: return 'No asignado';
+    }
   }
 
   toggleDarkMode(): void {

@@ -6,6 +6,7 @@
 
 	<div class="dashboard-container">
 		<div class="dashboard-grid">
+
 			<div class="dashboard-column">
 				<div class="dashboard-card animate-fadein">
 					<h2 class="dashboard-title">Hola {{ DataSourceUsuario?.nombre }} 👋</h2>
@@ -13,51 +14,135 @@
 						<div><strong>Email:</strong> {{ DataSourceUsuario?.email }}</div>
 						<div><strong>Nombre:</strong> {{ DataSourceUsuario?.nombre }}</div>
 						<div><strong>Apellido:</strong> {{ DataSourceUsuario?.apellido }}</div>
-						<div><strong>DNI:</strong> {{ DataSourceUsuario?.dni }}</div>
 						<div><strong>Rol:</strong> {{ getRolTexto(DataSourceUsuario?.rol_id) }}</div>
 					</div>
 				</div>
 
+				@if (DataSourceUsuario?.rol_id !== 2) {
 				<div class="sugerencia-card animate-fadein">
 					<div class="sugerencia-header">
 						<div class="pills-container">
-							<span class="experimental-pill">Experimental</span>
 							<span class="ai-pill">✨ IA</span>
 						</div>
 						<h3 class="sugerencia-title">Sugerencia de Actividad</h3>
 					</div>
-					<p class="sugerencia-descripcion">¿No sabes qué hacer? ¡Deja que nuestra IA te recomiende una
-						actividad!</p>
-					<div class="sugerencia-form">
+					<p class="sugerencia-descripcion">¿No sabes qué hacer? ¡Deja que nuestra IA te recomiende!</p>
+					<div class="sugerencia-form" style="flex-direction: column;">
 						<div class="form-group">
 							<label for="edad">Tu Edad</label>
 							<input type="number" id="edad" [(ngModel)]="edadUsuario" placeholder="Ej: 25" required>
 						</div>
 						<div class="form-group">
-							<label for="intereses">Tus Intereses (separados por coma)</label>
+							<label for="intereses">Intereses</label>
 							<input type="text" id="intereses" [(ngModel)]="interesesUsuario"
-								placeholder="Ej: fútbol, lectura" required>
+								placeholder="Ej: fútbol, crossfit" required>
 						</div>
 						<div class="form-group">
-							<label for="historial">Actividades Previas (opcional)</label>
+							<label for="historial">Historial Deportivo</label>
 							<input type="text" id="historial" [(ngModel)]="historialUsuario"
-								placeholder="Ej: tenis, gimnasio">
+								placeholder="Ej: natación, tenis (opcional)">
 						</div>
 					</div>
 					<button class="btn-sugerencia" (click)="pedirSugerencia()" [disabled]="cargando">
-						{{ cargando ? 'Generando...' : 'Obtener sugerencia' }}
+						{{ cargando ? 'Pensando...' : 'Sugerir' }}
 					</button>
-					<p class="sugerencia-resultado" *ngIf="sugerencia || cargando">{{ cargando ? 'Generando...' :
-						sugerencia }}</p>
+					<p class="sugerencia-resultado" *ngIf="sugerencia || cargando">
+						{{ cargando ? 'Analizando perfiles...' : sugerencia }}
+					</p>
+				</div>
+				}
+			</div>
+
+			@if (DataSourceUsuario?.rol_id === 2) {
+			<div class="clases-panel animate-fadein">
+				<div class="panel-header">
+					<h3 class="panel-title">Tus Actividades a Cargo</h3>
+					<span class="text-muted small">Gestiona tus grupos</span>
+				</div>
+
+				<div class="clases-list-container">
+					@if (loadingEntrenador) {
+					<div class="text-center py-5">
+						<div class="spinner-border text-primary" role="status"></div>
+					</div>
+					}
+					@else if (actividadesEntrenador.length === 0) {
+					<div class="empty-state">
+						<div class="empty-icon">📋</div>
+						<p>No tienes actividades asignadas actualmente.</p>
+					</div>
+					}
+					@else {
+					<div class="clases-list">
+						@for (act of actividadesEntrenador; track act.actividad_id) {
+						<div class="clase-row">
+							<div class="clase-info">
+								<h4 class="clase-nombre">{{ act.nombre }}</h4>
+								<p class="clase-horario">
+									<i class="bi bi-people-fill"></i> Cupo: {{ act.cupo }} personas
+								</p>
+							</div>
+							<div class="d-flex align-items-center gap-2">
+								<span class="badge" [ngClass]="act.estado ? 'bg-success-subtle' : 'bg-danger-subtle'">
+									{{ act.estado ? 'ACTIVO' : 'INACTIVO' }}
+								</span>
+								<a [routerLink]="['/clases']" [queryParams]="{actividadId: act.actividad_id}"
+									class="btn btn-sm btn-primary">
+									Gestionar
+								</a>
+							</div>
+						</div>
+						}
+					</div>
+					}
 				</div>
 			</div>
-			<div class="calendar-card animate-fadein">
-				<h3 class="calendar-title">Calendario de Actividades</h3>
-				<div class="calendar-placeholder">
-					<p>Próximamente: Un calendario interactivo para ver y gestionar tus actividades.</p>
-					<i class="calendar-icon">📅</i>
+			}
+
+			@if (DataSourceUsuario?.rol_id !== 2) {
+			<div class="clases-panel animate-fadein">
+				<div class="panel-header">
+					<h3 class="panel-title">Mis Clases</h3>
+				</div>
+
+				<div class="clases-list-container">
+					@if (loadingClases) {
+					<div class="text-center py-5">
+						<div class="spinner-border text-primary" role="status"></div>
+					</div>
+					}
+					@else if (misActividades.length === 0) {
+					<div class="empty-state">
+						<div class="empty-icon">🎾</div>
+						<p>Aún no te has inscripto a ninguna actividad.</p>
+						<a routerLink="/actividades" class="btn-primary-sm">Explorar Actividades</a>
+					</div>
+					}
+					@else {
+					<div class="clases-list">
+						@for (act of misActividades; track act.actividad_id) {
+						<div class="clase-row">
+							<div class="clase-info">
+								<h4 class="clase-nombre">{{ act.actividad_nombre }}</h4>
+								<p class="clase-horario">
+									<i class="bi bi-clock"></i> {{ act.horario || 'Horario a confirmar' }}
+								</p>
+							</div>
+							<div class="clase-status">
+								<span class="badge"
+									[ngClass]="act.actividad_estado ? 'bg-success-subtle' : 'bg-danger-subtle'">
+									{{ act.actividad_estado ? 'ACTIVO' : 'INACTIVO' }}
+								</span>
+							</div>
+						</div>
+						}
+					</div>
+					}
 				</div>
 			</div>
+			}
+
 		</div>
 	</div>
 </div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">

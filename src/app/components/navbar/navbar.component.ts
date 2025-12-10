@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { DashboardService } from '../../services/dashboard.service';
+import { ActividadesService } from '../../services/actividades.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // <--- IMPORTANTE: Agregar esto
+import { FormsModule } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterModule, CommonModule, FormsModule], // <--- Agregar FormsModule aquí
+  imports: [RouterModule, CommonModule, FormsModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
   standalone: true
@@ -17,6 +18,8 @@ export class NavbarComponent implements OnInit {
 
   userRole: number | null = null;
   isLoggedIn$: Observable<boolean>;
+
+  private actividadesService = inject(ActividadesService);
 
   // Variables para el Modal de Contraseña
   showPasswordModal = false;
@@ -27,6 +30,10 @@ export class NavbarComponent implements OnInit {
   };
   mensajePass = '';
   tipoMensajePass = '';
+
+  // Variables para notificaciones
+  notificaciones: any[] = [];
+  // Ya no necesitamos 'showNotificaciones' porque lo maneja CSS con :hover
 
   constructor(
     private loginService: LoginService,
@@ -43,8 +50,28 @@ export class NavbarComponent implements OnInit {
         this.dashboardService.GetUsuario(email).subscribe((user: any) => {
           this.userRole = user?.rol_id;
         });
+        
+        // Cargar notificaciones
+        this.cargarNotificaciones(email);
       }
     }
+  }
+
+  cargarNotificaciones(email: string) {
+    this.actividadesService.GetNotificaciones(email).subscribe({
+      next: (data: any) => {
+        this.notificaciones = data || [];
+      }
+    });
+  }
+
+  marcarComoLeido(notif: any) {
+    const email = localStorage.getItem('email');
+    if (!email) return;
+
+    this.actividadesService.MarcarLeido(notif.comunicado_id, email).subscribe(() => {
+      this.notificaciones = this.notificaciones.filter(n => n.comunicado_id !== notif.comunicado_id);
+    });
   }
 
   logout() {
@@ -77,7 +104,6 @@ export class NavbarComponent implements OnInit {
       return;
     }
 
-    // Objeto para enviar al backend
     const dto = {
       ClaveActual: this.passData.actual,
       NuevaClave: this.passData.nueva
