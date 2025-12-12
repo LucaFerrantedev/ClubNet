@@ -6,12 +6,12 @@
 
 .navbar {
 	width: 100%;
-	min-height: 64px; /* Altura mínima, puede crecer si es necesario */
-	height: auto; /* Altura automática */
+	min-height: 64px;
+	height: auto;
 	background-color: #111827;
 	display: flex;
 	align-items: center;
-	padding: 0.5rem 2rem; /* Padding vertical para cuando hay wrap */
+	padding: 0.5rem 2rem;
 	border-bottom: 1px solid #374151;
 	font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
 	position: sticky;
@@ -25,8 +25,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	flex-wrap: wrap; /* Permite que los elementos se envuelvan a la siguiente línea */
-	gap: 1rem; /* Espacio entre logo, links y cuenta cuando se envuelven */
+	flex-wrap: wrap;
+	gap: 1rem;
 }
 
 .navbar-left, .navbar-right {
@@ -56,21 +56,17 @@
 }
 
 @keyframes spin {
-	from {
-		transform: rotate(0deg);
-	}
-	to {
-		transform: rotate(360deg);
-	}
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
 }
 
 .navbar-links {
 	display: flex;
-	flex-grow: 1; /* Permite que los links ocupen el espacio disponible */
+	flex-grow: 1;
 	align-items: center;
-	justify-content: center; /* Centra los links cuando se envuelven */
+	justify-content: center;
 	gap: 0.5rem;
-	flex-wrap: wrap; /* Permite que los links se envuelvan en múltiples líneas */
+	flex-wrap: wrap;
 }
 
 .navbar-link {
@@ -94,16 +90,20 @@
 }
 
 /* =================================
-   Navbar Dropdown (Usuario)
+   Navbar Dropdown (Usuario y Notificaciones)
    ================================= */
 
-.navbar-user-dropdown {
+/* Contenedores con posición relativa para el dropdown */
+.navbar-user-dropdown,
+.navbar-notifications {
 	position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .navbar-user-label {
 	color: #d1d5db;
-	display: flex; /* Para alinear con los otros links */
+	display: flex;
 	font-size: 0.95rem;
 	font-weight: 600;
 	cursor: pointer;
@@ -112,6 +112,7 @@
 	transition: color 0.2s ease, background-color 0.2s ease;
 }
 
+/* Lógica Hover para Usuario */
 .navbar-user-dropdown:hover .navbar-dropdown-content {
 	opacity: 1;
 	transform: translateY(0);
@@ -123,6 +124,14 @@
 	color: #fff;
 }
 
+/* Lógica Hover para Notificaciones */
+.navbar-notifications:hover .navbar-dropdown-content {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+/* Estilo base del Dropdown */
 .navbar-dropdown-content {
 	opacity: 0;
 	visibility: hidden;
@@ -131,35 +140,13 @@
 	top: calc(100% + 0.5rem);
 	background-color: #1f2937;
 	min-width: 180px;
-	box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); /* Sombra moderna */
+	box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 	border: 1px solid #374151;
 	border-radius: 0.75rem;
 	z-index: 50;
 	overflow: hidden;
 	transform: translateY(-10px);
 	transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
-}
-
-
-/* =================================
-   Responsive
-   ================================= */
-
-@media (max-width: 1024px) {
-	.navbar-container {
-		flex-direction: column; /* Apila logo, links y usuario */
-		gap: 1rem; /* Espacio entre los elementos apilados */
-	}
-
-	.navbar-center {
-		order: 2; /* Mueve los links al final en vista móvil */
-		width: 100%;
-	}
-
-	.navbar-links {
-		justify-content: center;
-		width: 100%;
-	}
 }
 
 .navbar-dropdown-content a {
@@ -177,6 +164,50 @@
 	color: #fff;
 }
 
+/* ESTILOS ESPECÍFICOS DE NOTIFICACIONES */
+.notif-dropdown {
+    width: 320px; /* Un poco más ancho para leer mejor */
+    right: -10px; /* Ajuste fino */
+}
+
+.notif-item:hover {
+  background-color: #374151;
+}
+
+.notif-item:last-child {
+  border-bottom: none !important;
+}
+
+/* Corrección de colores para legibilidad sobre fondo oscuro */
+.notif-item p {
+    color: #d1d5db !important; /* Gris claro para el detalle */
+}
+
+.notif-item small {
+    color: #9ca3af !important; /* Gris medio-claro para la fecha */
+}
+
+/* =================================
+   Responsive
+   ================================= */
+
+@media (max-width: 1024px) {
+	.navbar-container {
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.navbar-center {
+		order: 2;
+		width: 100%;
+	}
+
+	.navbar-links {
+		justify-content: center;
+		width: 100%;
+	}
+}
+
 /* === ESTILOS DEL MODAL === */
 .modal-backdrop {
 	position: fixed;
@@ -188,7 +219,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	z-index: 1000; /* Mayor que el navbar (que suele ser 50) */
+	z-index: 1000;
 	backdrop-filter: blur(4px);
     animation: fadeIn 0.3s ease-in-out;
 }
@@ -199,7 +230,7 @@
 	border-radius: 1rem;
 	box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 	width: 90%;
-	max-width: 400px; /* Más estrecho para contraseña */
+	max-width: 400px;
 	position: relative;
     animation: slideIn 0.4s ease-out;
 }
@@ -229,7 +260,6 @@
     margin-bottom: 1.5rem;
 }
 
-/* Formulario */
 .form-grid {
 	display: flex;
 	flex-direction: column;
@@ -262,7 +292,6 @@
 	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
-/* Botones Modal */
 .modal-actions {
 	display: flex;
 	justify-content: flex-end;
@@ -291,7 +320,6 @@
 }
 .btn-guardar:hover { background-color: #1d4ed8; }
 
-/* Mensajes Feedback */
 .modern-message {
     padding: 0.75rem;
     border-radius: 0.5rem;
@@ -308,6 +336,5 @@
     color: #991b1b;
 }
 
-/* Animaciones */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }

@@ -16,52 +16,50 @@ import { UsuariosService } from '../../services/usuarios.service';
 })
 export class ActividadesComponent implements OnInit {
   
-  // Inyección de dependencias moderna
   private actividadesService = inject(ActividadesService);
-  public loginService = inject(LoginService); // Público para usar en el HTML
+  public loginService = inject(LoginService);
   private usuariosService = inject(UsuariosService);
   private router = inject(Router);
 
-  // Estado del componente
   actividades: Actividad[] = [];
   listaEntrenadores: any[] = [];
   inscripcionesIds: number[] = [];
   
   isLoading = true;
   isEditMode = false;
-  isDarkMode = false; // Se podría mover a un ThemeService global
+  isDarkMode = false;
 
-  // Formularios y selección
   actividadForm: Actividad = this.initActividad();
   selectedActividad: Actividad | null = null;
   actividadParaEliminar: Actividad | null = null;
 
-  // Getters para roles (Usan el Signal de LoginService, ¡Reactivo!)
+  // Variables para Comunicados
+  showComunicadoModal = false;
+  comunicadoData = {
+    asunto: '',
+    detalle: ''
+  };
+  actividadParaComunicado: Actividad | null = null;
+
   get esAdmin() { return this.loginService.currentUser()?.rol_id === 1; }
   get esEntrenador() { return this.loginService.currentUser()?.rol_id === 2; }
   get esUsuarioNormal() { return this.loginService.currentUser()?.rol_id === 3; }
 
   ngOnInit(): void {
-    // Manejo de tema oscuro
     const darkModePref = localStorage.getItem('darkMode');
     this.isDarkMode = darkModePref === 'true';
-
-    // Carga inicial de datos
     this.CargarDatos();
   }
 
   CargarDatos() {
     this.isLoading = true;
-    
-    // Si el usuario no está en el Signal, intentamos cargarlo (fallback)
     const email = localStorage.getItem('email');
     if (!this.loginService.currentUser() && email) {
         this.loginService.loadUser(email);
     }
 
-    // Lógica condicional basada en roles
     if (this.esAdmin) {
-      this.CargarEntrenadores(); // Carga entrenadores y luego actividades
+      this.CargarEntrenadores();
     } else {
       this.CargarActividades();
       if (this.esUsuarioNormal && email) {
@@ -73,11 +71,8 @@ export class ActividadesComponent implements OnInit {
   CargarActividades() {
     this.actividadesService.GetActividades().subscribe({
       next: (res) => {
-        // Mapeo seguro de datos
         const datos = res.data || (Array.isArray(res) ? res : []);
-        
         this.actividades = datos.map((act) => {
-          // Lógica de presentación para nombre de entrenador
           if (!act.ent_nombre && act.entrenador_id) {
             const entrenador = this.listaEntrenadores.find(e => e.persona_id === act.entrenador_id);
             if (entrenador) {
@@ -97,9 +92,7 @@ export class ActividadesComponent implements OnInit {
   }
 
   CargarEntrenadores() {
-    // Asumimos que UsuariosService también se refactorizará para devolver tipos, por ahora any
     this.usuariosService.GetUsuariosByRol(2).subscribe((data: any) => {
-       // Filtramos o asignamos directamente dependiendo de la respuesta de tu API
        this.listaEntrenadores = Array.isArray(data) ? data : (data.data || []);
        this.CargarActividades(); 
     });
@@ -114,15 +107,11 @@ export class ActividadesComponent implements OnInit {
     });
   }
 
-  // --- Lógica CRUD Unificada ---
-
   GuardarActividad() {
-    // Preparamos los datos (conversion de tipos si el HTML devuelve strings)
     const payload = { ...this.actividadForm };
     payload.cupo = Number(payload.cupo);
     payload.cuota_valor = Number(payload.cuota_valor);
     
-    // Si 'inicio' viene como 'YYYY-MM', lo convertimos a número YYYYMM
     if (typeof payload.inicio === 'string') {
         payload.inicio = Number((payload.inicio as string).replace('-', ''));
     }
@@ -142,7 +131,6 @@ export class ActividadesComponent implements OnInit {
 
   EliminarActividad() {
     if (!this.actividadParaEliminar) return;
-    
     this.actividadesService.DeleteActividad(this.actividadParaEliminar.actividad_id).subscribe({
       next: () => { 
         this.CargarActividades(); 
@@ -152,19 +140,13 @@ export class ActividadesComponent implements OnInit {
     });
   }
 
-  // --- Helpers de UI ---
-
   abrirModal(actividad?: Actividad, editMode: boolean = false) {
     this.isEditMode = editMode;
     if (actividad) {
       this.selectedActividad = actividad;
-      // Copia para editar sin afectar la vista tabla
       this.actividadForm = { ...actividad };
-      
-      // Formatear fecha para el input type="month" (YYYYMM -> YYYY-MM)
       if (this.actividadForm.inicio) {
           const inicioStr = this.actividadForm.inicio.toString();
-          // Hack rápido para que el input lo lea
           (this.actividadForm.inicio as any) = `${inicioStr.substring(0, 4)}-${inicioStr.substring(4, 6)}`;
       }
     } else {
@@ -190,7 +172,6 @@ export class ActividadesComponent implements OnInit {
     this.actividadParaEliminar = null;
   }
 
-  // Navegación
   Inscribirse(actividad_id: number) {
     this.router.navigate(['/inscripcion'], { state: { actividadId: actividad_id } });
   }
@@ -203,7 +184,45 @@ export class ActividadesComponent implements OnInit {
     return this.inscripcionesIds.includes(actividadId);
   }
 
-  // Factory para objeto vacío
+  // --- Lógica Modal Comunicados ---
+
+  abrirModalComunicado(actividad: Actividad) {
+    this.actividadParaComunicado = actividad;
+    this.comunicadoData = { asunto: '', detalle: '' };
+    this.showComunicadoModal = true;
+  }
+
+  cerrarModalComunicado() {
+    this.showComunicadoModal = false;
+    this.actividadParaComunicado = null;
+  }
+
+  enviarComunicado() {
+    if (!this.actividadParaComunicado || !this.comunicadoData.asunto || !this.comunicadoData.detalle) {
+      alert('Asunto y Detalle son obligatorios'); 
+      return;
+    }
+
+    const payload = {
+      actividad_id: this.actividadParaComunicado.actividad_id,
+      entrenador_id: this.loginService.currentUser()?.persona_id || 0,
+      asunto: this.comunicadoData.asunto,
+      detalle: this.comunicadoData.detalle
+    };
+
+    this.actividadesService.CrearComunicado(payload).subscribe({
+      next: (res) => {
+        if (res.success) {
+          alert('Comunicado enviado con éxito');
+          this.cerrarModalComunicado();
+        } else {
+          alert('Error al enviar: ' + res.message);
+        }
+      },
+      error: () => alert('Error de conexión')
+    });
+  }
+
   private initActividad(): Actividad {
     return {
       actividad_id: 0,

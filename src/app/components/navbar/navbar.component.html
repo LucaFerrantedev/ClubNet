@@ -14,7 +14,6 @@
                 <a class="navbar-link" routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
                 <a class="navbar-link" routerLink="/actividades" routerLinkActive="active-link">Actividades</a>
                 <a class="navbar-link" routerLink="/usuarios" routerLinkActive="active-link">Usuarios</a>
-                <!-- <a class="navbar-link" routerLink="/clases" routerLinkActive="active-link">Clases</a> -->
                 <a class="navbar-link" routerLink="/pagos" routerLinkActive="active-link">Pagos</a>
                 <div class="navbar-user-dropdown">
                   <span class="navbar-user-label navbar-link">Comunicación</span>
@@ -28,7 +27,6 @@
         
                 @if (userRole === 2) {
                 <a class="navbar-link" routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
-                <!-- <a class="navbar-link" routerLink="/mis-clases" routerLinkActive="active-link">Mis Clases</a> -->
                 <a class="navbar-link" routerLink="/actividades" routerLinkActive="active-link">Actividades</a>
                 }
         
@@ -42,6 +40,41 @@
     </div>
 
     <div class="navbar-right">
+      
+      <div class="navbar-notifications me-3">
+        <i class="bi bi-bell-fill" style="font-size: 1.2rem; color: #d1d5db; cursor: pointer;"></i>
+        
+        @if (notificaciones.length > 0) {
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+            {{ notificaciones.length }}
+          </span>
+        }
+
+        <div class="navbar-dropdown-content notif-dropdown">
+          <div class="p-2 border-bottom text-white fw-bold small bg-dark bg-opacity-25">Notificaciones</div>
+          
+          @if (notificaciones.length === 0) {
+            <div class="p-3 small text-center" style="color: #d1d5db;">No tienes mensajes nuevos.</div>
+          } @else {
+            <div class="notif-list" style="max-height: 300px; overflow-y: auto;">
+              @for (n of notificaciones; track n.comunicado_id) {
+                <div class="notif-item p-3 border-bottom">
+                  <div class="d-flex justify-content-between align-items-start mb-1">
+                    <strong class="text-primary small">{{ n.actividad_nombre }}</strong>
+                    <small style="font-size: 0.7rem;">{{ n.fecha | date:'shortDate' }}</small>
+                  </div>
+                  <div class="fw-bold text-white mb-1" style="font-size: 0.9rem;">{{ n.asunto }}</div>
+                  <p class="small mb-2" style="line-height: 1.3;">{{ n.detalle }}</p>
+                  <button class="btn btn-sm btn-outline-light w-100 py-0" style="font-size: 0.75rem;" (click)="marcarComoLeido(n)">
+                    Marcar como leído
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
       <div class="navbar-user">
         <div class="navbar-user-dropdown">
           <span class="navbar-user-label">Cuenta</span>

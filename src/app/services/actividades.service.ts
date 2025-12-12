@@ -1,15 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ApiResponse, Usuario } from './login.service'; // Reutilizamos tipos
+import { ApiResponse, Usuario } from './login.service';
 import { environment } from '../../environments/environment';
 
-// --- INTERFAZ ESPECÍFICA ---
 export interface Actividad {
   actividad_id: number;
   nombre: string;
   descripcion: string;
   cupo: number;
-  inicio: number; // Formato YYYYMM
+  inicio: number;
   cuota_valor: number;
   estado: boolean;
   url_imagen: string;
@@ -18,14 +17,20 @@ export interface Actividad {
   ent_apellido?: string;
 }
 
+export interface ComunicadoDTO {
+  actividad_id: number;
+  entrenador_id: number;
+  asunto: string;
+  detalle: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ActividadesService {
-  url = environment.URL_API+"/actividad";
-  url_user = environment.URL_API+"/usuario";
+  url = environment.URL_API + "/actividad";
+  url_user = environment.URL_API + "/usuario";
 
-  // Ya no necesitamos LoginService aquí, el interceptor maneja la auth
   constructor(private http: HttpClient) { }
 
   GetActividades() {
@@ -50,5 +55,17 @@ export class ActividadesService {
 
   GetInscripcionesUsuario(email: string) {
     return this.http.get<ApiResponse<any[]>>(`${this.url}/GetInscripciones/${email}`);
+  }
+
+  CrearComunicado(obj: ComunicadoDTO) {
+    return this.http.post<ApiResponse>(`${this.url}/CrearComunicado`, obj);
+  }
+
+  GetNotificaciones(email: string) {
+    return this.http.get<any[]>(`${this.url}/GetNotificaciones?email=${email}`);
+  }
+
+  MarcarLeido(id: number, email: string) {
+    return this.http.post(`${this.url}/MarcarLeido?id=${id}&email=${email}`, {});
   }
 }
