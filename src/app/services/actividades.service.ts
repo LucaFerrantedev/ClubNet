@@ -33,9 +33,16 @@ export class ActividadesService {
 
   constructor(private http: HttpClient) { }
 
-  GetActividades() {
-    return this.http.get<ApiResponse<Actividad[]>>(`${this.url}/GetActividades`);
-  }
+  GetActividades(entrenadorId?: number) {
+      let urlRequest = `${this.url}/GetActividades`;
+
+      // Si viene el ID, lo agregamos a la URL como Query Param
+      if (entrenadorId) {
+        urlRequest += `?entrenadorId=${entrenadorId}`;
+      }
+
+      return this.http.get<ApiResponse<Actividad[]>>(urlRequest);
+    }
 
   CreateActividad(obj: Actividad) {
     return this.http.post<ApiResponse>(`${this.url}/CreateActividad`, obj);

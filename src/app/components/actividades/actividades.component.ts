@@ -69,10 +69,21 @@ export class ActividadesComponent implements OnInit {
   }
 
   CargarActividades() {
-    this.actividadesService.GetActividades().subscribe({
+    // Obtenemos el ID del usuario actual si es entrenador
+    let entrenadorId: number | undefined;
+
+    if (this.esEntrenador) {
+      // loginService.currentUser() trae los datos del usuario logueado
+      entrenadorId = this.loginService.currentUser()?.persona_id;
+    }
+
+    // Llamamos al servicio pasando el ID (será undefined si es Admin o Usuario normal)
+    this.actividadesService.GetActividades(entrenadorId).subscribe({
       next: (res) => {
         const datos = res.data || (Array.isArray(res) ? res : []);
+        
         this.actividades = datos.map((act) => {
+          // Lógica existente para mapear nombres...
           if (!act.ent_nombre && act.entrenador_id) {
             const entrenador = this.listaEntrenadores.find(e => e.persona_id === act.entrenador_id);
             if (entrenador) {
