@@ -13,6 +13,7 @@ export class InscripcionesComponent implements OnInit{
   inscripciones: any[] = [];
   isLoading = true;
   email:any;
+  isDarkMode = false;
 
   constructor(private service:ActividadesService) {}
 

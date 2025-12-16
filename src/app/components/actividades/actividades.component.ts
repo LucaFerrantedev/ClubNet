@@ -15,7 +15,7 @@ import { UsuariosService } from '../../services/usuarios.service';
   standalone: true
 })
 export class ActividadesComponent implements OnInit {
-  
+
   private actividadesService = inject(ActividadesService);
   public loginService = inject(LoginService);
   private usuariosService = inject(UsuariosService);
@@ -24,7 +24,9 @@ export class ActividadesComponent implements OnInit {
   actividades: Actividad[] = [];
   listaEntrenadores: any[] = [];
   inscripcionesIds: number[] = [];
-  
+  actividadesOriginales: Actividad[] = [];
+  estadoFilter: string = 'Todos';
+
   isLoading = true;
   isEditMode = false;
   isDarkMode = false;
@@ -55,7 +57,7 @@ export class ActividadesComponent implements OnInit {
     this.isLoading = true;
     const email = localStorage.getItem('email');
     if (!this.loginService.currentUser() && email) {
-        this.loginService.loadUser(email);
+      this.loginService.loadUser(email);
     }
 
     if (this.esAdmin) {
@@ -69,51 +71,72 @@ export class ActividadesComponent implements OnInit {
   }
 
   CargarActividades() {
-    // Obtenemos el ID del usuario actual si es entrenador
-    let entrenadorId: number | undefined;
-
-    if (this.esEntrenador) {
-      // loginService.currentUser() trae los datos del usuario logueado
-      entrenadorId = this.loginService.currentUser()?.persona_id;
-    }
-
-    // Llamamos al servicio pasando el ID (será undefined si es Admin o Usuario normal)
-    this.actividadesService.GetActividades(entrenadorId).subscribe({
+    // Llamamos al servicio SIN parámetros (o con el ID de entrenador si ya implementaste eso antes)
+    // Si decidiste hacer el filtro de entrenador también en frontend, aquí pedirías TODAS.
+    this.actividadesService.GetActividades().subscribe({
       next: (res) => {
         const datos = res.data || (Array.isArray(res) ? res : []);
-        
-        this.actividades = datos.map((act) => {
-          // Lógica existente para mapear nombres...
+
+        // Mapeo de nombres de entrenadores (tu lógica existente)
+        const datosMapeados = datos.map((act) => {
           if (!act.ent_nombre && act.entrenador_id) {
             const entrenador = this.listaEntrenadores.find(e => e.persona_id === act.entrenador_id);
             if (entrenador) {
-                act.ent_nombre = entrenador.nombre;
-                act.ent_apellido = entrenador.apellido;
+              act.ent_nombre = entrenador.nombre;
+              act.ent_apellido = entrenador.apellido;
             }
           }
           return act;
         });
+
+        // 3. Guardamos TODO en la lista original y aplicamos el filtro inicial
+        this.actividadesOriginales = datosMapeados;
+        this.aplicarFiltros();
+
         this.isLoading = false;
       },
-      error: (err) => { 
-        console.error(err); 
-        this.isLoading = false; 
+      error: (err) => {
+        console.error(err);
+        this.isLoading = false;
       }
     });
   }
 
+  aplicarFiltros() {
+      let listaFiltrada = [...this.actividadesOriginales];
+
+      // A) Filtro por Entrenador (Si decidiste hacerlo en frontend también)
+      // Si solo quieres ver tus actividades:
+      if (this.esEntrenador) {
+        const miId = this.loginService.currentUser()?.persona_id;
+        if (miId) {
+          listaFiltrada = listaFiltrada.filter(a => a.entrenador_id === miId);
+        }
+      }
+
+      // B) Filtro por Estado (Activa / Inactiva)
+      if (this.estadoFilter !== 'Todos') {
+        const debeEstarActiva = this.estadoFilter === 'Activa';
+        listaFiltrada = listaFiltrada.filter(a => a.estado === debeEstarActiva);
+      }
+
+      // Actualizamos la lista que ve el usuario
+      this.actividades = listaFiltrada;
+  }
+
+
   CargarEntrenadores() {
     this.usuariosService.GetUsuariosByRol(2).subscribe((data: any) => {
-       this.listaEntrenadores = Array.isArray(data) ? data : (data.data || []);
-       this.CargarActividades(); 
+      this.listaEntrenadores = Array.isArray(data) ? data : (data.data || []);
+      this.CargarActividades();
     });
   }
 
   CargarInscripciones(email: string) {
     this.actividadesService.GetInscripcionesUsuario(email).subscribe({
-      next: (res: any) => { 
+      next: (res: any) => {
         const datos = res.data || (Array.isArray(res) ? res : []);
-        this.inscripcionesIds = datos.map((i: any) => i.actividad_id); 
+        this.inscripcionesIds = datos.map((i: any) => i.actividad_id);
       }
     });
   }
@@ -122,30 +145,30 @@ export class ActividadesComponent implements OnInit {
     const payload = { ...this.actividadForm };
     payload.cupo = Number(payload.cupo);
     payload.cuota_valor = Number(payload.cuota_valor);
-    
+
     if (typeof payload.inicio === 'string') {
-        payload.inicio = Number((payload.inicio as string).replace('-', ''));
+      payload.inicio = Number((payload.inicio as string).replace('-', ''));
     }
 
-    const request = this.isEditMode 
-        ? this.actividadesService.UpdateActividad(payload)
-        : this.actividadesService.CreateActividad(payload);
+    const request = this.isEditMode
+      ? this.actividadesService.UpdateActividad(payload)
+      : this.actividadesService.CreateActividad(payload);
 
     request.subscribe({
-        next: () => {
-            this.CargarActividades();
-            this.cerrarModal();
-        },
-        error: (err) => console.error("Error al guardar:", err)
+      next: () => {
+        this.CargarActividades();
+        this.cerrarModal();
+      },
+      error: (err) => console.error("Error al guardar:", err)
     });
   }
 
   EliminarActividad() {
     if (!this.actividadParaEliminar) return;
     this.actividadesService.DeleteActividad(this.actividadParaEliminar.actividad_id).subscribe({
-      next: () => { 
-        this.CargarActividades(); 
-        this.actividadParaEliminar = null; 
+      next: () => {
+        this.CargarActividades();
+        this.actividadParaEliminar = null;
       },
       error: (err) => console.error(err)
     });
@@ -157,8 +180,8 @@ export class ActividadesComponent implements OnInit {
       this.selectedActividad = actividad;
       this.actividadForm = { ...actividad };
       if (this.actividadForm.inicio) {
-          const inicioStr = this.actividadForm.inicio.toString();
-          (this.actividadForm.inicio as any) = `${inicioStr.substring(0, 4)}-${inicioStr.substring(4, 6)}`;
+        const inicioStr = this.actividadForm.inicio.toString();
+        (this.actividadForm.inicio as any) = `${inicioStr.substring(0, 4)}-${inicioStr.substring(4, 6)}`;
       }
     } else {
       this.actividadForm = this.initActividad();
@@ -210,7 +233,7 @@ export class ActividadesComponent implements OnInit {
 
   enviarComunicado() {
     if (!this.actividadParaComunicado || !this.comunicadoData.asunto || !this.comunicadoData.detalle) {
-      alert('Asunto y Detalle son obligatorios'); 
+      alert('Asunto y Detalle son obligatorios');
       return;
     }
 

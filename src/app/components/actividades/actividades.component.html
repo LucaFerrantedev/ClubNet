@@ -1,11 +1,23 @@
 <app-navbar></app-navbar>
 <div class="main-container animate-fadein" [class.dark-mode]="isDarkMode">
-  
+
   <div class="content-wrapper">
-    
-    <div class="header-section text-center mb-5">
-      <h1 class="page-title">Actividades</h1>
-      <p class="page-subtitle">Gestiona y visualiza las disciplinas del club.</p>
+
+    <div class="row mb-3 align-items-center">
+      <div class="col-md-6">
+        <h2>Actividades</h2>
+      </div>
+
+      <div class="col-md-6 text-end">
+        <div class="d-inline-block text-start" style="min-width: 200px;">
+          <label for="filtroEstado" class="form-label small mb-1">Estado:</label>
+          <select id="filtroEstado" class="form-select" [(ngModel)]="estadoFilter" (change)="aplicarFiltros()">
+            <option value="Todos">Todas</option>
+            <option value="Activa">Activas</option>
+            <option value="Inactiva">Inactivas</option>
+          </select>
+        </div>
+      </div>
     </div>
 
     @if (esAdmin) {
@@ -31,7 +43,8 @@
           </div>
           <div class="form-group full-width">
             <label>Descripción</label>
-            <textarea name="descripcion" [(ngModel)]="actividadForm.descripcion" rows="2" placeholder="Detalles..."></textarea>
+            <textarea name="descripcion" [(ngModel)]="actividadForm.descripcion" rows="2"
+              placeholder="Detalles..."></textarea>
           </div>
           <div class="form-group">
             <label>Entrenador</label>
@@ -55,7 +68,7 @@
     }
 
     <div class="card-custom p-0 overflow-hidden" style="border: none; box-shadow: none; background: transparent;">
-      <div class="table-responsive"> 
+      <div class="table-responsive">
         <table class="table-custom">
           <thead>
             <tr>
@@ -70,7 +83,9 @@
           </thead>
           <tbody>
             @if (isLoading) {
-            <tr><td colspan="7" class="text-center py-5 text-muted">Cargando datos...</td></tr>
+            <tr>
+              <td colspan="7" class="text-center py-5 text-muted">Cargando datos...</td>
+            </tr>
             }
             @for (actividad of actividades; track actividad.actividad_id) {
             <tr>
@@ -78,9 +93,9 @@
               <td>{{ actividad.inicio.toString() | slice:0:4 }}/{{ actividad.inicio.toString() | slice:4:6 }}</td>
               <td>
                 @if (actividad.ent_nombre) {
-                  <span style="color: var(--primary);">{{ actividad.ent_nombre }} {{ actividad.ent_apellido }}</span>
+                <span style="color: var(--primary);">{{ actividad.ent_nombre }} {{ actividad.ent_apellido }}</span>
                 } @else {
-                  <span class="text-muted small font-italic">Sin asignar</span>
+                <span class="text-muted small font-italic">Sin asignar</span>
                 }
               </td>
               <td>{{ actividad.cupo }}</td>
@@ -92,26 +107,32 @@
               </td>
               <td class="text-end">
                 <div class="d-flex justify-content-end gap-2">
-                  <button class="btn-icon" (click)="abrirModal(actividad)" title="Ver Detalle"><i class="bi bi-eye"></i></button>
-                  
+                  <button class="btn-icon" (click)="abrirModal(actividad)" title="Ver Detalle"><i
+                      class="bi bi-eye"></i></button>
+
                   @if (esEntrenador && actividad.entrenador_id === loginService.currentUser()?.persona_id) {
-                    <button class="btn-primary" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;" (click)="VerClases(actividad.actividad_id)">Clases</button>
-                    <button class="btn-icon ms-1" style="color: #f59e0b;" title="Enviar Comunicado" (click)="abrirModalComunicado(actividad)">
-                        <i class="bi bi-megaphone-fill"></i>
-                    </button>
+                  <button class="btn-primary" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;"
+                    (click)="VerClases(actividad.actividad_id)">Clases</button>
+                  <button class="btn-icon ms-1" style="color: #f59e0b;" title="Enviar Comunicado"
+                    (click)="abrirModalComunicado(actividad)">
+                    <i class="bi bi-megaphone-fill"></i>
+                  </button>
                   }
 
                   @if (esAdmin) {
-                    <button class="btn-icon" (click)="abrirModal(actividad, true)"><i class="bi bi-pencil"></i></button>
-                    <button class="btn-icon delete" (click)="solicitarConfirmacionEliminar(actividad)"><i class="bi bi-trash"></i></button>
+                  <button class="btn-icon" (click)="abrirModal(actividad, true)"><i class="bi bi-pencil"></i></button>
+                  <button class="btn-icon delete" (click)="solicitarConfirmacionEliminar(actividad)"><i
+                      class="bi bi-trash"></i></button>
                   }
 
                   @if (esUsuarioNormal) {
-                    @if (!estaInscripto(actividad.actividad_id)) {
-                      <button class="btn-primary" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;" (click)="Inscribirse(actividad.actividad_id)">Inscribirse</button>
-                    } @else {
-                      <button class="btn-icon" title="Ver Clases" (click)="VerClases(actividad.actividad_id)"><i class="bi bi-calendar-event"></i></button>
-                    }
+                  @if (!estaInscripto(actividad.actividad_id)) {
+                  <button class="btn-primary" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;"
+                    (click)="Inscribirse(actividad.actividad_id)">Inscribirse</button>
+                  } @else {
+                  <button class="btn-icon" title="Ver Clases" (click)="VerClases(actividad.actividad_id)"><i
+                      class="bi bi-calendar-event"></i></button>
+                  }
                   }
                 </div>
               </td>
@@ -127,45 +148,51 @@
   <div class="modal-backdrop" (click)="cerrarModal()">
     <div class="modal-content card-custom" (click)="$event.stopPropagation()">
       <button class="modal-close" (click)="cerrarModal()">&times;</button>
-      
+
       @if(esAdmin && isEditMode) {
-         <h2 class="section-title">Editar Actividad</h2>
-         <form (ngSubmit)="GuardarActividad()">
-            <div class="form-grid">
-              <div class="form-group"><label>Nombre</label><input [(ngModel)]="actividadForm.nombre" name="mName"></div>
-              <div class="form-group"><label>Cupo</label><input type="number" [(ngModel)]="actividadForm.cupo" name="mCupo"></div>
-              <div class="form-group"><label>Cuota</label><input type="number" [(ngModel)]="actividadForm.cuota_valor" name="mCuota"></div>
-              <div class="form-group full-width"><label>Descripción</label><textarea [(ngModel)]="actividadForm.descripcion" name="mDesc"></textarea></div>
-               <div class="form-group">
-                  <label>Estado</label>
-                  <select [(ngModel)]="actividadForm.estado" name="mEstado">
-                      <option [ngValue]="true">Activo</option>
-                      <option [ngValue]="false">Inactivo</option>
-                  </select>
-              </div>
-            </div>
-            <div class="mt-4 text-end">
-               <button type="button" class="btn-base me-2" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-main);" (click)="toggleEditMode()">Cancelar</button>
-               <button type="submit" class="btn-primary">Guardar</button>
-            </div>
-         </form>
-      } @else {
-          <h2 class="section-title mb-3">{{ selectedActividad.nombre }}</h2>
-          @if (selectedActividad.url_imagen) {
-            <div class="modal-image-container">
-              <img [src]="selectedActividad.url_imagen" [alt]="selectedActividad.nombre" class="modal-image" />
-            </div>
-          }
-          <div class="modal-body">
-              <p style="color: var(--text-muted); line-height: 1.6;">{{ selectedActividad.descripcion }}</p>
-              
-              <div class="mt-4 p-3 rounded" style="background-color: var(--bg-app); border: 1px solid var(--border-color); color: var(--text-main);">
-                  <div class="d-flex justify-content-between align-items-center">
-                      <span><strong>Entrenador:</strong> {{ selectedActividad.ent_nombre || 'Sin asignar' }}</span>
-                      <span class="text-success fw-bold fs-5">${{ selectedActividad.cuota_valor }}</span>
-                  </div>
-              </div>
+      <h2 class="section-title">Editar Actividad</h2>
+      <form (ngSubmit)="GuardarActividad()">
+        <div class="form-grid">
+          <div class="form-group"><label>Nombre</label><input [(ngModel)]="actividadForm.nombre" name="mName"></div>
+          <div class="form-group"><label>Cupo</label><input type="number" [(ngModel)]="actividadForm.cupo" name="mCupo">
           </div>
+          <div class="form-group"><label>Cuota</label><input type="number" [(ngModel)]="actividadForm.cuota_valor"
+              name="mCuota"></div>
+          <div class="form-group full-width"><label>Descripción</label><textarea [(ngModel)]="actividadForm.descripcion"
+              name="mDesc"></textarea></div>
+          <div class="form-group">
+            <label>Estado</label>
+            <select [(ngModel)]="actividadForm.estado" name="mEstado">
+              <option [ngValue]="true">Activo</option>
+              <option [ngValue]="false">Inactivo</option>
+            </select>
+          </div>
+        </div>
+        <div class="mt-4 text-end">
+          <button type="button" class="btn-base me-2"
+            style="background: transparent; border: 1px solid var(--border-color); color: var(--text-main);"
+            (click)="toggleEditMode()">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar</button>
+        </div>
+      </form>
+      } @else {
+      <h2 class="section-title mb-3">{{ selectedActividad.nombre }}</h2>
+      @if (selectedActividad.url_imagen) {
+      <div class="modal-image-container">
+        <img [src]="selectedActividad.url_imagen" [alt]="selectedActividad.nombre" class="modal-image" />
+      </div>
+      }
+      <div class="modal-body">
+        <p style="color: var(--text-muted); line-height: 1.6;">{{ selectedActividad.descripcion }}</p>
+
+        <div class="mt-4 p-3 rounded"
+          style="background-color: var(--bg-app); border: 1px solid var(--border-color); color: var(--text-main);">
+          <div class="d-flex justify-content-between align-items-center">
+            <span><strong>Entrenador:</strong> {{ selectedActividad.ent_nombre || 'Sin asignar' }}</span>
+            <span class="text-success fw-bold fs-5">${{ selectedActividad.cuota_valor }}</span>
+          </div>
+        </div>
+      </div>
       }
     </div>
   </div>
@@ -177,7 +204,8 @@
       <h2 class="section-title border-0 pb-0">Confirmar Eliminación</h2>
       <p class="text-muted my-3">¿Estás seguro de eliminar "{{ actividadParaEliminar.nombre }}"?</p>
       <div class="d-flex justify-content-center gap-2 mt-4">
-        <button type="button" class="btn-base" style="border: 1px solid var(--border-color);" (click)="cancelarEliminacion()">Cancelar</button>
+        <button type="button" class="btn-base" style="border: 1px solid var(--border-color);"
+          (click)="cancelarEliminacion()">Cancelar</button>
         <button type="button" class="btn-danger" (click)="EliminarActividad()">Eliminar</button>
       </div>
     </div>
@@ -185,32 +213,34 @@
   }
 
   @if (showComunicadoModal && actividadParaComunicado) {
-    <div class="modal-backdrop" (click)="cerrarModalComunicado()">
-      <div class="modal-content card-custom" (click)="$event.stopPropagation()">
-        <button class="modal-close" (click)="cerrarModalComunicado()">&times;</button>
-        
-        <h2 class="section-title">Nuevo Comunicado</h2>
-        <p class="text-muted mb-3">Para: <strong>{{ actividadParaComunicado.nombre }}</strong></p>
-        
-        <form (ngSubmit)="enviarComunicado()">
-          <div class="form-grid" style="grid-template-columns: 1fr;">
-            <div class="form-group">
-              <label>Asunto <span class="text-danger">*</span></label>
-              <input type="text" [(ngModel)]="comunicadoData.asunto" name="cAsunto" required placeholder="Ej: Clase suspendida por lluvia">
-            </div>
-            
-            <div class="form-group">
-              <label>Detalles <span class="text-danger">*</span></label>
-              <textarea [(ngModel)]="comunicadoData.detalle" name="cDetalle" rows="4" required placeholder="Escriba el mensaje para los alumnos..."></textarea>
-            </div>
+  <div class="modal-backdrop" (click)="cerrarModalComunicado()">
+    <div class="modal-content card-custom" (click)="$event.stopPropagation()">
+      <button class="modal-close" (click)="cerrarModalComunicado()">&times;</button>
+
+      <h2 class="section-title">Nuevo Comunicado</h2>
+      <p class="text-muted mb-3">Para: <strong>{{ actividadParaComunicado.nombre }}</strong></p>
+
+      <form (ngSubmit)="enviarComunicado()">
+        <div class="form-grid" style="grid-template-columns: 1fr;">
+          <div class="form-group">
+            <label>Asunto <span class="text-danger">*</span></label>
+            <input type="text" [(ngModel)]="comunicadoData.asunto" name="cAsunto" required
+              placeholder="Ej: Clase suspendida por lluvia">
           </div>
-    
-          <div class="mt-4 text-end">
-             <button type="button" class="btn-base me-2" (click)="cerrarModalComunicado()">Cancelar</button>
-             <button type="submit" class="btn-primary">Enviar <i class="bi bi-send-fill ms-1"></i></button>
+
+          <div class="form-group">
+            <label>Detalles <span class="text-danger">*</span></label>
+            <textarea [(ngModel)]="comunicadoData.detalle" name="cDetalle" rows="4" required
+              placeholder="Escriba el mensaje para los alumnos..."></textarea>
           </div>
-        </form>
-      </div>
+        </div>
+
+        <div class="mt-4 text-end">
+          <button type="button" class="btn-base me-2" (click)="cerrarModalComunicado()">Cancelar</button>
+          <button type="submit" class="btn-primary">Enviar <i class="bi bi-send-fill ms-1"></i></button>
+        </div>
+      </form>
     </div>
-    }
+  </div>
+  }
 </div>
