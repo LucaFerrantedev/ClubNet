@@ -5,7 +5,7 @@
 build/
 bin/
 obj/
-environments/
+environment.development.ts
 
 .env
 *.local
