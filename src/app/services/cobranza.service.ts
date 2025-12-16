@@ -19,4 +19,9 @@ export class CobranzaService {
     const headers = this.loginService.getAuthHeaders();
     return this.http.get(this.url + "/GetCobros?persona_id="+id, { headers: headers });
   }
+
+  DescargarRecibo(cobroId: number) {
+    const headers = this.loginService.getAuthHeaders();
+    return this.http.get(this.url + "/DescargarRecibo/"+cobroId, { headers: headers,responseType: 'blob' });
+  }
 }

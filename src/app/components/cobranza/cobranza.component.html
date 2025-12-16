@@ -99,7 +99,10 @@
               <th>Vencimiento</th>
               <th>Monto</th>
               <th class="text-center">Estado</th>
-              <th class="text-end pe-4">Acciones</th>
+              @if(!esAdmin) {
+                <th class="text-end pe-4">Acciones</th>
+                  }
+              
             </tr>
           </thead>
           
@@ -148,14 +151,14 @@
                   }
                   
                   @if(!esAdmin && item.estado === 'PAGADO') {
-                     <button class="btn-base btn-sm" style="border: 1px solid var(--border-color); color: var(--text-muted);" title="Descargar comprobante">
+                     <button class="btn-base btn-sm" (click)="descargarComprobante(item.cobro_id)" style="border: 1px solid var(--border-color); color: var(--text-muted);" title="Descargar comprobante">
                       <i class="bi bi-download"></i> Recibo
                     </button>
                   }
 
-                  @if(esAdmin) {
+                  <!-- @if(esAdmin) {
                     <button class="btn-icon"><i class="bi bi-eye"></i></button>
-                  }
+                  } -->
                 </td>
               </tr>
             } @empty {

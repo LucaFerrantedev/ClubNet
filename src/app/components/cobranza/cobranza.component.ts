@@ -260,4 +260,21 @@ export class CobranzaComponent implements OnInit {
     localStorage.setItem('darkMode', this.isDarkMode.toString());
     this.applyDarkMode();
   }
+
+  descargarComprobante(cobroId: number) {
+  this.cobranzaService.DescargarRecibo(cobroId).subscribe({
+    next: (blob: Blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Recibo_${cobroId}.pdf`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    },
+    error: (err) => {
+      console.error('Error al descargar recibo', err);
+      alert('No se pudo generar el recibo. Verifique que el pago esté confirmado.');
+    }
+    });
+  }
 }
