@@ -11,6 +11,7 @@ import { UsuariosComponent } from './components/usuarios/usuarios.component';
 import { PagoResultadoComponent } from './components/pago-resultado-component/pago-resultado-component';
 import { InscripcionesComponent } from './components/inscripciones/inscripciones.component';
 import { CobranzaComponent } from './components/cobranza/cobranza.component';
+import { ReportesComponent } from './components/reportes/reportes.component';
 
 export const routes: Routes = [
   // Redirección de la ruta raíz ("") a "/home"
@@ -107,6 +108,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: "", component: CobranzaComponent }
+    ]
+  },
+  {
+    path: "reportes",
+    component: ContainerComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: "", component: ReportesComponent }
     ]
   },
   // Captura cualquier URL no definida y redirige a /home
