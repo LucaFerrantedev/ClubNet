@@ -61,7 +61,7 @@
                 <div class="notif-item p-3 border-bottom">
                   <div class="d-flex justify-content-between align-items-start mb-1">
                     <strong class="text-primary small">{{ n.actividad_nombre }}</strong>
-                    <small style="font-size: 0.7rem;">{{ n.fecha | date:'shortDate' }}</small>
+                    <small style="font-size: 0.7rem;">{{ n.fecha | date:'dd/MM/yyyy' }}</small>
                   </div>
                   <div class="fw-bold text-white mb-1" style="font-size: 0.9rem;">{{ n.asunto }}</div>
                   <p class="small mb-2" style="line-height: 1.3;">{{ n.detalle }}</p>
