@@ -1,0 +1,58 @@
+<app-navbar></app-navbar>
+<div class="container fade-in">
+  <h2 class="titulo-dashboard">Panel de Control</h2>
+
+  <div class="selector-container">
+    <button class="btn-selector" 
+            [class.active]="vistaActual === 'ingresos'" 
+            (click)="seleccionarVista('ingresos')">
+      💰 Ingresos
+    </button>
+    <button class="btn-selector" 
+            [class.active]="vistaActual === 'deuda'" 
+            (click)="seleccionarVista('deuda')">
+      📉 Estado Deudas
+    </button>
+    <button class="btn-selector" 
+            [class.active]="vistaActual === 'ocupacion'" 
+            (click)="seleccionarVista('ocupacion')">
+      👤 Ocupacion Vacantes
+    </button>
+    <button class="btn-selector" 
+            [class.active]="vistaActual === 'socios'" 
+            (click)="seleccionarVista('socios')">
+      🚀 Nuevos Socios
+    </button>
+  </div>
+
+  <div class="chart-display-area">
+    
+    <div *ngIf="vistaActual === 'ingresos'" class="chart-card fade-in">
+      <h3 class="chart-title">Evolución de Ingresos Mensuales</h3>
+      <div class="chart-container">
+        <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType"></canvas>
+      </div>
+    </div>
+
+    <div *ngIf="vistaActual === 'deuda'" class="chart-card fade-in">
+      <h3 class="chart-title">Distribución de Pagos vs Deuda</h3>
+      <div class="chart-container pie-container"> <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="pieChartType"></canvas>
+      </div>
+    </div>
+
+    <div *ngIf="vistaActual === 'ocupacion'" class="chart-card fade-in">
+      <h3 class="chart-title">Cupos vs Inscriptos por Actividad</h3>
+      <div class="chart-container">
+        <canvas baseChart [data]="ocupacionChartData" [options]="barChartOptions" [type]="'bar'"></canvas>
+      </div>
+    </div>
+
+    <div *ngIf="vistaActual === 'socios'" class="chart-card fade-in">
+      <h3 class="chart-title">Crecimiento de la Base de Socios</h3>
+      <div class="chart-container">
+        <canvas baseChart [data]="lineChartData" [options]="barChartOptions" [type]="lineChartType"></canvas>
+      </div>
+    </div>
+
+  </div>
+</div>
