@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptors, HttpInterceptorFn } from '@angular/common/http';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 // --- INTERCEPTOR DE AUTENTICACIÓN ---
 const authInterceptor: HttpInterceptorFn = (req, next) => {
@@ -29,6 +30,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withFetch(),
       withInterceptors([authInterceptor]) 
-    )
+    ),
+    provideCharts(withDefaultRegisterables())
   ]
 };
