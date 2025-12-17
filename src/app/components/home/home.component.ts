@@ -7,8 +7,10 @@ import { Router } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit{
-  DataSource: any;
+export class HomeComponent implements OnInit {
+  // Inicializamos como array vacío para evitar errores en el template antes de la carga
+  DataSource: any[] = [];
+
   constructor(private homeService: HomeService, private router: Router) { }
 
   ngOnInit(): void {
@@ -19,11 +21,16 @@ export class HomeComponent implements OnInit{
     this.router.navigate(['/login']);
   }
 
-  GetActividades(){
-    this.homeService.GetActividades().subscribe((x: any) => {
-      // FILTRO: Solo mostramos las actividades donde estado es true (Activo)
-      this.DataSource = x.filter((act: any) => act.estado === true);
-      console.log(this.DataSource);
+  GetActividades() {
+    this.homeService.GetActividades().subscribe({
+      next: (x: any) => {
+        // Filtramos solo las actividades activas para la landing page
+        this.DataSource = x.filter((act: any) => act.estado === true);
+        console.log('Actividades cargadas:', this.DataSource);
+      },
+      error: (err) => {
+        console.error('Error cargando actividades en Home:', err);
+      }
     });
   }
 }
