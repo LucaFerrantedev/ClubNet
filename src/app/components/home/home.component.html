@@ -1,95 +1,34 @@
-<div class="home-container">
-  <nav class="nav-glass">
-    <div class="nav-content">
-      <div class="brand">
-        <img src="https://img.icons8.com/color/48/football2.png" alt="Club Logo" />
-        <span>Club<strong>ios</strong></span>
-        <img src="https://img.icons8.com/color/48/football2.png" alt="Club Logo" />
-      </div>
-      <button class="nav-login-btn" (click)="Continuar()">Acceso Socios</button>
-    </div>
-  </nav>
-
-  <header class="hero">
-    <div class="hero-main">
-      <span class="hero-tag">Comunidad Deportiva</span>
-      <h1>Tu club, <br><span class="text-accent">en un solo lugar.</span></h1>
-      <p>Unite a Clubios para gestionar tus disciplinas, consultar horarios y vivir el deporte como nunca antes.</p>
-      <div class="hero-cta">
-        <button class="btn-primary" (click)="Continuar()">Empezar ahora</button>
-      </div>
-    </div>
+<div class="landing-bg">
+  <header class="landing-header">
+    <img src="https://img.icons8.com/color/96/football2.png" alt="Club Logo" class="landing-logo animate-pop" />
+    <h1 class="landing-title animate-fadein">¡Bienvenido a <span class="highlight">Clubios</span>!</h1>
+    <p class="landing-subtitle animate-slidein">El club donde el deporte y la comunidad se encuentran.</p>
+    <button class="landing-btn animate-bounce" (click)="Continuar()">Entrar</button>
   </header>
-
-  <section class="recruit-section">
-    <div class="container">
-      <div class="section-title">
-        <h2>Búsquedas Activas</h2>
-        <p>¡Queremos que seas parte de nuestro equipo!</p>
-      </div>
-      <div class="recruit-grid">
-        <div class="recruit-card animate-card">
-          <div class="recruit-icon">👤</div>
-          <h3>Clubios busca Talentos</h3>
-          <p>Buscamos jugadores para nuestras categorías juveniles de Fútbol y Básquet.</p>
-          <span class="recruit-tag">¡Sumate!</span>
-        </div>
-        <div class="recruit-card animate-card" style="animation-delay: 0.1s;">
-          <div class="recruit-icon">📋</div>
-          <h3>Clubios busca Profesores</h3>
-          <p>¿Sos entrenador certificado? Estamos ampliando nuestro staff técnico.</p>
-          <span class="recruit-tag">Postulate</span>
-        </div>
-        <div class="recruit-card animate-card" style="animation-delay: 0.2s;">
-          <div class="recruit-icon">🤝</div>
-          <h3>Clubios busca Sponsors</h3>
-          <p>Apoyá el deporte local y dale visibilidad a tu marca en nuestras instalaciones.</p>
-          <span class="recruit-tag">Contactanos</span>
+  <section class="landing-section">
+    <h2 class="landing-section-title animate-fadein">Nuestras disciplinas</h2>
+    <div class="landing-cards">
+      @for (actividad of DataSource; track actividad.actividad_id) {
+      <div class="landing-card animate-card">
+        <img [src]="actividad.url_imagen" [alt]="actividad.nombre" />
+        <div class="landing-card-content">
+          <h3>{{actividad.nombre}}</h3>
+          <p>{{actividad.descripcion}}</p>
         </div>
       </div>
+    }
     </div>
   </section>
-
-  <section id="actividades" class="activities-section">
-    <div class="container">
-      <div class="section-title">
-        <h2>Nuestras Disciplinas</h2>
-        <p>Explorá todas las actividades que tenemos preparadas para vos.</p>
-      </div>
-
-      <div class="activities-grid">
-        @for (actividad of DataSource; track actividad.actividad_id) {
-          <div class="activity-card">
-            <div class="card-media">
-              <img [src]="actividad.url_imagen" [alt]="actividad.nombre">
-              <div class="card-overlay">
-                <button (click)="Continuar()">Inscribirme</button>
-              </div>
-            </div>
-            <div class="card-content">
-              <h3>{{actividad.nombre}}</h3>
-              <p>{{actividad.descripcion}}</p>
-            </div>
-          </div>
-        } @empty {
-          <p class="empty-state">No hay actividades activas por el momento.</p>
-        }
-      </div>
-    </div>
+  <section class="landing-benefits">
+    <h2 class="landing-section-title animate-fadein">¿Por qué elegir Clubios?</h2>
+    <ul class="benefits-list">
+      <li class="animate-slidein">Ambiente familiar y seguro</li>
+      <li class="animate-slidein" style="animation-delay: 0.1s;">Profesores y entrenadores certificados</li>
+      <li class="animate-slidein" style="animation-delay: 0.2s;">Infraestructura moderna y espacios verdes</li>
+      <li class="animate-slidein" style="animation-delay: 0.3s;">Eventos, torneos y actividades sociales</li>
+    </ul>
   </section>
-
-  <footer class="footer-centered">
-    <div class="footer-content">
-      <div class="footer-logo">
-        <img src="https://img.icons8.com/color/48/football2.png" alt="Logo" />
-        <span>Clubios</span>
-      </div>
-      <p>&copy; 2025 Clubios - Buenos Aires, Argentina. <br> Todos los derechos reservados.</p>
-      <div class="footer-links">
-        <a href="#">Privacidad</a>
-        <a href="#">Términos</a>
-        <a href="#">Soporte</a>
-      </div>
-    </div>
+  <footer class="landing-footer">
+    <small>&copy; 2025 ClubNet. Todos los derechos reservados.</small>
   </footer>
 </div>
