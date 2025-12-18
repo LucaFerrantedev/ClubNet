@@ -33,8 +33,6 @@ export class LoginComponent implements OnInit {
   clave: any;
 
   confirmarClave: any;
-  datasourceRegister: any;
-  datasourceLogin: any;
   mensaje: any;
   recoveryEmail: string = '';
 
@@ -79,17 +77,27 @@ export class LoginComponent implements OnInit {
   // Esto pasa cuando se apreta el boton de registrarse
   onRegister() {
     if (!this.dni || !this.nombre || !this.apellido || !this.email || !this.clave || !this.confirmarClave) {
-          this.mensaje = 'Todos los campos son obligatorios.';
-          this.mensajeTipo = 'error';
-          return;
-    }
-
-    if (this.dni.length !== 8) {
-      this.mensaje = 'El DNI debe tener exactamente 8 números.';
+      this.mensaje = 'Todos los campos son obligatorios.';
       this.mensajeTipo = 'error';
       return;
     }
 
+    // 2. Verificar si contiene letras (usando una expresión regular en TS)
+    const soloNumeros = /^\d+$/;
+    if (!soloNumeros.test(this.dni)) {
+      this.mensaje = 'Error: El DNI solo puede contener números.';
+      this.mensajeTipo = 'error';
+      return;
+    }
+
+    // 3. Verificar largo de exactamente 8 dígitos
+    if (this.dni.length !== 8) {
+      this.mensaje = 'Error: El DNI debe tener exactamente 8 dígitos.';
+      this.mensajeTipo = 'error';
+      return;
+    }
+
+    // 4. Verificar coincidencia de claves
     if (this.clave !== this.confirmarClave) {
       this.mensaje = 'Las contraseñas no coinciden.';
       this.mensajeTipo = 'error';
@@ -98,26 +106,21 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    // Si pasa todas las validaciones, proceder con el registro
     let obj = {
       "dni": Number(this.dni),
       "nombre": this.nombre,
       "apellido": this.apellido,
       "rol": this.rol,
       "email": this.email,
-      "clave": (this.clave)
-    }
+      "clave": this.clave
+    };
+
     this.loginService.Register(obj).subscribe({
       next: (response) => {
-        let success = (typeof response === 'boolean') ? response : (response as any).success;
-        if (success === true) {
+        if (response && (response as any).success) {
           this.mensaje = '¡Registro exitoso!';
           this.mensajeTipo = 'success';
-        } else if (success === false) {
-          this.mensaje = 'Registro fallido. Intenta de nuevo.';
-          this.mensajeTipo = 'error';
-        } else {
-          this.mensaje = '';
-          this.mensajeTipo = '';
         }
         this.resetForm();
         setTimeout(() => { this.mensaje = ''; this.mensajeTipo = ''; }, 2500);
@@ -131,20 +134,6 @@ export class LoginComponent implements OnInit {
     });
 
   }
-
-  validateDni(event: any) {
-    const input = event.target as HTMLInputElement;
-    // Reemplaza cualquier caracter que no sea número y limita a 8 dígitos
-    let value = input.value.replace(/[^0-9]/g, '');
-    
-    if (value.length > 8) {
-      value = value.substring(0, 8);
-    }
-    
-    this.dni = value;
-    input.value = value; // Sincroniza el valor visual del input
-  }
-
 
   switchToRecovery() {
     this.activeTab = 'recovery';
