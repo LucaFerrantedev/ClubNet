@@ -209,6 +209,12 @@
     font-size: 0.9rem;
     color: #334155;
     line-height: 1.5;
+
+    /* --- Nuevas propiedades para manejar textos largos --- */
+    max-height: 350px;      /* Limita la altura para que no deforme el dashboard */
+    overflow-y: auto;       /* Agrega scroll si el texto supera la altura máxima */
+    white-space: pre-wrap;  /* Respeta los saltos de línea y espacios de la IA */
+    word-wrap: break-word;  /* Evita que palabras muy largas rompan el contenedor */
 }
 
 /* --- MODO OSCURO --- */
@@ -238,5 +244,11 @@
 .dark-mode .panel-header { border-bottom-color: #334155; }
 .dark-mode .dark-mode-toggle { background: #334155; color: white; }
 .dark-mode .ver-todo-link { color: #60a5fa; }
-.dark-mode .sugerencia-resultado { background: #334155; color: #e2e8f0; }
+.dark-mode .sugerencia-resultado::-webkit-scrollbar {
+    width: 6px;
+}
+.dark-mode .sugerencia-resultado::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 10px;
+}
 .dark-mode input { background: #334155; border-color: #475569; color: white; }
