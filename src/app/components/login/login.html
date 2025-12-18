@@ -32,7 +32,8 @@
         <form *ngIf="activeTab === 'register'" (submit)="onRegister()" class="modern-form animate-fadein">
             <div class="modern-input-group">
                 <i class="fa fa-id-card"></i>
-                <input type="text" placeholder="DNI" required [(ngModel)]="dni" name="dni" />
+                <input type="text" placeholder="DNI (8 dígitos)" required [(ngModel)]="dni" name="dni" maxlength="8"
+                    minlength="8" pattern="[0-9]{8}" (input)="validateDni($event)" />
             </div>
             <div class="modern-input-group">
                 <i class="fa fa-user"></i>

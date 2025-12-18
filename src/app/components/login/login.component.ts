@@ -79,10 +79,17 @@ export class LoginComponent implements OnInit {
   // Esto pasa cuando se apreta el boton de registrarse
   onRegister() {
     if (!this.dni || !this.nombre || !this.apellido || !this.email || !this.clave || !this.confirmarClave) {
-      this.mensaje = 'Todos los campos son obligatorios.';
+          this.mensaje = 'Todos los campos son obligatorios.';
+          this.mensajeTipo = 'error';
+          return;
+    }
+
+    if (this.dni.length !== 8) {
+      this.mensaje = 'El DNI debe tener exactamente 8 números.';
       this.mensajeTipo = 'error';
       return;
     }
+
     if (this.clave !== this.confirmarClave) {
       this.mensaje = 'Las contraseñas no coinciden.';
       this.mensajeTipo = 'error';
@@ -90,6 +97,7 @@ export class LoginComponent implements OnInit {
       this.confirmarClave = '';
       return;
     }
+
     let obj = {
       "dni": Number(this.dni),
       "nombre": this.nombre,
@@ -123,6 +131,20 @@ export class LoginComponent implements OnInit {
     });
 
   }
+
+  validateDni(event: any) {
+    const input = event.target as HTMLInputElement;
+    // Reemplaza cualquier caracter que no sea número y limita a 8 dígitos
+    let value = input.value.replace(/[^0-9]/g, '');
+    
+    if (value.length > 8) {
+      value = value.substring(0, 8);
+    }
+    
+    this.dni = value;
+    input.value = value; // Sincroniza el valor visual del input
+  }
+
 
   switchToRecovery() {
     this.activeTab = 'recovery';
