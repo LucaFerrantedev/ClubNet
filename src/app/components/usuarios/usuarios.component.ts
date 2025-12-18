@@ -40,24 +40,24 @@ export class UsuariosComponent implements OnInit {
   selectedUser: UsuarioDTO | null = null;
   userToEdit: any = {};
   showEditModal = false;
-  
+
   // Mensajería general
   mensaje: string = '';
   mensajeTipo: 'success' | 'error' = 'success';
-  
+
   // Para la creación de usuario
   newUser: any = {
     dni: null,
     nombre: '',
     apellido: '',
-    rol: 3, 
+    rol: 3,
     email: '',
     clave: '',
     confirmarClave: ''
   };
 
   // Propiedad para el modal de confirmación de eliminación
-  userToDelete: UsuarioDTO | null = null; 
+  userToDelete: UsuarioDTO | null = null;
 
   // Para paginación
   pagedUsers: UsuarioDTO[] = [];
@@ -79,7 +79,7 @@ export class UsuariosComponent implements OnInit {
     if (email) {
       this.usuariosService.GetUsuario(email).subscribe({
         next: (user: any) => {
-          this.isAdmin = user?.rol_id === 1; 
+          this.isAdmin = user?.rol_id === 1;
           if (this.isAdmin) {
             this.loadUsers();
             this.loadRoles();
@@ -88,7 +88,7 @@ export class UsuariosComponent implements OnInit {
             this.showMessage('Acceso denegado. Solo administradores pueden ver esta sección.', 'error');
           }
         },
-        error: (err: any) => { 
+        error: (err: any) => {
           this.isLoading = false;
           this.showMessage('Error al verificar el rol de usuario.', 'error');
           console.error("Error al cargar datos del usuario:", err);
@@ -108,20 +108,20 @@ export class UsuariosComponent implements OnInit {
         this.updatePagedUsers();
         this.isLoading = false;
       },
-      error: (err: any) => { 
+      error: (err: any) => {
         this.isLoading = false;
         this.showMessage('Error al cargar los usuarios. Asegúrate de que tienes permisos.', 'error');
         console.error('Error al cargar usuarios:', err);
       }
     });
   }
-  
+
   loadRoles() {
     this.usuariosService.GetRoles().subscribe({
       next: (data: any) => {
         this.roles = data as Rol[];
       },
-      error: (err: any) => { 
+      error: (err: any) => {
         console.error('Error al cargar roles:', err);
       }
     });
@@ -131,7 +131,7 @@ export class UsuariosComponent implements OnInit {
   openEditModal(user: UsuarioDTO) {
     this.userToEdit = { ...user };
     this.showEditModal = true;
-    this.mensaje = ''; 
+    this.mensaje = '';
   }
 
   closeEditModal() {
@@ -141,37 +141,70 @@ export class UsuariosComponent implements OnInit {
   }
 
   updateUser() {
+    // 1. Validación de caracteres numéricos
+    const soloNumeros = /^\d+$/;
+    const dniStr = String(this.userToEdit.dni);
+
+    if (!soloNumeros.test(dniStr)) {
+      this.showMessage('Error: El DNI solo puede contener números.', 'error');
+      return;
+    }
+
+    // 2. Validación de longitud exacta
+    if (dniStr.length !== 8) {
+      this.showMessage('Error: El DNI debe tener exactamente 8 dígitos.', 'error');
+      return;
+    }
+
+    // Si pasa las validaciones, se prepara el objeto para enviar
     const updatedUser: UsuarioDTO = {
       ...this.userToEdit,
       dni: Number(this.userToEdit.dni),
       rol_id: Number(this.userToEdit.rol_id),
-      persona_id: Number(this.userToEdit.persona_id) 
+      persona_id: Number(this.userToEdit.persona_id)
     };
-    
+
     this.usuariosService.UpdateUsuario(updatedUser).subscribe({
       next: (res: any) => {
         if (res.success) {
-          this.showMessage(`Usuario ${updatedUser.nombre} ${updatedUser.apellido} actualizado con éxito.`, 'success');
-          this.loadUsers(); 
+          this.showMessage(`Usuario ${updatedUser.nombre} actualizado con éxito.`, 'success');
+          this.loadUsers();
           setTimeout(() => this.closeEditModal(), 1500);
         } else {
           this.showMessage(res.message || 'Error al actualizar el usuario.', 'error');
         }
       },
-      error: (err: any) => { 
-        this.showMessage('Error de conexión o de servidor al actualizar el usuario.', 'error');
-        console.error('Error al actualizar usuario:', err);
+      error: (err: any) => {
+        this.showMessage('Error de conexión al actualizar.', 'error');
+        console.error('Error:', err);
       }
     });
   }
-  
+
   // Método Crear Usuario
   createUser() {
+    // 1. Verificar campos obligatorios
     if (!this.newUser.dni || !this.newUser.nombre || !this.newUser.apellido || !this.newUser.email || !this.newUser.clave || !this.newUser.confirmarClave) {
       this.showMessage('Todos los campos son obligatorios.', 'error');
       return;
     }
 
+    // 2. Validación de solo números
+    const soloNumeros = /^\d+$/;
+    const dniStr = String(this.newUser.dni); // Convertimos a string para validar longitud y contenido
+
+    if (!soloNumeros.test(dniStr)) {
+      this.showMessage('Error: El DNI solo puede contener números.', 'error');
+      return;
+    }
+
+    // 3. Validación de 8 dígitos exactos
+    if (dniStr.length !== 8) {
+      this.showMessage('Error: El DNI debe tener exactamente 8 dígitos.', 'error');
+      return;
+    }
+
+    // 4. Verificar coincidencia de claves
     if (this.newUser.clave !== this.newUser.confirmarClave) {
       this.showMessage('Las claves no coinciden.', 'error');
       return;
@@ -180,7 +213,7 @@ export class UsuariosComponent implements OnInit {
     const { confirmarClave, ...objToSend } = this.newUser;
     objToSend.dni = Number(objToSend.dni);
     objToSend.rol = Number(objToSend.rol);
-    
+
     this.usuariosService.CreateUser(objToSend).subscribe({
       next: (res: any) => {
         if (res.success) {
@@ -197,11 +230,11 @@ export class UsuariosComponent implements OnInit {
       }
     });
   }
-  
+
   // Pide confirmación para eliminar
   solicitarConfirmacionEliminar(user: UsuarioDTO) {
     this.userToDelete = user;
-    this.mensaje = ''; 
+    this.mensaje = '';
   }
 
   // Cancela la eliminación
@@ -211,12 +244,12 @@ export class UsuariosComponent implements OnInit {
 
   // Ejecuta la eliminación (baja lógica)
   EliminarUsuario(persona_id: number) {
-    this.userToDelete = null; 
+    this.userToDelete = null;
     this.usuariosService.DeleteUser(persona_id).subscribe({
       next: (res: any) => {
         if (res.success) {
           this.showMessage('Usuario dado de baja con éxito.', 'success');
-          this.loadUsers(); 
+          this.loadUsers();
         } else {
           this.showMessage(res.message || 'Error al dar de baja el usuario.', 'error');
         }
@@ -240,7 +273,7 @@ export class UsuariosComponent implements OnInit {
       confirmarClave: ''
     };
   }
-  
+
   // Método auxiliar para mensajes
   showMessage(message: string, type: 'success' | 'error') {
     this.mensaje = message;
@@ -254,21 +287,21 @@ export class UsuariosComponent implements OnInit {
   getRoleName(rolId: number): string {
     return this.roles.find(r => r.rol_id === rolId)?.nombre || 'Desconocido';
   }
-  
+
   // Lógica de paginación
   updatePagedUsers() {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     this.pagedUsers = this.usuarios.slice(startIndex, endIndex);
   }
-  
+
   onPageChange(page: number) {
     if (page > 0 && page <= this.totalPages) {
       this.currentPage = page;
       this.updatePagedUsers();
     }
   }
-  
+
   get totalPages(): number {
     return Math.ceil(this.usuarios.length / this.pageSize);
   }
