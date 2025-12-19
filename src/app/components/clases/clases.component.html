@@ -276,3 +276,26 @@
 
   </div>
 </div>
+<div class="fab-container" *ngIf="esEntrenador"> <button class="btn-ia" (click)="abrirConsultaIA()" [disabled]="cargandoIA">
+    
+    <span *ngIf="!cargandoIA">🤖 Analizar Clases</span>
+    
+    <ng-container *ngIf="cargandoIA">
+      <span class="loader"></span> 
+      <span>Analizando...</span>
+    </ng-container>
+
+  </button>
+</div>
+
+<div class="ia-modal-overlay" *ngIf="mostrarModalIA">
+  <div class="ia-modal-content">
+    <h3>🧠 Análisis del Agente</h3>
+    
+    <div class="ia-cuerpo" [innerHTML]="respuestaIA"></div>
+
+    <div class="ia-footer">
+      <button (click)="cerrarModalIA()">Entendido</button>
+    </div>
+  </div>
+</div>

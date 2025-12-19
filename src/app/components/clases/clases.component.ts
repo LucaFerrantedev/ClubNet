@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ClasesService } from '../../services/clases.service';
 import { ActividadesService } from '../../services/actividades.service';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { IAService } from '../../services/ia.service';
 
 interface GrupoClases {
   id: number;
@@ -58,11 +59,16 @@ export class ClasesComponent implements OnInit {
   videoVisibleId: number | null = null;
   isUploadingVideo = false;
 
+  // --- NUEVAS VARIABLES PARA LA IA ---
+  mostrarModalIA: boolean = false; 
+  cargandoIA: boolean = false;
+  respuestaIA: string = '';
 
   constructor(
     private clasesService: ClasesService,
     private actividadesService: ActividadesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private iaService:IAService
   ) { }
 
   ngOnInit(): void {
@@ -340,5 +346,33 @@ export class ClasesComponent implements OnInit {
   cerrarModal() { 
     this.showModal = false;
     this.isEditMode = false;
+  }
+
+  abrirConsultaIA() {
+    // Validamos que existan datos en TU array 'clases'
+    if (!this.clasesEntrenador || this.clasesEntrenador.length === 0) {
+      alert('No hay clases listadas para analizar.');
+      return;
+    }
+
+    this.cargandoIA = true;
+    this.iaService.consultarPlanificacion(this.clasesEntrenador).subscribe({
+      next: (res) => {
+        this.respuestaIA = res.recomendacion || res.sugerencia || res;
+        this.mostrarModalIA = true; // Abrimos SOLO el modal de IA
+        this.cargandoIA = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.respuestaIA = 'No pude conectar con el copiloto.';
+        this.mostrarModalIA = true;
+        this.cargandoIA = false;
+      }
+    });
+  }
+
+  // Usamos un nombre específico para NO chocar con tu modal de clases
+  cerrarModalIA() {
+    this.mostrarModalIA = false;
   }
 }

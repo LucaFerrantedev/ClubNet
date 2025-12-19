@@ -7,12 +7,15 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class IAService {
-  private apiUrl = environment.URL_API+'/ia/sugerirActividad';
+  private apiUrl = environment.URL_API+'/ia';
 
   constructor(private http: HttpClient) { }
 
   // Metodo para sugerir una actividad basada en datos proporcionados
   sugerirActividad(datos: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, datos);
+    return this.http.post<any>(this.apiUrl+"/sugerirActividad", datos);
+  }
+  consultarPlanificacion(clases: any[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/recomendar-planificacion`, clases);
   }
 }
