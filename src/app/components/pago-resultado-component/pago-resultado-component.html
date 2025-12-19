@@ -1,0 +1,37 @@
+<div class="container mt-5 text-center">
+  
+  @if (estado === 'exito') {
+    <div class="card border-success mb-3 mx-auto" style="max-width: 500px;">
+      <div class="card-header bg-success text-white">¡Pago Aprobado!</div>
+      <div class="card-body text-success">
+        <h5 class="card-title">Tu inscripción se realizó correctamente.</h5>
+        <p class="card-text">Ya hemos recibido tu pago. Te enviamos un correo con los detalles.</p>
+        <hr>
+        <p class="mb-0"><small>Código de operación: {{ paymentId }}</small></p>
+        <p class="mb-0"><small>Referencia: {{ externalReference }}</small></p>
+      </div>
+    </div>
+  }
+
+  @if (estado === 'fallo') {
+    <div class="card border-danger mb-3 mx-auto" style="max-width: 500px;">
+      <div class="card-header bg-danger text-white">Hubo un problema</div>
+      <div class="card-body text-danger">
+        <h5 class="card-title">El pago fue rechazado.</h5>
+        <p class="card-text">Por favor, intenta nuevamente con otro medio de pago.</p>
+      </div>
+    </div>
+  }
+
+  @if (estado === 'pendiente') {
+    <div class="card border-warning mb-3 mx-auto" style="max-width: 500px;">
+      <div class="card-header bg-warning text-dark">Pago Pendiente</div>
+      <div class="card-body text-dark">
+        <h5 class="card-title">Estamos procesando tu pago.</h5>
+        <p class="card-text">Si pagaste en efectivo, se acreditará en breve. No te preocupes, te avisaremos.</p>
+      </div>
+    </div>
+  }
+
+  <button class="btn btn-primary mt-4" (click)="volverAlInicio()">Volver al Inicio</button>
+</div>

@@ -1,0 +1,157 @@
+<app-navbar></app-navbar>
+<div class="main-container animate-fadein" [class.dark-mode]="isDarkMode">
+    <div class="content-wrapper">
+        <div class="header-section text-center mb-5">
+            @if (isAdmin) { <span class="badge bg-info-subtle mb-2">Administrador</span> }
+            <h1 class="page-title">Gestión de Usuarios</h1>
+            <p class="page-subtitle">Administra los miembros y sus permisos.</p>
+        </div>
+
+        @if (isAdmin) {
+        <div class="card-custom mb-4">
+            <h2 class="section-title">Registrar Usuario</h2>
+            @if (mensaje && showEditModal === false) {
+            <div class="p-3 mb-3 rounded"
+                [style.background]="mensajeTipo==='success' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'"
+                [style.color]="mensajeTipo==='success' ? '#10b981' : '#ef4444'">
+                {{ mensaje }}
+            </div>
+            }
+            <form (ngSubmit)="createUser()" #newUserForm="ngForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>DNI</label>
+                        <input type="text" name="dni" [(ngModel)]="newUser.dni" required maxlength="8">
+                    </div>
+                    <div class="form-group"><label>Nombre</label><input type="text" name="nombre"
+                            [(ngModel)]="newUser.nombre" required></div>
+                    <div class="form-group"><label>Apellido</label><input type="text" name="apellido"
+                            [(ngModel)]="newUser.apellido" required></div>
+                    <div class="form-group"><label>Email</label><input type="email" name="email"
+                            [(ngModel)]="newUser.email" required></div>
+                    <div class="form-group"><label>Clave</label><input type="password" name="clave"
+                            [(ngModel)]="newUser.clave" required></div>
+                    <div class="form-group"><label>Confirmar Clave</label><input type="password" name="confirmarClave"
+                            [(ngModel)]="newUser.confirmarClave" required></div>
+                    <div class="form-group"><label>Rol</label>
+                        <select name="rol" [(ngModel)]="newUser.rol" required>
+                            @for (rol of roles; track rol.rol_id) { <option [ngValue]="rol.rol_id">{{ rol.nombre }}
+                            </option> }
+                        </select>
+                    </div>
+                </div>
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn-primary" [disabled]="!newUserForm.form.valid">Crear
+                        Usuario</button>
+                </div>
+            </form>
+        </div>
+        }
+
+        <div class="table-responsive bg-transparent border-0 shadow-none">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>DNI</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if(isLoading) { <tr>
+                        <td colspan="6" class="text-center py-5">Cargando...</td>
+                    </tr> }
+                    @for (user of pagedUsers; track user.persona_id) {
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="avatar-circle">{{ user.nombre.charAt(0) }}</div>
+                                <span class="fw-bold">{{ user.nombre }} {{ user.apellido }}</span>
+                            </div>
+                        </td>
+                        <td style="font-family: monospace;">{{ user.dni }}</td>
+                        <td class="text-muted">{{ user.email }}</td>
+                        <td><span class="badge bg-info-subtle">{{ getRoleName(user.rol_id) }}</span></td>
+                        <td>
+                            <span class="badge" [ngClass]="user.estado ? 'bg-success-subtle' : 'bg-danger-subtle'">
+                                {{ user.estado ? 'ACTIVO' : 'INACTIVO' }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <button class="btn-icon" (click)="openEditModal(user)"><i class="bi bi-pencil"></i></button>
+                            <button class="btn-icon delete" (click)="solicitarConfirmacionEliminar(user)"><i
+                                    class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-center align-items-center gap-3 mt-4">
+            <button class="btn-base"
+                style="background: transparent; border: 1px solid var(--border-color); color: var(--text-muted);"
+                (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Anterior</button>
+            <span class="text-muted small fw-bold">Página {{ currentPage }}</span>
+            <button class="btn-base"
+                style="background: transparent; border: 1px solid var(--border-color); color: var(--text-muted);"
+                (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">Siguiente</button>
+        </div>
+    </div>
+</div>
+
+@if (showEditModal && userToEdit) {
+<div class="modal-backdrop" (click)="closeEditModal()">
+    <div class="modal-content card-custom" (click)="$event.stopPropagation()">
+        <h2 class="section-title">Editar Usuario</h2>
+        @if (mensaje && showEditModal) {
+        <div class="p-2 mb-3 rounded text-center small"
+            [style.background]="mensajeTipo==='success' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'"
+            [style.color]="mensajeTipo==='success' ? '#10b981' : '#ef4444'">
+            {{ mensaje }}
+        </div>
+        }
+        <form (ngSubmit)="updateUser()">
+            <div class="form-grid">
+                <div class="form-group"><label>Nombre</label><input [(ngModel)]="userToEdit.nombre" name="uNom"></div>
+                <div class="form-group"><label>Apellido</label><input [(ngModel)]="userToEdit.apellido" name="uApe">
+                </div>
+                <div class="form-group">
+                    <label>DNI</label>
+                    <input type="text" [(ngModel)]="userToEdit.dni" name="uDni" maxlength="8">
+                </div>
+                <div class="form-group"><label>Estado</label>
+                    <select [(ngModel)]="userToEdit.estado" name="uEst">
+                        <option [ngValue]="true">Activo</option>
+                        <option [ngValue]="false">Inactivo</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-4 text-end">
+                <button type="button" class="btn-base me-2"
+                    style="background: transparent; border: 1px solid var(--border-color); color: var(--text-main);"
+                    (click)="closeEditModal()">Cancelar</button>
+                <button type="submit" class="btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+}
+
+@if (userToDelete) {
+<div class="modal-backdrop" (click)="cancelarEliminacion()">
+    <div class="modal-content card-custom text-center" style="max-width: 400px;" (click)="$event.stopPropagation()">
+        <h2 class="section-title border-0 pb-0">Confirmar Baja</h2>
+        <p class="text-muted my-3">¿Dar de baja a {{ userToDelete.nombre }}?</p>
+        <div class="d-flex justify-content-center gap-2 mt-4">
+            <button type="button" class="btn-base" style="border: 1px solid var(--border-color);"
+                (click)="cancelarEliminacion()">Cancelar</button>
+            <button type="button" class="btn-danger"
+                (click)="EliminarUsuario(userToDelete.persona_id)">Confirmar</button>
+        </div>
+    </div>
+</div>
+}

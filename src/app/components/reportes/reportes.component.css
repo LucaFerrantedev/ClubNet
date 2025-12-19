@@ -1,0 +1,103 @@
+.container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.titulo-dashboard {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #1e6091; /* Tu azul principal */
+  font-weight: 700;
+}
+
+/* --- ESTILOS DEL SELECTOR --- */
+.selector-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  flex-wrap: wrap; /* Para que no se rompa en celular */
+}
+
+.btn-selector {
+  background-color: white;
+  border: 2px solid #e9ecef;
+  color: #6c757d;
+  padding: 10px 25px;
+  border-radius: 50px; /* Bordes redondeados modernos */
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.btn-selector:hover {
+  background-color: #f8f9fa;
+  border-color: #1e6091;
+  color: #1e6091;
+  transform: translateY(-2px);
+}
+
+/* Clase Active: Cuando el botón está seleccionado */
+.btn-selector.active {
+  background-color: #1e6091; /* Tu azul */
+  color: white;
+  border-color: #1e6091;
+  box-shadow: 0 4px 10px rgba(30, 96, 145, 0.3);
+}
+
+/* --- ÁREA DEL GRÁFICO --- */
+.chart-display-area {
+  min-height: 450px; /* Evita saltos de altura al cambiar */
+}
+
+.chart-card {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* Sombra elegante */
+  border: 1px solid #f0f0f0;
+}
+
+.chart-title {
+  color: #343a40;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.chart-container {
+  position: relative;
+  height: 400px; /* Gráfico grande y claro */
+  width: 100%;
+}
+
+/* Para la torta, a veces queda muy grande, la limitamos un poco */
+.pie-container {
+  max-width: 600px;
+  margin: 0 auto; 
+}
+
+/* Animación simple */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .btn-selector {
+    width: 100%; /* Botones full width en celular */
+    border-radius: 10px;
+  }
+  .chart-container {
+    height: 300px;
+  }
+}

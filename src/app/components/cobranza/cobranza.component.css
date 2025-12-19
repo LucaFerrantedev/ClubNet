@@ -1,0 +1,23 @@
+/* src/app/components/cobranza/cobranza.component.css */
+
+/* El contenedor principal hereda de styles.css (.main-container) */
+
+/* Ajustes específicos para el encabezado de esta página */
+.header-section {
+  text-align: center;
+  position: relative; /* Para el botón absoluto */
+}
+
+/* En pantallas muy chicas, el botón absoluto podría molestar, lo ajustamos */
+@media (max-width: 768px) {
+  .header-section button {
+    position: static;
+    display: block;
+    margin: 1rem auto 0 auto;
+  }
+}
+
+/* Utilidad para el texto principal en modo oscuro/claro */
+.text-main {
+  color: var(--text-main) !important;
+}

@@ -1,0 +1,301 @@
+<app-navbar></app-navbar>
+
+<div class="clases-main" [class.dark-mode]="isDarkMode">
+  <div class="clases-wrapper">
+
+    @if (esEntrenador) {
+      <header class="clases-header">
+        <div>
+          <h1 class="clases-title">
+            Gestión de Clases 
+            @if(actividadNombreActual){ <span style="font-weight: 400; font-size: 0.8em; color: #6b7280">| {{actividadNombreActual}}</span> }
+          </h1>
+          
+          @if(actividadesDelEntrenador.length > 0) {
+             <div class="mt-2">
+                <select class="form-select-simple" [ngModel]="actividadId" (ngModelChange)="cambiarActividadVisualizada($event)">
+                  <option [ngValue]="null" disabled>-- Selecciona Actividad --</option>
+                  @for (act of actividadesDelEntrenador; track act.actividad_id) {
+                    <option [ngValue]="act.actividad_id">{{ act.nombre }}</option>
+                  }
+                </select>
+             </div>
+          }
+        </div>
+
+        <button class="btn-crear-clase" (click)="abrirModal()">
+          + Crear clase
+        </button>
+      </header>
+
+      <section class="clases-card animate-slidein">
+
+        @if (isLoading) {
+          <div class="no-actividades text-center p-4 text-muted">
+            Cargando clases...
+          </div>
+        } @else {
+
+          @if (clasesEntrenador.length === 0) {
+            <div class="no-actividades text-center p-5 text-muted">
+              @if(actividadId) {
+                No hay clases cargadas para esta actividad.
+              } @else {
+                Selecciona una actividad arriba para ver sus clases.
+              }
+            </div>
+          }
+
+          @for (clase of clasesEntrenador; track clase.clase_id) {
+            <article
+              class="clase-item"
+              (click)="abrirModal(clase)"
+              [class.clase-activa]="nuevaClase && nuevaClase.clase_id === clase.clase_id && showModal"
+            >
+              <div class="clase-info">
+                <div class="clase-icon">
+                  @if(clase.url_multimedia) { 🎬 } @else { 📋 }
+                </div>
+                <div>
+                  <h2 class="clase-titulo">{{ clase.titulo }}</h2>
+                  <p class="clase-detalle">{{ clase.detalle }}</p>
+                  @if (clase.url_multimedia) {
+                    <button class="btn-ver-video mt-2" (click)="toggleVideo(clase.clase_id, $event)">
+                      @if (videoVisibleId === clase.clase_id) {
+                        Ocultar Video
+                      } @else {
+                        Ver Video
+                      }
+                    </button>
+                  }
+                </div>
+              </div>
+
+              <div class="clase-actions">
+                
+                <div class="clase-intensidad me-4">
+                  <span class="clase-intensidad-label">INTENSIDAD</span>
+                  <span
+                    class="badge-intensidad"
+                    [ngClass]="getIntensidadClass(clase.intensidad)"
+                  >
+                    {{ clase.intensidad | lowercase }}
+                  </span>
+                </div>
+
+                <button class="btn-eliminar-icon" (click)="solicitarConfirmacionEliminar(clase, $event)" title="Eliminar Clase">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18" />
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  </svg>
+                </button>
+
+              </div>
+            </article>
+            @if (videoVisibleId === clase.clase_id && clase.url_multimedia) {
+              <div class="video-wrapper">
+                <video controls playsinline class="video-player">
+                  <source [src]="clase.url_multimedia" type="video/mp4">
+                  Tu navegador no soporta la reproducción de videos.
+                </video>
+              </div>
+            }
+          }
+        }
+      </section>
+
+      @if (showModal) {
+        <div class="modal-backdrop" (click)="cerrarModal()">
+          <div class="modal-content" (click)="$event.stopPropagation()">
+
+            <button class="modal-close" (click)="cerrarModal()">
+              &times;
+            </button>
+
+            <h2 class="editor-title">
+              {{ isEditMode ? 'Editar Clase' : 'Crear nueva clase' }}
+            </h2>
+
+            <div class="editor-grid">
+              <div class="editor-group">
+                <label for="titulo-edit">Título</label>
+                <input
+                  id="titulo-edit"
+                  type="text"
+                  [(ngModel)]="nuevaClase.titulo"
+                  placeholder="Ej: Táctica defensiva"
+                />
+              </div>
+
+              <div class="editor-group" style="grid-column: 1 / -1;">
+                <label for="detalle-edit">Detalle</label>
+                <textarea
+                  id="detalle-edit"
+                  rows="3"
+                  [(ngModel)]="nuevaClase.detalle"
+                  placeholder="Descripción de la clase..."
+                ></textarea>
+              </div>
+
+              <div class="editor-group">
+                <label for="intensidad-edit">Intensidad</label>
+                <select
+                  id="intensidad-edit"
+                  name="intensidad"
+                  [(ngModel)]="nuevaClase.intensidad"
+                  [ngClass]="['intensidad-select', getIntensidadClass(nuevaClase.intensidad)]"
+                >
+                  <option [ngValue]="null" disabled>-- Seleccionar --</option>
+                  <option value="ALTA">Alta</option>
+                  <option value="MEDIA">Media</option>
+                  <option value="BAJA">Baja</option>
+                </select>
+              </div>
+
+              <div class="editor-group">
+                <label for="video-edit">Video de la clase</label>
+                <div class="video-upload">
+                  <input
+                    id="video-edit"
+                    type="file"
+                    accept="video/*"
+                    (change)="onFileSelected($event)"
+                  />
+                </div>
+                <small class="editor-help">
+                  {{ selectedVideoName || 'Ningún archivo seleccionado' }}
+                </small>
+                </div>
+
+            </div>
+
+            <div class="editor-actions">
+              <button class="btn-secundario" (click)="cerrarModal()">
+                Cancelar
+              </button>
+              <button class="btn-principal" (click)="guardarClase()" [disabled]="isUploadingVideo">  {{ isEditMode ? 'Guardar Cambios' : 'Crear Clase' }} </button>
+
+            </div>
+
+          </div>
+        </div>
+      }
+      
+      @if (claseParaEliminar) {
+        <div class="modal-backdrop" (click)="cancelarEliminacion()">
+          <div class="modal-content modal-confirmacion" (click)="$event.stopPropagation()">
+            <h2 class="editor-title" style="color: #ef4444">Confirmar Eliminación</h2>
+            <p style="text-align:center; color: #4b5563">¿Estás seguro de que deseas eliminar la clase "<strong>{{ claseParaEliminar.titulo }}</strong>"?</p>
+            <div class="editor-actions" style="justify-content: center;">
+              <button class="btn-secundario" (click)="cancelarEliminacion()">Cancelar</button>
+              <button class="btn-principal" style="background-color: #ef4444;" (click)="eliminarClase()">
+                Sí, Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
+    } 
+    
+    @else {
+      <header class="clases-header">
+        <div>
+          <h1 class="clases-title">Mis Clases</h1>
+          <p class="clases-subtitle">Consulta el cronograma de tus actividades.</p>
+        </div>
+      </header>
+      
+      @if(inscripcionesUsuario.length > 0) {
+        <div class="mb-4 d-flex align-items-center gap-2" style="padding: 0 1rem;">
+          <label class="fw-bold text-secondary">Filtrar:</label>
+          <select class="form-select-simple" [(ngModel)]="filtroUsuarioId">
+            <option [ngValue]="null">Todas mis actividades</option>
+            @for (ins of inscripcionesUsuario; track ins.actividad_id) {
+              <option [ngValue]="ins.actividad_id">{{ ins.actividad_nombre }}</option>
+            }
+          </select>
+        </div>
+      }
+
+      <div class="content-wrapper">
+         @if (isLoading) {
+            <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+         } @else {
+            @for (grupo of clasesFiltradasUsuario; track grupo.id) {
+              <div class="mb-5 animate-slidein">
+                <h3 class="mb-3 px-3 border-start border-4 border-primary fw-bold text-secondary">
+                  {{ grupo.actividad }}
+                </h3>
+                
+                <section class="clases-card">
+                  @for (clase of grupo.listaClases; track clase.clase_id) {
+                    <article class="clase-item" style="cursor: default;">
+                      <div class="clase-info">
+                        <div class="clase-icon">
+                           @if(clase.url_multimedia) { 🎬 } @else { 💪 } 
+                        </div>
+                        <div>
+                          <h2 class="clase-titulo">{{ clase.titulo }}</h2>
+                          <p class="clase-detalle">{{ clase.detalle }}</p>
+                          
+                          @if (clase.url_multimedia) {
+                            <button class="btn-ver-video mt-2" (click)="toggleVideo(clase.clase_id, $event)">
+                              @if (videoVisibleId === clase.clase_id) {
+                                Ocultar Video
+                              } @else {
+                                Ver Video
+                              }
+                            </button>
+                          }
+                        </div>
+                      </div>
+                      <div class="clase-actions">
+                         <span class="badge-intensidad" [ngClass]="getIntensidadClass(clase.intensidad)">
+                            {{ clase.intensidad | lowercase }}
+                         </span>
+                      </div>
+                    </article>
+
+                    @if (videoVisibleId === clase.clase_id && clase.url_multimedia) {
+                      <div class="video-wrapper">
+                        <video controls playsinline class="video-player">
+                          <source [src]="clase.url_multimedia" type="video/mp4">
+                          Tu navegador no soporta la reproducción de videos.
+                        </video>
+                      </div>
+                    }
+                  }
+                </section>
+              </div>
+            }
+         }
+      </div>
+    }
+
+  </div>
+</div>
+<div class="fab-container" *ngIf="esEntrenador"> <button class="btn-ia" (click)="abrirConsultaIA()" [disabled]="cargandoIA">
+    
+    <span *ngIf="!cargandoIA">🤖 Analizar Clases</span>
+    
+    <ng-container *ngIf="cargandoIA">
+      <span class="loader"></span> 
+      <span>Analizando...</span>
+    </ng-container>
+
+  </button>
+</div>
+
+<div class="ia-modal-overlay" *ngIf="mostrarModalIA">
+  <div class="ia-modal-content">
+    <h3>🧠 Análisis del Agente</h3>
+    
+    <div class="ia-cuerpo" [innerHTML]="respuestaIA"></div>
+
+    <div class="ia-footer">
+      <button (click)="cerrarModalIA()">Entendido</button>
+    </div>
+  </div>
+</div>

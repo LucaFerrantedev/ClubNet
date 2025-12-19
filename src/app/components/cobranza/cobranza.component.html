@@ -1,0 +1,185 @@
+<app-navbar></app-navbar>
+
+<div class="main-container animate-fadein" [class.dark-mode]="isDarkMode">
+  <div class="content-wrapper">
+    <div class="row mb-3 align-items-center">
+      <div class="col-md-6">
+        <h2>
+          @if (esAdmin) { Gestión de Cobranzas } @else { Mis Pagos }
+        </h2>
+        <p>
+          @if (esAdmin) { Control total de pagos de socios. } @else { Gestiona tus cuotas al día. }
+        </p>
+      </div>
+
+
+      <button class="btn-base"
+        style="background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); margin-top: 1rem;"
+        (click)="cargarDatos()" title="Actualizar datos">
+        <i class="bi bi-arrow-clockwise"></i>
+      </button>
+    </div>
+
+    <div class="content-wrapper" style="max-width: 1400px; margin: 0 auto; width: 100%;">
+
+      @if (esAdmin) {
+      <div class="card-custom mb-4">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Buscar Socio</label>
+            <input type="text" class="form-control-custom" placeholder="Nombre..." [(ngModel)]="filtroTexto"
+              (input)="aplicarFiltros()">
+          </div>
+          <div class="form-group">
+            <label>Actividad</label>
+            <select class="form-control-custom" [(ngModel)]="filtroActividad" (change)="aplicarFiltros()">
+              <option value="TODAS">Todas</option>
+              @for (act of actividades; track act.actividad_id) {
+              <option [value]="act.actividad_id">{{ act.nombre }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Estado</label>
+            <select class="form-control-custom" [(ngModel)]="filtroEstado" (change)="aplicarFiltros()">
+              <option value="TODOS">Todos</option>
+              <option value="PENDIENTE">Pendientes (Al día)</option>
+              <option value="VENCIDO">Vencidos (Atrasados)</option>
+              <option value="PAGADO">Pagados</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      }
+
+      @if (!esAdmin && !isLoading) {
+      <div class="mb-4">
+        @if (resumenUsuario.totalDeuda > 0) {
+        <div class="card-custom border-0 shadow-sm d-flex align-items-center justify-content-between flex-wrap gap-3"
+          style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);">
+          <div class="d-flex align-items-center gap-3">
+            <div class="display-6 text-primary"><i class="bi bi-wallet2"></i></div>
+            <div>
+              <h5 class="fw-bold mb-1 text-main">Estado de Cuenta</h5>
+              <p class="mb-0 text-muted">
+                Tienes
+                @if (resumenUsuario.vencidos > 0) {
+                <strong class="text-danger">{{ resumenUsuario.vencidos }} cuota(s) vencida(s)</strong>
+                } @else {
+                0 vencidas
+                }
+                y <strong>{{ resumenUsuario.pendientes }} pendientes</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div class="px-4 py-2 rounded text-center"
+            style="background-color: var(--card-bg); border: 1px solid var(--border-color);">
+            <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Total a Pagar</small>
+            <div class="fs-4 fw-bold text-dark" style="color: var(--text-main);">${{ resumenUsuario.totalDeuda }}</div>
+          </div>
+        </div>
+        } @else {
+        <div class="card-custom border-0 shadow-sm d-flex align-items-center gap-3"
+          style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
+          <div class="display-6 text-success"><i class="bi bi-check-circle-fill"></i></div>
+          <div>
+            <h5 class="fw-bold mb-1 text-main">¡Estás al día!</h5>
+            <p class="mb-0 text-muted">No tienes pagos pendientes. ¡A disfrutar del club!</p>
+          </div>
+        </div>
+        }
+      </div>
+      }
+
+      <div class="card-custom p-0 overflow-hidden animate-slidein">
+        <div class="table-responsive bg-transparent border-0">
+          <table class="table-custom">
+            <thead>
+              <tr>
+                <th class="ps-4">Periodo</th>
+                @if(esAdmin) { <th>Socio</th> }
+                <th>Actividad</th>
+                <th>Vencimiento</th>
+                <th>Monto</th>
+                <th class="text-center">Estado</th>
+                @if(!esAdmin) {
+                <th class="text-end pe-4">Acciones</th>
+                }
+
+              </tr>
+            </thead>
+
+            <tbody>
+              @if (isLoading) {
+              <tr>
+                <td colspan="8" class="text-center py-5 text-muted">Cargando pagos...</td>
+              </tr>
+              }
+
+              @for (item of cobrosFiltrados; track item.cobro_id) {
+              <tr>
+                <td class="ps-4 fw-bold">Cuota {{ item.periodo }}</td>
+
+                @if(esAdmin) {
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="avatar-circle">{{ item.socio ? item.socio.charAt(0) : '?' }}</div>
+                    <span class="fw-medium">{{ item.socio }}</span>
+                  </div>
+                </td>
+                }
+
+                <td>{{ item.nombre }}</td>
+
+                <td class="small" [class.text-danger]="getEstadoVisual(item) === 'VENCIDO'">
+                  Día {{ item.dia_vencimiento }}
+                  @if(getEstadoVisual(item) === 'VENCIDO') { <i class="bi bi-exclamation-circle-fill ms-1"></i> }
+                </td>
+
+                <td class="fw-bold font-monospace" style="color: var(--text-main);">${{ item.monto }}</td>
+
+                <td class="text-center">
+                  @switch (getEstadoVisual(item)) {
+                  @case ('PAGADO') { <span class="badge bg-success-subtle">Pagado</span> }
+                  @case ('PENDIENTE') { <span class="badge bg-warning-subtle">Pendiente</span> }
+                  @case ('VENCIDO') { <span class="badge bg-danger-subtle">Vencido</span> }
+                  }
+                </td>
+
+                <td class="text-end pe-4">
+                  @if(!esAdmin && item.estado !== 'PAGADO') {
+                  <button class="btn-primary btn-sm shadow-sm"
+                    [style.background-color]="getEstadoVisual(item) === 'VENCIDO' ? 'var(--danger)' : 'var(--primary)'"
+                    (click)="iniciarPago(item)">
+                    {{ getEstadoVisual(item) === 'VENCIDO' ? 'Regularizar' : 'Pagar' }}
+                  </button>
+                  }
+
+                  @if(!esAdmin && item.estado === 'PAGADO') {
+                  <button class="btn-base btn-sm" (click)="descargarComprobante(item.cobro_id)"
+                    style="border: 1px solid var(--border-color); color: var(--text-muted);"
+                    title="Descargar comprobante">
+                    <i class="bi bi-download"></i> Recibo
+                  </button>
+                  }
+
+                  <!-- @if(esAdmin) {
+                    <button class="btn-icon"><i class="bi bi-eye"></i></button>
+                  } -->
+                </td>
+              </tr>
+              } @empty {
+              @if (!isLoading) {
+              <tr>
+                <td colspan="8" class="text-center py-4 text-muted">No se encontraron cobros.</td>
+              </tr>
+              }
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

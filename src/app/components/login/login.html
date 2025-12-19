@@ -1,1 +1,87 @@
-<p>login works!</p>
+<div class="modern-login-bg">
+    <div class="modern-login-card">
+
+        <div class="modern-logo">
+            <img src="https://img.icons8.com/color/96/football2.png" alt="Club Logo" />
+            <h1>Clubios</h1>
+            <p class="subtitle">Tu portal deportivo</p>
+        </div>
+
+        <div class="modern-tabs" *ngIf="activeTab !== 'recovery'">
+            <button [class.active]="activeTab === 'login'" (click)="activeTab = 'login'">Iniciar sesión</button>
+            <button [class.active]="activeTab === 'register'" (click)="activeTab = 'register'">Registrarse</button>
+        </div>
+
+        <form *ngIf="activeTab === 'login'" (submit)="onLogin()" class="modern-form animate-fadein">
+            <div class="modern-input-group">
+                <i class="fa fa-envelope"></i>
+                <input type="email" placeholder="Email" required [(ngModel)]="email" name="emailLogin" />
+            </div>
+            <div class="modern-input-group">
+                <i class="fa fa-lock"></i>
+                <input type="password" placeholder="Contraseña" required [(ngModel)]="clave" name="claveLogin" />
+            </div>
+
+            <button class="modern-btn-main" type="submit">Entrar</button>
+
+            <a (click)="switchToRecovery()" class="modern-forgot-link" style="cursor: pointer;">
+                ¿Olvidaste tu contraseña?
+            </a>
+        </form>
+
+        <form *ngIf="activeTab === 'register'" (submit)="onRegister()" class="modern-form animate-fadein">
+            <div class="modern-input-group">
+                <i class="fa fa-id-card"></i>
+                <input type="text" placeholder="DNI (8 números)" required [(ngModel)]="dni" name="dni" maxlength="8" />
+            </div>
+            <div class="modern-input-group">
+                <i class="fa fa-user"></i>
+                <input type="text" placeholder="Nombre" required [(ngModel)]="nombre" name="nombre" />
+            </div>
+            <div class="modern-input-group">
+                <i class="fa fa-user"></i>
+                <input type="text" placeholder="Apellido" required [(ngModel)]="apellido" name="apellido" />
+            </div>
+            <div class="modern-input-group">
+                <i class="fa fa-envelope"></i>
+                <input type="email" placeholder="Email" required [(ngModel)]="email" name="email" />
+            </div>
+            <div class="modern-input-group">
+                <i class="fa fa-lock"></i>
+                <input type="password" placeholder="Contraseña" required [(ngModel)]="clave" name="clave" />
+            </div>
+            <div class="modern-input-group">
+                <i class="fa fa-lock"></i>
+                <input type="password" placeholder="Confirmar contraseña" required [(ngModel)]="confirmarClave"
+                    name="confirmarClave" />
+            </div>
+            <button class="modern-btn-main" type="submit">Registrarse</button>
+        </form>
+
+        <div *ngIf="activeTab === 'recovery'" class="modern-form animate-fadein">
+            <div style="text-align: center; margin-bottom: 1rem;">
+                <h3 style="color: #22314a; margin: 0 0 0.5rem 0; font-size: 1.5rem;">Recuperar Contraseña</h3>
+                <p style="color: #666; font-size: 0.9rem; margin: 0; line-height: 1.4;">
+                    Ingresa tu email asociado y te enviaremos una nueva contraseña temporal.
+                </p>
+            </div>
+
+            <div class="modern-input-group">
+                <i class="fa fa-envelope"></i>
+                <input type="email" placeholder="Tu Email registrado" required [(ngModel)]="recoveryEmail"
+                    name="recoveryEmail" />
+            </div>
+
+            <button class="modern-btn-main" (click)="onRecovery()">Enviar Nueva Contraseña</button>
+
+            <a (click)="backToLogin()" class="modern-forgot-link"
+                style="text-align: center; margin-top: 1rem; cursor: pointer; display: block;">
+                <i class="fa fa-arrow-left"></i> Volver a Iniciar Sesión
+            </a>
+        </div>
+
+        <div *ngIf="mensaje" class="modern-message" [ngClass]="mensajeTipo">{{ mensaje }}</div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">

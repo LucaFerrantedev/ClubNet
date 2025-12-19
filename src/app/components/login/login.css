@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+body, html {
+	height: 100%;
+	margin: 0;
+	font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+	background: #0a2540;
+}
+
+.modern-login-bg {
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(135deg, #2081C3 0%, #63D2FF 100%);
+}
+
+.modern-login-card {
+	background: #fff;
+	border-radius: 2rem;
+	box-shadow: 0 8px 32px 0 #0a6cf122, 0 2px 8px 0 #0a254033;
+	padding: 2.2rem 2.2rem 1.5rem 2.2rem;
+	width: 100%;
+	max-width: 420px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1.1rem;
+	animation: cardIn 0.7s cubic-bezier(.68,-0.55,.27,1.55) both;
+}
+
+.modern-logo {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5rem;
+}
+.modern-logo img {
+	width: 70px;
+	height: 70px;
+	margin-bottom: 0.5rem;
+}
+.modern-logo h1 {
+	font-size: 2rem;
+	color: #0a6cf1;
+	margin: 0;
+	font-weight: 700;
+	letter-spacing: 1px;
+}
+.modern-logo .subtitle {
+	color: #22314a;
+	font-size: 1rem;
+	margin: 0;
+	font-weight: 500;
+}
+
+.modern-tabs {
+	display: flex;
+	width: 100%;
+	gap: 0.5rem;
+	margin-bottom: 0.5rem;
+}
+.modern-tabs button {
+	flex: 1;
+	padding: 0.7rem 0;
+	border: none;
+	border-radius: 1.5rem;
+	background: #e6ecfa;
+	color: #0a6cf1;
+	font-size: 1rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 0.2s, color 0.2s;
+}
+.modern-tabs button.active {
+	background: #47A8BD;
+	color: #fff;
+}
+
+.modern-form {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 0.7rem;
+}
+.modern-input-group {
+	display: flex;
+	align-items: center;
+	background: #f4fafd;
+	border-radius: 1.2rem;
+	padding: 0.5rem 0.9rem;
+	box-shadow: 0 1px 2px 0 #0a6cf122;
+	gap: 0.6rem;
+}
+.modern-input-group i {
+	color: #0a6cf1;
+	font-size: 1.1rem;
+}
+.modern-input-group input {
+	border: none;
+	background: transparent;
+	outline: none;
+	font-size: 1rem;
+	color: #22314a;
+	width: 100%;
+	padding: 0.15rem 0;
+}
+/* Card más ancha y menos alta solo para registro */
+.modern-login-card:has(form[ng-reflect-ng-if='true'] .modern-input-group:nth-child(6)) {
+	max-width: 500px;
+	padding-top: 1.5rem;
+	padding-bottom: 1.1rem;
+}
+
+.modern-btn-main {
+	width: 100%;
+	padding: 0.9rem 0;
+	border: none;
+	border-radius: 1.5rem;
+	background: #22314a 100%;
+	color: #fff;
+	font-size: 1.1rem;
+	font-weight: 700;
+	cursor: pointer;
+	margin-top: 0.5rem;
+	box-shadow: 0 2px 8px 0 #0a6cf133;
+	transition: background 0.2s, box-shadow 0.2s, transform 0.18s;
+}
+.modern-btn-main:hover {
+	background: #2081C3;
+	color: #e6ecfa;
+	box-shadow: 0 4px 16px 0 #0a6cf155;
+	transform: scale(1.04);
+}
+
+.modern-forgot-link {
+	display: block;
+	text-align: right;
+	color: #0a6cf1;
+	font-size: 0.95rem;
+	margin-top: 0.3rem;
+	text-decoration: none;
+	transition: color 0.2s;
+}
+.modern-forgot-link:hover {
+	color: #22314a;
+}
+
+.modern-message {
+	margin-top: 1rem;
+	border-radius: 1rem;
+	padding: 0.7rem 1rem;
+	text-align: center;
+	font-weight: 600;
+	font-size: 1rem;
+	box-shadow: 0 1px 4px 0 #0a6cf122;
+	opacity: 0.98;
+	animation: fadeInMsg 0.6s cubic-bezier(.68,-0.55,.27,1.55);
+	transition: background 0.2s, color 0.2s;
+}
+.modern-message.success {
+	background: #e6fbe9;
+	color: #1cae4c;
+	border: 1.5px solid #1cae4c;
+	text-shadow: 0 1px 4px #1cae4c22;
+}
+.modern-message.error {
+	background: #ffeaea;
+	color: #e03a3a;
+	border: 1.5px solid #e03a3a;
+	text-shadow: 0 1px 4px #e03a3a22;
+}
+@keyframes fadeInMsg {
+	0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+	80% { opacity: 1; transform: translateY(-2px) scale(1.03); }
+	100% { opacity: 0.98; transform: translateY(0) scale(1); }
+}
+
+/* Animaciones */
+@keyframes cardIn {
+	0% { opacity: 0; transform: scale(0.8) translateY(40px); }
+	80% { opacity: 1; transform: scale(1.05) translateY(-5px); }
+	100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@media (max-width: 500px) {
+	.modern-login-card {
+		padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+		max-width: 98vw;
+	}
+	.modern-logo h1 {
+		font-size: 1.3rem;
+	}
+}

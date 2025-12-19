@@ -1,0 +1,34 @@
+<div class="landing-bg">
+  <header class="landing-header">
+    <img src="https://img.icons8.com/color/96/football2.png" alt="Club Logo" class="landing-logo animate-pop" />
+    <h1 class="landing-title animate-fadein">¡Bienvenido a <span class="highlight">Clubios</span>!</h1>
+    <p class="landing-subtitle animate-slidein">El club donde el deporte y la comunidad se encuentran.</p>
+    <button class="landing-btn animate-bounce" (click)="Continuar()">Entrar</button>
+  </header>
+  <section class="landing-section">
+    <h2 class="landing-section-title animate-fadein">Nuestras disciplinas</h2>
+    <div class="landing-cards">
+      @for (actividad of DataSource; track actividad.actividad_id) {
+      <div class="landing-card animate-card">
+        <img [src]="actividad.url_imagen" [alt]="actividad.nombre" />
+        <div class="landing-card-content">
+          <h3>{{actividad.nombre}}</h3>
+          <p>{{actividad.descripcion}}</p>
+        </div>
+      </div>
+    }
+    </div>
+  </section>
+  <section class="landing-benefits">
+    <h2 class="landing-section-title animate-fadein">¿Por qué elegir Clubios?</h2>
+    <ul class="benefits-list">
+      <li class="animate-slidein">Ambiente familiar y seguro</li>
+      <li class="animate-slidein" style="animation-delay: 0.1s;">Profesores y entrenadores certificados</li>
+      <li class="animate-slidein" style="animation-delay: 0.2s;">Infraestructura moderna y espacios verdes</li>
+      <li class="animate-slidein" style="animation-delay: 0.3s;">Eventos, torneos y actividades sociales</li>
+    </ul>
+  </section>
+  <footer class="landing-footer">
+    <small>&copy; 2025 Clubios. Todos los derechos reservados.</small>
+  </footer>
+</div>
