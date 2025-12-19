@@ -204,6 +204,13 @@ export class UsuariosComponent implements OnInit {
       return;
     }
 
+    // Contraseña pide mínimo 6 caracteres, dentro de ellos al menos un número y una letra minúscula
+    const passwordRegex = /^(?=.*[0-9])(?=.*[a-z]).{6,}$/;
+    if (!passwordRegex.test(this.newUser.clave)) {
+      this.showMessage('La contraseña debe tener al menos 6 caracteres, un número y una minúscula.', 'error');
+      return;
+    }
+
     // 4. Verificar coincidencia de claves
     if (this.newUser.clave !== this.newUser.confirmarClave) {
       this.showMessage('Las claves no coinciden.', 'error');

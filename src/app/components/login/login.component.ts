@@ -97,6 +97,15 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    // Contraseña pide mínimo 6 caracteres, dentro de ellos al menos un número y una letra minúscula
+    const passwordRegex = /^(?=.*[0-9])(?=.*[a-z]).{6,}$/;
+    if (!passwordRegex.test(this.clave)) {
+      this.mensaje = 'La contraseña es débil: debe tener al menos 6 caracteres, incluir un número y una letra minúscula.';
+      this.mensajeTipo = 'error';
+      return;
+    }
+
+
     // 4. Verificar coincidencia de claves
     if (this.clave !== this.confirmarClave) {
       this.mensaje = 'Las contraseñas no coinciden.';
